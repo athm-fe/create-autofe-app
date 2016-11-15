@@ -1,0 +1,17 @@
+{
+  "name": "create-autofe-app",
+  "version": "0.1.0",
+  "description": "Create autohome fe apps with no build configuration.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "jpuncle",
+  "license": "ISC",
+  "files": [
+    "index.js"
+  ],
+  "bin": {
+    "create-autofe-app": "./index.js"
+  }
+}

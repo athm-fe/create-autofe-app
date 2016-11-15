@@ -1,0 +1,13 @@
+{
+  "name": "autofe-scripts",
+  "version": "0.1.0",
+  "description": "Configuration and scripts for Create Autofe App.",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "autofe-scripts": "./bin/autofe-scripts.js"
+  },
+  "author": "jpuncle",
+  "license": "ISC"
+}
