@@ -2,12 +2,34 @@
   "name": "autofe-scripts",
   "version": "0.1.0",
   "description": "Configuration and scripts for Create Autofe App.",
+  "author": "jpuncle",
+  "license": "ISC",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
     "autofe-scripts": "./bin/autofe-scripts.js"
   },
-  "author": "jpuncle",
-  "license": "ISC"
+  "dependencies": {
+    "browser-sync": "^2.9.11",
+    "cross-spawn": "^5.0.1",
+    "del": "^2.0.2",
+    "gulp": "^3.9.0",
+    "gulp-clean-css": "^2.0.11",
+    "gulp-data": "^1.2.1",
+    "gulp-if": "^2.0.0",
+    "gulp-imagemin": "^2.3.0",
+    "gulp-include": "^2.3.1",
+    "gulp-markdown": "^1.2.0",
+    "gulp-nunjucks-render": "1.0.0",
+    "gulp-rev": "^6.0.1",
+    "gulp-rev-urls": "^1.0.1",
+    "gulp-sass": "^2.0.4",
+    "gulp-uglify": "^1.4.2",
+    "gulp-util": "^3.0.7",
+    "gulp-wrap": "^0.13.0",
+    "highlight.js": "^9.6.0",
+    "require-dir": "^0.3.0",
+    "run-sequence": "^1.1.4"
+  }
 }
