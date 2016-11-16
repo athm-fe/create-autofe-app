@@ -1,4 +1,4 @@
-const gulp = require('gulp');
+var gulp = require('gulp');
 require('require-dir')('../tasks');
 
 console.log('argv: ', process.argv);

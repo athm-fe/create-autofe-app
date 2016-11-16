@@ -1,8 +1,8 @@
 #!/usr/bin/env node
-const spawn = require('cross-spawn');
+var spawn = require('cross-spawn');
 
-const script = process.argv[2];
-const args = process.argv.slice(3);
+var script = process.argv[2];
+var args = process.argv.slice(3);
 
 var result;
 

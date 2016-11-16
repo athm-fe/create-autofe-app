@@ -1,11 +1,11 @@
-const gulp = require('gulp');
-const config = require('../config/gulpConfig');
-const browserSync = require('../config/browserSync');
-const uglify = require('gulp-uglify');
-const gulpif = require('gulp-if');
-const gutil = require('gulp-util');
+var gulp = require('gulp');
+var config = require('../config/gulpConfig');
+var browserSync = require('../config/browserSync');
+var uglify = require('gulp-uglify');
+var gulpif = require('gulp-if');
+var gutil = require('gulp-util');
 
-const jsTask = function () {
+var jsTask = function () {
   return gulp.src(config.js.src)
     // TODO gutil.env.env === 'prod'
     .pipe(gulpif(gutil.env.env === 'prod', uglify({

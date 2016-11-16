@@ -1,21 +1,21 @@
-const gulp = require('gulp');
-const config = require('../config/gulpConfig');
-const browserSync = require('../config/browserSync');
-const render = require('gulp-nunjucks-render');
-const data = require('gulp-data');
-const path = require('path');
+var gulp = require('gulp');
+var config = require('../config/gulpConfig');
+var browserSync = require('../config/browserSync');
+var render = require('gulp-nunjucks-render');
+var data = require('gulp-data');
+var path = require('path');
 
-const htmlTask = function () {
-  const env = render.nunjucks.configure([config.src], { watch: false });
+var htmlTask = function () {
+  var env = render.nunjucks.configure([config.src], { watch: false });
 
   env.addFilter('assets', function (assetpath) {
-    const url = path.join(this.ctx.__ctx_file.prefix || '', assetpath);
+    var url = path.join(this.ctx.__ctx_file.prefix || '', assetpath);
     return url;
   });
 
   return gulp.src([config.html.src, config.html.exclude])
     .pipe(data(function (file) {
-      const obj = {
+      var obj = {
         path: file.path,
         relative: file.relative,
         base: file.base,

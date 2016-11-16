@@ -1,5 +1,5 @@
-const gulp = require('gulp');
-const runSequence = require('run-sequence');
+var gulp = require('gulp');
+var runSequence = require('run-sequence');
 
 gulp.task('build', function (cb) {
   runSequence(

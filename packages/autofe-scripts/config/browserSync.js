@@ -1,3 +1,3 @@
-const browserSync = require('browser-sync').create();
+var browserSync = require('browser-sync').create();
 
 module.exports = browserSync;

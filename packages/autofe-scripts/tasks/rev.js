@@ -1,13 +1,13 @@
-const path = require('path');
-const gulp = require('gulp');
-const config = require('../config/gulpConfig');
-const rev = require('gulp-rev');
-const revReplace = require('gulp-rev-urls');
+var path = require('path');
+var gulp = require('gulp');
+var config = require('../config/gulpConfig');
+var rev = require('gulp-rev');
+var revReplace = require('gulp-rev-urls');
 
 // 1) Add md5 hashes to assets referenced by CSS and JS files
 gulp.task('rev-assets', function () {
   // Ignore files that may reference assets. We'll rev them next.
-  const ignoreThese = '!' + path.join(config.rev.base, '/**/*+(css|js|json|html)');
+  var ignoreThese = '!' + path.join(config.rev.base, '/**/*+(css|js|json|html)');
 
   return gulp.src([path.join(config.rev.base, '/**/*'), ignoreThese])
     .pipe(rev())
@@ -18,7 +18,7 @@ gulp.task('rev-assets', function () {
 
 // 2) Update asset references with reved filenames in compiled css + js
 gulp.task('rev-update-references', function () {
-  const manifest = path.join(config.rev.dest, 'rev-manifest.json');
+  var manifest = path.join(config.rev.dest, 'rev-manifest.json');
 
   return gulp.src(path.join(config.rev.base, '/**/**.{css,js}'))
     .pipe(revReplace({

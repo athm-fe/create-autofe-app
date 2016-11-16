@@ -1,8 +1,8 @@
-const gulp = require('gulp');
-const config = require('../config/gulpConfig');
-const browserSync = require('../config/browserSync');
+var gulp = require('gulp');
+var config = require('../config/gulpConfig');
+var browserSync = require('../config/browserSync');
 
-const browserSyncTask = function () {
+var browserSyncTask = function () {
   browserSync.init(config.browserSync.option);
 };
 

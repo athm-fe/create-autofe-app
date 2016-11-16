@@ -1,9 +1,9 @@
-const gulp = require('gulp');
-const config = require('../config/gulpConfig');
-const browserSync = require('../config/browserSync');
-const imagemin = require('gulp-imagemin');
+var gulp = require('gulp');
+var config = require('../config/gulpConfig');
+var browserSync = require('../config/browserSync');
+var imagemin = require('gulp-imagemin');
 
-const imagesTask = function () {
+var imagesTask = function () {
   return gulp.src(config.images.src)
     .pipe(imagemin(config.images.imagemin))
     .pipe(gulp.dest(config.images.dest))

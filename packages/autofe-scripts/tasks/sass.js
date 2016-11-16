@@ -1,12 +1,12 @@
-const gulp = require('gulp');
-const config = require('../config/gulpConfig');
-const browserSync = require('../config/browserSync');
-const sass = require('gulp-sass');
-const clean = require('gulp-clean-css');
-const gulpif = require('gulp-if');
-const gutil = require('gulp-util');
+var gulp = require('gulp');
+var config = require('../config/gulpConfig');
+var browserSync = require('../config/browserSync');
+var sass = require('gulp-sass');
+var clean = require('gulp-clean-css');
+var gulpif = require('gulp-if');
+var gutil = require('gulp-util');
 
-const sassTask = function () {
+var sassTask = function () {
   return gulp.src(config.sass.src)
     .pipe(sass(config.sass.option).on('error', sass.logError))
     // TODO gutil.env.env === 'prod'

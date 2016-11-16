@@ -1,6 +1,6 @@
-const path = require('path');
+var path = require('path');
 
-const root = {
+var root = {
   src: 'src',
   dest: 'build'
 };

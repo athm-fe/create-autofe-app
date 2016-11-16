@@ -1,11 +1,12 @@
-const path = require('path');
+var path = require('path');
 
-const appDirectory = process.cwd();
+var appDirectory = process.cwd();
+
 function resolveApp(relativePath) {
   return path.resolve(appDirectory, relativePath);
 }
 
 module.exports = {
   appDirectory: appDirectory,
-  appBuild: resolveApp('build'),
+  appBuild: resolveApp('build')
 };

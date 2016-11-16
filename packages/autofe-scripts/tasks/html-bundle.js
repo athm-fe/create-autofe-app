@@ -1,8 +1,8 @@
-const gulp = require('gulp');
-const config = require('../config/gulpConfig');
-const include = require('gulp-include');
+var gulp = require('gulp');
+var config = require('../config/gulpConfig');
+var include = require('gulp-include');
 
-const htmlBundleTask = function () {
+var htmlBundleTask = function () {
   return gulp.src(config.htmlBundle.src)
     .pipe(include())
     .pipe(config.htmlBundle.dest);
