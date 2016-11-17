@@ -1,9 +1,22 @@
 {
   "name": "autofe-scripts",
   "version": "0.1.0",
-  "description": "Configuration and scripts for Create Autofe App.",
+  "description": "Configuration and scripts for Create AutoFE App.",
+  "repository": "jpuncle/create-autofe-app",
   "author": "jpuncle",
-  "license": "ISC",
+  "engines": {
+    "node": ">=4"
+  },
+  "bugs": {
+    "url": "https://github.com/jpuncle/create-autofe-app/issues"
+  },
+  "files": [
+    "bin",
+    "config",
+    "scripts",
+    "tasks",
+    "template"
+  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },

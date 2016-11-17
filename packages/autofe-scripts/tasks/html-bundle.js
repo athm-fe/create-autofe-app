@@ -5,7 +5,7 @@ var include = require('gulp-include');
 var htmlBundleTask = function () {
   return gulp.src(config.htmlBundle.src)
     .pipe(include())
-    .pipe(config.htmlBundle.dest);
+    .pipe(gulp.dest(config.htmlBundle.dest));
 };
 
 gulp.task('html-bundle', htmlBundleTask);
