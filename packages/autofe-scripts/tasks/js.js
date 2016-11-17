@@ -7,8 +7,7 @@ var gutil = require('gulp-util');
 
 var jsTask = function () {
   return gulp.src(config.js.src)
-    // TODO gutil.env.env === 'prod'
-    .pipe(gulpif(gutil.env.env === 'prod', uglify({
+    .pipe(gulpif(process.env.NODE_ENV === 'production', uglify({
       output: {
         ascii_only: true
       }

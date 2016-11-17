@@ -9,8 +9,7 @@ var gutil = require('gulp-util');
 var sassTask = function () {
   return gulp.src(config.sass.src)
     .pipe(sass(config.sass.option).on('error', sass.logError))
-    // TODO gutil.env.env === 'prod'
-    .pipe(gulpif(gutil.env.env === 'prod', clean({ compatibility: 'ie7' })))
+    .pipe(gulpif(process.env.NODE_ENV === 'production', clean({ compatibility: 'ie7' })))
     .pipe(gulp.dest(config.sass.dest))
     .pipe(browserSync.stream());
 };
