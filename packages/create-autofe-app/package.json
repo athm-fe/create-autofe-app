@@ -1,17 +1,26 @@
 {
   "name": "create-autofe-app",
   "version": "0.1.0",
-  "description": "Create autohome fe apps with no build configuration.",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "description": "Create AutoFE apps with no build configuration.",
+  "repository": "jpuncle/create-autofe-app",
   "author": "jpuncle",
-  "license": "ISC",
+  "engines": {
+    "node": ">=4"
+  },
+  "bugs": {
+    "url": "https://github.com/jpuncle/create-autofe-app/issues"
+  },
   "files": [
     "index.js"
   ],
   "bin": {
     "create-autofe-app": "./index.js"
+  },
+  "dependencies": {
+    "chalk": "^1.1.1",
+    "cross-spawn": "^4.0.0",
+    "minimist": "^1.2.0",
+    "path-exists": "^2.1.0",
+    "semver": "^5.0.3"
   }
 }
