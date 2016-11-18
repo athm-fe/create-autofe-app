@@ -1,4 +1,9 @@
 {
+  "scripts": {
+    "create-autofe-app": "tasks/cra.sh",
+    "postinstall": "lerna bootstrap",
+    "publish": "tasks/release.sh"
+  },
   "devDependencies": {
     "lerna": "2.0.0-beta.30"
   }

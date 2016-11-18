@@ -1,5 +1,7 @@
 node_modules/
 build
 .DS_Store
+*.tgz
+my-app*
 lerna-debug.log
 npm-debug.log
