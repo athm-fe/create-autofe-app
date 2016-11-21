@@ -2,6 +2,7 @@
   "scripts": {
     "start": "node packages/autofe-scripts/scripts/start.js",
     "build": "node packages/autofe-scripts/scripts/build.js",
+    "test": "node packages/autofe-scripts/scripts/test.js",
     "create-autofe-app": "tasks/cra.sh",
     "postinstall": "lerna bootstrap",
     "publish": "tasks/release.sh"
