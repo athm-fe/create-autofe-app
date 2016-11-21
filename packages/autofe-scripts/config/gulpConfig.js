@@ -1,8 +1,9 @@
 var path = require('path');
+var paths = require('./paths');
 
 var root = {
-  src: 'src',
-  dest: 'build'
+  src: path.join(paths.appDirectory, 'src'),
+  dest: paths.appBuild
 };
 
 module.exports = {
@@ -56,9 +57,5 @@ module.exports = {
   },
   watch: {
     tasks: ['fonts', 'images', 'sass', 'js', 'html', 'markdown']
-  },
-  rev: {
-    base: root.dest,
-    dest: 'dist'
   }
 };

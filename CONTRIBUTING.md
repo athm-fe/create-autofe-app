@@ -8,6 +8,8 @@ cd create-autofe-app
 npm install
 ```
 
+`npm start` 可以用来看 demo
+
 如果想本地测试 `create-autofe-app` 和 `autofe-scripts`，可以按照下面的步骤来：
 
 ```
