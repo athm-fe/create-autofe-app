@@ -16,9 +16,9 @@ module.exports = function(appPath, appName, verbose, originalDirectory) {
   // Setup the script rules
   appPackage.scripts = {
     'start': 'autofe-scripts start',
-    'build': 'autofe-scripts build',
-    'test': 'autofe-scripts test --env=jsdom',
-    'eject': 'autofe-scripts eject'
+    'build': 'autofe-scripts build'
+    // 'test': 'autofe-scripts test --env=jsdom',
+    // 'eject': 'autofe-scripts eject'
   };
 
   fs.writeFileSync(
@@ -94,13 +94,13 @@ module.exports = function(appPath, appName, verbose, originalDirectory) {
     console.log(chalk.cyan('  npm run build'));
     console.log('    Bundles the app into static files for production.');
     console.log();
-    console.log(chalk.cyan('  npm test'));
-    console.log('    Starts the test runner.');
-    console.log();
-    console.log(chalk.cyan('  npm run eject'));
-    console.log('    Removes this tool and copies build dependencies, configuration files');
-    console.log('    and scripts into the app directory. If you do this, you can’t go back!');
-    console.log();
+    // console.log(chalk.cyan('  npm test'));
+    // console.log('    Starts the test runner.');
+    // console.log();
+    // console.log(chalk.cyan('  npm run eject'));
+    // console.log('    Removes this tool and copies build dependencies, configuration files');
+    // console.log('    and scripts into the app directory. If you do this, you can’t go back!');
+    // console.log();
     console.log('We suggest that you begin by typing:');
     console.log();
     console.log(chalk.cyan('  cd'), cdpath);

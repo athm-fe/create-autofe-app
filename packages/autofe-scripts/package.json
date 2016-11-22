@@ -46,30 +46,5 @@
     "require-dir": "^0.3.0",
     "run-sequence": "^1.1.4"
   },
-  "devDependencies": {
-    "bundle-deps": "^1.0.0"
-  },
-  "bundledDependencies": [
-    "browser-sync",
-    "chalk",
-    "cross-spawn",
-    "del",
-    "fs-extra",
-    "gulp",
-    "gulp-clean-css",
-    "gulp-data",
-    "gulp-if",
-    "gulp-imagemin",
-    "gulp-include",
-    "gulp-markdown",
-    "gulp-nunjucks-render",
-    "gulp-sass",
-    "gulp-uglify",
-    "gulp-util",
-    "gulp-wrap",
-    "highlight.js",
-    "path-exists",
-    "require-dir",
-    "run-sequence"
-  ]
+  "devDependencies": {}
 }
