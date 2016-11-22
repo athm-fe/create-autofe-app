@@ -10,7 +10,7 @@ npm install
 
 `npm start` 可以用来看 demo
 
-如果想本地测试 `create-autofe-app` 和 `autofe-scripts`，可以按照下面的步骤来：
+如果想本地联调测试 `create-autofe-app` 和 `autofe-scripts`，可以按照下面的步骤来：
 
 ```
 npm run create-autofe-app my-app
