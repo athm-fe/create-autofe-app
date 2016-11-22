@@ -97,14 +97,13 @@ Your app is ready to be deployed!
 
 ## What’s Inside?
 
-* browser-sync
-* gulp
-* clean-css
-* sass
-* uglify
-* imagemin
-* nunjucks
-* markdown
+* [Browsersync](https://browsersync.io/)
+* [gulp](http://gulpjs.com/)
+* [gulp-sass](https://github.com/dlmanning/gulp-sass)
+* [gulp-clean-css](https://github.com/scniro/gulp-clean-css)
+* [gulp-uglify](https://github.com/terinjokes/gulp-uglify)
+* [imagemin](https://github.com/imagemin/imagemin)
+* [Nunjucks](https://mozilla.github.io/nunjucks/)
 * and others.
 
 All of them are transitive dependencies of the provided npm package.
