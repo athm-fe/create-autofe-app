@@ -111,3 +111,14 @@ All of them are transitive dependencies of the provided npm package.
 ## Contributing
 
 We'd love to have your helping hand on `create-autofe-app`! See [CONTRIBUTING.md](CONTRIBUTING.md) for more information on what we're looking for and how to get started.
+
+
+## TODO
+
+* 添加 `README`，模版新增 `includePretty` 和 `assets`
+* gulp 的日志没有出来
+* `rev` 相关功能需要重新考虑
+* 阿金的那种控件需求
+* `autoprefixer`
+* 文件上传 FastDFS
+* 反向代理到后端 API
