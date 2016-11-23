@@ -10,6 +10,7 @@ You can find the most recent version of this guide [here](https://github.com/jpu
 - [可用的命令](#可用的命令)
   - [npm start](#npm-start)
   - [npm run build](#npm-run-build)
+- [功能支持](#功能支持)
 - [样式开发](#样式开发)
 
 ## 更新到新版本
@@ -79,4 +80,31 @@ It correctly bundles assets in production mode and optimizes the build for the b
 
 Your app is ready to be deployed!
 
+## 功能支持
+
+* 使用 [Browsersync](http://browsersync.io/) 来开启本地服务器，支持文件修改时自动刷新浏览器
+* 使用 [Nunjucks](https://mozilla.github.io/nunjucks/) 模版引擎来写 HTML
+* 使用 Sass 来写 CSS
+* 使用 clean-css 来压缩 CSS
+* 使用 UglifyJS2 来压缩 JS
+* 使用 imagemin 来压缩图片
+* 支持 Markdown 文件编译输出为 HTML 文件
+
 ## 样式开发
+
+## html-bundle
+
+## NODE_ENV=development npm run build
+
+## Nunjucks 模版开发
+
+assets
+
+includePretty
+
+## 图片管理
+
+img
+pic
+
+## JS 开发

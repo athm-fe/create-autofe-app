@@ -122,3 +122,4 @@ We'd love to have your helping hand on `create-autofe-app`! See [CONTRIBUTING.md
 * `autoprefixer`
 * 文件上传 FastDFS
 * 反向代理到后端 API
+* 模块开发与管理 js+css+img+tpl
