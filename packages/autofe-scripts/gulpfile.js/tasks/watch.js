@@ -1,5 +1,5 @@
 var gulp = require('gulp');
-var config = require('../config/gulpConfig');
+var config = require('../config');
 
 var watchTask = function () {
   var tasks = config.watch.tasks || [];

@@ -1,5 +1,5 @@
 var gulp = require('gulp');
-var config = require('../config/gulpConfig');
+var config = require('../config');
 var include = require('gulp-include');
 
 var htmlBundleTask = function () {

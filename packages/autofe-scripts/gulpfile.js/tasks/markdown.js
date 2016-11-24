@@ -2,8 +2,8 @@ var gulp = require('gulp');
 var markdown = require('gulp-markdown');
 var wrap = require('gulp-wrap');
 var highlight = require('highlight.js');
-var config = require('../config/gulpConfig');
-var browserSync = require('../config/browserSync');
+var config = require('../config');
+var browserSync = require('../lib/browserSync');
 var join = require('path').join;
 
 var markdownTask = function () {

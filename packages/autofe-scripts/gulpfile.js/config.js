@@ -1,5 +1,5 @@
 var path = require('path');
-var paths = require('./paths');
+var paths = require('../config/paths');
 
 var root = {
   src: path.join(paths.appDirectory, 'src'),

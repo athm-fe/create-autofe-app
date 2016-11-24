@@ -1,6 +1,6 @@
 var gulp = require('gulp');
-var config = require('../config/gulpConfig');
-var browserSync = require('../config/browserSync');
+var config = require('../config');
+var browserSync = require('../lib/browserSync');
 
 var fontsTask = function () {
   return gulp.src(config.fonts.src)

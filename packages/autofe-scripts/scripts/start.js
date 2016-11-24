@@ -1,5 +1,5 @@
 var gulp = require('gulp');
-require('require-dir')('../tasks');
+require('../gulpfile.js');
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
