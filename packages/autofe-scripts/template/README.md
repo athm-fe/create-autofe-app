@@ -221,8 +221,8 @@ src/
 代码如下：
 `component/btn/index.html`
 ```html
-<link rel="stylesheet" href="{ 'component/btn/index.css' | assets}">
-<img src="{ 'component/btn/btn.png' | assets}">
+<link rel="stylesheet" href="{{ 'component/btn/index.css' | assets }}">
+<img src="{{ 'component/btn/btn.png' | assets }}">
 ```
 
 **注意：使用`assets`时需要从`src`之下开始写路径，不能直接写 `index.css` ，目前还没想到其它的办法。**
