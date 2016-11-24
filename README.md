@@ -115,7 +115,6 @@ We'd love to have your helping hand on `create-autofe-app`! See [CONTRIBUTING.md
 
 ## TODO
 
-* gulp 的日志没有出来
 * `rev` 相关功能需要重新考虑
 * 阿金的那种控件需求
 * `autoprefixer`
