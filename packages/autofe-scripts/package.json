@@ -13,8 +13,8 @@
   "files": [
     "bin",
     "config",
+    "gulpfile.js",
     "scripts",
-    "tasks",
     "template"
   ],
   "scripts": {
