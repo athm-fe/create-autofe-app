@@ -13,11 +13,11 @@ You can find the most recent version of this guide [here](https://github.com/jpu
 - [功能支持](#功能支持)
 - [开发约定](#开发约定)
 - [编写样式](#编写样式)
-- [编写 HTML](#编写-HTML)
-  - [includePretty](#includePretty)
+- [编写 HTML](#编写-html)
+  - [includePretty](#includepretty)
   - [assets](#assets)
   - [html-bundle](#html-bundle)
-- [还缺啥?](#还缺啥?)
+- [还缺啥?](#还缺啥)
 
 ## 更新到新版本
 
