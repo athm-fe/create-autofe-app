@@ -11,7 +11,13 @@ You can find the most recent version of this guide [here](https://github.com/jpu
   - [npm start](#npm-start)
   - [npm run build](#npm-run-build)
 - [功能支持](#功能支持)
-- [样式开发](#样式开发)
+- [开发约定](#开发约定)
+- [编写样式](#编写样式)
+- [编写 HTML](#编写-HTML)
+  - [includePretty](#includePretty)
+  - [assets](#assets)
+  - [html-bundle](#html-bundle)
+- [还缺啥?](#还缺啥?)
 
 ## 更新到新版本
 
@@ -62,6 +68,8 @@ my-app/
 
 你编写的所有代码都需要放在 `src` 目录里，因为只有 `src` 目录下的代码才会被 `autofe-scripts` 打包构建。
 
+打包输出到 `build` 目录下。
+
 ## 可用的命令
 
 在项目目录下，你可以运行如下命令：
@@ -80,31 +88,101 @@ It correctly bundles assets in production mode and optimizes the build for the b
 
 Your app is ready to be deployed!
 
+默认打包后的样式和脚本是被压缩后的，如果像得到不压缩的样式和脚本，可以执行下面的命令：
+```sh
+NODE_ENV=development npm run build
+```
+
 ## 功能支持
 
-* 使用 [Browsersync](http://browsersync.io/) 来开启本地服务器，支持文件修改时自动刷新浏览器
+* 使用 [Browsersync](http://browsersync.io/) 开启本地服务器
+  * 支持文件修改时自动刷新浏览器
+  * 支持目录浏览
 * 使用 [Nunjucks](https://mozilla.github.io/nunjucks/) 模版引擎来写 HTML
-* 使用 Sass 来写 CSS
-* 使用 clean-css 来压缩 CSS
-* 使用 UglifyJS2 来压缩 JS
-* 使用 imagemin 来压缩图片
-* 支持 Markdown 文件编译输出为 HTML 文件
+* 使用 Sass 写 CSS
+* 使用 clean-css 压缩 CSS
+* 使用 UglifyJS2 压缩 JS，中文 to ASCII
+* 使用 imagemin 压缩图片
+* 使用 Markdown 写文档，并生成 HTML 方便查看
 
-## 样式开发
+## 开发约定
 
-## html-bundle
+1. 文件碎片化、代码模块化
+2. 使用前缀下划线命名模块文件，打包时不输出
+3. 打包输出文件（即 `build` 文件夹）不提交到 git 仓库
+4. 图片放到 `img` 和 `pic` 目录下，区别是 `pic` 仅做 demo 展示用，上线完全不需要
 
-## NODE_ENV=development npm run build
+## 编写样式
 
-## Nunjucks 模版开发
+用 SASS 来写样式，没什么好说的。比如下面的例子：
 
-assets
+`_btn.scss`
+```css
+.btn {
+  display: inline-block;
+}
+```
 
-includePretty
+`main.scss`
+```css
+@import "btn";
 
-## 图片管理
+.some {
+  color: red;
+}
+```
 
-img
-pic
+编译后，只会产生 `main.css` 。
 
-## JS 开发
+## 编写 HTML
+
+本工具使用 [Nunjucks](https://mozilla.github.io/nunjucks/) 模版引擎来编写 HTML ，建议先去官网了解下该模版引擎的用法。
+
+### `includePretty`
+
+即使不想看，你也可以像往常那样写 HTML，只要你会 `includePretty` 就够用了。
+
+`_part1.html`
+```html
+<div>
+  <span>anything...</span>
+</div>
+```
+
+`index.html`
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Index</title>
+  </head>
+  <body>
+    {% includePretty "_part1.html" %}
+  </body>
+</html>
+```
+
+output:
+```html
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Index</title>
+  </head>
+  <body>
+    <div>
+      <span>anything...</span>
+    </div>
+  </body>
+</html>
+```
+
+### `assets`
+
+### html-bundle
+
+## 还缺啥?
+
+文档写的不好？写的不全？欢迎[来找茬](https://github.com/jpuncle/create-autofe-app/issues)。
