@@ -125,3 +125,4 @@ We'd love to have your helping hand on `create-autofe-app`! See [CONTRIBUTING.md
 * js 打包，es6，amd，cmd，commonjs，webpack
 * 自动雪碧图
 * 资源加 CND 前缀
+* 打包时，警告 console, alert, debugger ？

@@ -3,6 +3,7 @@ var config = require('../config');
 var browserSync = require('../lib/browserSync');
 var sass = require('gulp-sass');
 var postcss = require('gulp-postcss');
+var assets  = require('postcss-assets');
 var autoprefixer = require('autoprefixer');
 var clean = require('gulp-clean-css');
 var gulpif = require('gulp-if');
@@ -12,6 +13,7 @@ var sassTask = function () {
   return gulp.src(config.sass.src)
     .pipe(sass(config.sass.option).on('error', sass.logError))
     .pipe(postcss([
+      assets(config.postcssAssets.option),
       autoprefixer(config.autoprefixer.option)
     ]))
     .pipe(gulpif(process.env.NODE_ENV === 'production', clean({ compatibility: 'ie7' })))

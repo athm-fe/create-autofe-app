@@ -29,6 +29,9 @@ module.exports = {
     dest: root.dest,
     option: {}
   },
+  postcssAssets: {
+    option: {}
+  },
   autoprefixer: {
     option: {
       browsers: ['ios >= 6', 'android >= 4.0', 'Explorer >= 6', 'Firefox >= 20', 'Opera > 10']
