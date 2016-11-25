@@ -1,5 +1,3 @@
 (function () {
-  setTimeout(function () {
-    alert('Hello world');
-  }, 1000);
+  console.log('Hello world');
 }());

@@ -117,7 +117,6 @@ We'd love to have your helping hand on `create-autofe-app`! See [CONTRIBUTING.md
 
 * `rev` 相关功能需要重新考虑
 * 阿金的那种控件需求
-* `autoprefixer`
 * 文件上传 FastDFS
 * 反向代理到后端 API
 * 模块的开发、下载、引用、预览和发布，形成模块云服务，js+css+img+tpl

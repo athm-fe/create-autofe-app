@@ -1,0 +1,27 @@
+:fullscreen a {
+  display: flex
+}
+
+.btn {
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+
+.btn .icon1 {
+  transform: scale(0.5);
+}
+
+.btn .icon2 {
+  -webkit-transform: scale(0.5);
+  transform: scale(0.5);
+}
+
+.btn .icon3 {
+  -webkit-transform: scale(0.6);
+  transform: scale(0.5);
+}
+
+.btn .icon4 {
+  transform: scale(0.5);
+  -webkit-transform: scale(0.6);
+}

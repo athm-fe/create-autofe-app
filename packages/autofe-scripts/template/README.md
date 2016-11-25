@@ -13,6 +13,7 @@ You can find the most recent version of this guide [here](https://github.com/jpu
 - [功能支持](#功能支持)
 - [开发约定](#开发约定)
 - [编写样式](#编写样式)
+  - [autoprefixer](#autoprefixer)
 - [编写 HTML](#编写-html)
   - [includePretty](#includepretty)
   - [assets](#assets)
@@ -133,6 +134,95 @@ NODE_ENV=development npm run build
 ```
 
 编译后，只会产生 `main.css` 。
+
+### Autoprefixer
+
+有了 Autoprefixer，你不再需要手动写 `-webkit-` ，`-ms-` ，`-moz-` 等浏览器厂商前缀，也就不再需要使用 Sass 之类的语言来编写一堆 mixins。
+
+加浏览器前缀时，我们只考虑下面所列的浏览器：
+```
+browsers: ['ios >= 6', 'android >= 4.0', 'Explorer >= 6', 'Firefox >= 20', 'Opera > 10']
+```
+
+Autoprefixer 根据你所支持的浏览器配置，从 [Can I Use](http://caniuse.com/) 获取数据，然后只添加必要的厂商前缀。
+
+### 简单的例子
+
+原来你可能这么写：
+```css
+.btn .icon {
+  -webkit-transform: scale(0.5);
+      -ms-transform: scale(0.5);
+       -o-transform: scale(0.5);
+          transform: scale(0.5);
+}
+```
+
+现在这么写就成：
+```css
+.btn .icon {
+  transform: scale(0.5);
+}
+```
+
+#### 去掉老旧的前缀
+
+Autoprefixer 还会去掉老旧的前缀，比如 `border-radius` ：
+```css
+.btn {
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+```
+
+根据我们的浏览器支持配置，我们不再需要 `border-radius` 的 `-webkit-`，`-moz-` 等前缀。经过 Autoprefixer 处理后会变成这样：
+```css
+.btn {
+  border-radius: 10px;
+}
+```
+
+#### 之前已经手动写了前缀也没关系
+
+```css
+.btn .icon {
+  -webkit-transform: scale(0.5);
+  transform: scale(0.5);
+}
+```
+
+会被处理成：
+
+```css
+.btn .icon {
+  -webkit-transform: scale(0.5);
+      -ms-transform: scale(0.5);
+       -o-transform: scale(0.5);
+          transform: scale(0.5);
+}
+```
+
+#### 特定浏览器 hack
+
+```css
+.btn .icon {
+  transform: scale(0.5);
+  -webkit-transform: scale(0.6);
+}
+```
+
+会被处理成：
+
+```css
+.btn .icon4 {
+  -ms-transform: scale(0.5);
+   -o-transform: scale(0.5);
+      transform: scale(0.5);
+  -webkit-transform: scale(0.6);
+}
+```
+
+上面我们介绍了几种 Autoprefixer 的处理规则，更多的用法请参见[官网](https://github.com/postcss/autoprefixer)
 
 ## 编写 HTML
 

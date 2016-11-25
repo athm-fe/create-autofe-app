@@ -29,6 +29,11 @@ module.exports = {
     dest: root.dest,
     option: {}
   },
+  autoprefixer: {
+    option: {
+      browsers: ['ios >= 6', 'android >= 4.0', 'Explorer >= 6', 'Firefox >= 20', 'Opera > 10']
+    }
+  },
   js: {
     src: path.join(root.src, '/**/*.js'),
     dest: root.dest
