@@ -14,6 +14,7 @@ You can find the most recent version of this guide [here](https://github.com/jpu
 - [开发约定](#开发约定)
 - [编写样式](#编写样式)
   - [autoprefixer](#autoprefixer)
+  - [图片内嵌](#图片内嵌)
 - [编写 HTML](#编写-html)
   - [includePretty](#includepretty)
   - [assets](#assets)
@@ -146,7 +147,7 @@ browsers: ['ios >= 6', 'android >= 4.0', 'Explorer >= 6', 'Firefox >= 20', 'Oper
 
 Autoprefixer 根据你所支持的浏览器配置，从 [Can I Use](http://caniuse.com/) 获取数据，然后只添加必要的厂商前缀。
 
-### 简单的例子
+#### 简单的例子
 
 原来你可能这么写：
 ```css
@@ -223,6 +224,28 @@ Autoprefixer 还会去掉老旧的前缀，比如 `border-radius` ：
 ```
 
 上面我们介绍了几种 Autoprefixer 的处理规则，更多的用法请参见[官网](https://github.com/postcss/autoprefixer)
+
+### 图片内嵌
+
+有时候希望将样式里引用的背景图内嵌到样式里，可以使用 `inline` 代替 `url`。
+
+```css
+.assets-svg {
+  width: 400px;
+  height: 72px;
+  background: inline("../img/postcss-assets.svg");
+}
+.assets-png {
+  width: 200px;
+  height: 57px;
+  background: inline("../img/postcss-assets.png");
+}
+.assets-jpg {
+  width: 190px;
+  height: 190px;
+  background: inline("../img/postcss-assets.jpg");
+}
+```
 
 ## 编写 HTML
 
