@@ -26,8 +26,8 @@ var pathExists = require('path-exists');
  *   --scripts-version <alternative package>
  *     Example of valid values:
  *     - a specific npm version: "0.2.0"
- *     - a .tgz archive from any npm repo: "https://registry.npmjs.org/autofe-scripts/-/autofe-scripts-0.1.0.tgz"
- *     - a package prepared with `tasks/clean_pack.sh`: "/Users/home/jpuncle/create-autofe-app/autofe-scripts-0.1.0.tgz"
+ *     - a .tgz archive from any npm repo: "https://registry.npmjs.org/autofe-scripts/-/autofe-scripts-0.2.0.tgz"
+ *     - a package prepared with `tasks/clean_pack.sh`: "/Users/home/jpuncle/create-autofe-app/autofe-scripts-0.2.0.tgz"
  */
 var commands = argv._;
 if (commands.length === 0) {

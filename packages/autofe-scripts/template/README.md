@@ -19,6 +19,7 @@ You can find the most recent version of this guide [here](https://github.com/jpu
   - [includePretty](#includepretty)
   - [assets](#assets)
   - [html-bundle](#html-bundle)
+- [sourcemaps](#sourcemaps)
 - [还缺啥?](#还缺啥)
 
 ## 更新到新版本
@@ -416,6 +417,12 @@ for html
 ```
 <!--=include relative/path/to/file.html -->
 ```
+
+## sourcemaps
+
+目前仅支持开发模式下的样式的 source map 。
+
+![sourcemap](http://x.autoimg.cn/fe/create-autofe-app/sourcemap.png)
 
 ## 还缺啥?
 
