@@ -120,7 +120,6 @@ We'd love to have your helping hand on `create-autofe-app`! See [CONTRIBUTING.md
 * 文件上传 FastDFS
 * 反向代理到后端 API
 * 模块的开发、下载、引用、预览和发布，形成模块云服务，js+css+img+tpl
-* sourcemap
 * js 打包，es6，amd，cmd，commonjs，webpack
 * 自动雪碧图
 * 资源加 CND 前缀
