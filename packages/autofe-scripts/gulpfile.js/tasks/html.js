@@ -4,10 +4,10 @@ var browserSync = require('../lib/browserSync');
 var render = require('gulp-nunjucks-render');
 var data = require('gulp-data');
 var path = require('path');
+var gutil = require('gulp-util');
 
-var htmlTask = function () {
-  var env = render.nunjucks.configure([config.src], { watch: false });
-
+var manageEnvironment = function(env) {
+  // IncludePrettyExtension
   function IncludePrettyExtension() {
     var tagName = 'includePretty';
     this.tags = [tagName];
@@ -35,35 +35,45 @@ var htmlTask = function () {
       var indentWidth = indentValue() - 1;
       var indentFilter = env.getFilter('indent');
       var trimFilter = env.getFilter('trim');
-      env.getTemplate(url, false, undefined, function (err, tmpl) {
-        if (err) {
-          throw err;
+      var safeFilter = env.getFilter('safe');
+
+      try {
+        var tmpl = env.getTemplate(url);
+        var result = tmpl.render(context.getVariables());
+        if (indentWidth > 0) {
+          result = indentFilter(result, indentWidth);
         }
+        result = trimFilter(result);
+        output = result;
+      } catch (e) {
+        throw e;
+      }
 
-        tmpl.render(context.getVariables(), null, function (err, result) {
-          if (err) {
-            throw err;
-          }
-
-          if (indentWidth > 0) {
-            result = indentFilter(result, indentWidth);
-          }
-          result = trimFilter(result);
-
-          output += result;
-        });
-      });
-
-      return output;
+      return safeFilter(output);
     };
   }
   env.addExtension('IncludePrettyExtension', new IncludePrettyExtension());
 
+  // Filter: assets
   env.addFilter('assets', function (assetpath) {
     var url = path.join(this.ctx.__ctx_file.prefix || '', assetpath);
     return url;
   });
+};
 
+var options = {
+  path: [config.src],
+  manageEnv: manageEnvironment
+};
+
+render.logError = function (error) {
+  var message = new gutil.PluginError('nunjucks', error).toString();
+  process.stderr.write(message + '\n');
+  this.emit('end');
+};
+
+
+var htmlTask = function () {
   return gulp.src([config.html.src, config.html.exclude])
     .pipe(data(function (file) {
       var obj = {
@@ -76,7 +86,7 @@ var htmlTask = function () {
         __ctx_file: obj
       };
     }))
-    .pipe(render())
+    .pipe(render(options).on('error', render.logError))
     .pipe(gulp.dest(config.html.dest))
     .pipe(browserSync.stream());
 };
