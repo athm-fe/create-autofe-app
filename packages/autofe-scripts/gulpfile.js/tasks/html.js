@@ -2,7 +2,8 @@
 
 const { src, dest } = require('gulp');
 const config = require('../config');
-const render = require('gulp-nunjucks-render');
+// const render = require('gulp-nunjucks-render');
+const render = require('../lib/nunjucks-render');
 const data = require('gulp-data');
 const path = require('path');
 const PluginError = require('plugin-error');
@@ -13,10 +14,19 @@ const insert = require('gulp-insert');
 
 const isProd = process.env.NODE_ENV === 'production';
 
+const isRelative = function (url) {
+  if (url.indexOf('./') == 0 || url.indexOf('../') === 0) {
+    return true;
+  }
+  return false;
+}
+
 const manageEnvironment = function (env) {
   // IncludePrettyExtension
   function IncludePrettyExtension() {
     const tagName = 'includePretty';
+
+    this.realpath = [];
     this.tags = [tagName];
     this.parse = function (parse, nodes) {
       const tag = parse.peekToken();
@@ -63,8 +73,16 @@ const manageEnvironment = function (env) {
       const trimFilter = env.getFilter('trim');
       const safeFilter = env.getFilter('safe');
 
+      var realpath = this.realpath[0] || context.ctx.__ctx_file.path;
+
+      if (isRelative(url)) {
+        this.realpath.unshift(path.resolve(path.dirname(realpath), url));
+      } else {
+        this.realpath.unshift(path.resolve(config.src, url));
+      }
+
       try {
-        const tmpl = env.getTemplate(url);
+        const tmpl = env.getTemplate(url, false, realpath);
         let result = tmpl.render(context.getVariables());
         if (indentWidth > 0) {
           result = indentFilter(result, indentWidth);
@@ -74,6 +92,8 @@ const manageEnvironment = function (env) {
       } catch (e) {
         throw e;
       }
+
+      this.realpath.shift();
 
       return safeFilter(output);
     };
