@@ -30,7 +30,12 @@ module.exports = {
     option: {}
   },
   postcssAssets: {
-    option: {}
+    option: {
+      basePath: root.src,
+      baseUrl: '/', // TODO config http://x.autoimg.cn/www/
+      relative: true,
+      cachebuster: false
+    }
   },
   autoprefixer: {
     option: {
