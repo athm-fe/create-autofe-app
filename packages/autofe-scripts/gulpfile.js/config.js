@@ -6,6 +6,16 @@ var root = {
   dest: paths.appBuild
 };
 
+var chromeName = 'google chrome';
+
+if (process.platform === 'darwin') {
+  chromeName = 'google chrome';
+} else if (process.platform === 'linux') {
+  chromeName = 'google-chrome';
+} else if (process.platform === 'win32') {
+  chromeName = 'chrome';
+}
+
 module.exports = {
   src: root.src,
   dest: root.dest,
@@ -61,7 +71,7 @@ module.exports = {
   },
   browserSync: {
     option: {
-      browser: 'google chrome',
+      browser: chromeName,
       server: {
         baseDir: root.dest,
         directory: true
