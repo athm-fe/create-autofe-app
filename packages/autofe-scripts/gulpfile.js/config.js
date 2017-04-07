@@ -21,6 +21,10 @@ module.exports = {
   clean: {
     dest: root.dest
   },
+  copy: {
+    src: path.join(root.src, '/**/*.{mp3,mp4,ogg,flv,swf,ico,cur,json,txt}'),
+    dest: path.join(root.dest)
+  },
   fonts: {
     src: path.join(root.src, '/**/*.{eot,svg,ttf,woff,woff2}'),
     dest: path.join(root.dest)
@@ -78,6 +82,6 @@ module.exports = {
     }
   },
   watch: {
-    tasks: ['fonts', 'images', 'sass', 'js', 'html', 'markdown']
+    tasks: ['copy', 'fonts', 'images', 'sass', 'js', 'html', 'markdown']
   }
 };
