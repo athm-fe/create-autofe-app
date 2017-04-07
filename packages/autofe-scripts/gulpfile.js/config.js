@@ -1,9 +1,8 @@
 var path = require('path');
-var paths = require('../config/paths');
 
 var root = {
-  src: path.join(paths.appDirectory, 'src'),
-  dest: paths.appBuild
+  src: 'src',
+  dest: 'build'
 };
 
 var chromeName = 'google chrome';
