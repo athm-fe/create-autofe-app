@@ -20,6 +20,6 @@ function resolveOwn(relativePath) {
 if (__dirname.indexOf(path.join('packages', 'autofe-scripts', 'config')) !== -1) {
   module.exports = {
     appDirectory: resolveOwn('../template'),
-    appBuild: resolveOwn('../../../build')
+    appBuild: resolveOwn('../template/build')
   };
 }

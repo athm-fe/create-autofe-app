@@ -1,9 +1,8 @@
 var path = require('path');
-var paths = require('../config/paths');
 
 var root = {
-  src: path.join(paths.appDirectory, 'src'),
-  dest: paths.appBuild
+  src: 'src',
+  dest: 'build'
 };
 
 var chromeName = 'google chrome';
@@ -21,6 +20,10 @@ module.exports = {
   dest: root.dest,
   clean: {
     dest: root.dest
+  },
+  copy: {
+    src: path.join(root.src, '/**/*.{mp3,mp4,ogg,flv,swf,ico,cur,json,txt}'),
+    dest: path.join(root.dest)
   },
   fonts: {
     src: path.join(root.src, '/**/*.{eot,svg,ttf,woff,woff2}'),
@@ -79,6 +82,6 @@ module.exports = {
     }
   },
   watch: {
-    tasks: ['fonts', 'images', 'sass', 'js', 'html', 'markdown']
+    tasks: ['copy', 'fonts', 'images', 'sass', 'js', 'html', 'markdown']
   }
 };

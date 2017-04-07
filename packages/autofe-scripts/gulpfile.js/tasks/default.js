@@ -5,7 +5,7 @@ gulp.task('default', function (cb) {
   runSequence(
     ['clean'],
     // ['fonts', 'iconFont', 'images', 'svgSprite'],
-    ['fonts', 'images'],
+    ['copy', 'fonts', 'images'],
     ['sass', 'js', 'html', 'markdown'],
     ['watch'],
     cb);
