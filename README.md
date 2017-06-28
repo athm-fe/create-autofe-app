@@ -7,7 +7,10 @@ Create AutoFE apps with no build configuration.
 * [Getting Started](#getting-started) – How to create a new app.
 * [User Guide](https://github.com/jpuncle/create-autofe-app/blob/master/packages/autofe-scripts/template/README.md) – How to develop apps bootstrapped with Create AutoFE App.
 
-## tl;dr
+Create AutoFE App works on macOS, Windows, and Linux.<br>
+If something doesn’t work please [file an issue](https://github.com/athm-fe/create-autofe-app/issues/new).
+
+## Quick Overview
 
 ```sh
 npm install -g create-autofe-app
@@ -15,11 +18,17 @@ npm install -g create-autofe-app
 create-autofe-app my-app
 cd my-app/
 npm start
-
 ```
 
 Then open [http://localhost:3000/](http://localhost:3000/) to see your app.<br>
 When you’re ready to deploy to production, create a minified bundle with `npm run build`.
+
+### Get Started Immediately
+
+You **don’t** need to install or configure tools like Gulp, Webpack or Babel.<br>
+They are preconfigured and hidden so that you can focus on the code.
+
+Just create a project, and you’re good to go.
 
 ## Getting Started
 
@@ -31,11 +40,9 @@ Install it once globally:
 npm install -g create-autofe-app
 ```
 
-**You’ll need to have Node >= 4 on your machine**
+**You’ll need to have Node >= 6 on your machine**. You can use [nvm](https://github.com/creationix/nvm#installation) to easily switch Node versions between different projects.
 
-**We strongly recommend to use Node >= 6 and npm >= 3 for faster installation speed and better disk usage.** You can use [nvm](https://github.com/creationix/nvm#usage) to easily switch Node versions between different projects.
-
-**This tool doesn’t assume a Node backend**. The Node installation is only required for the build tools that rely on it locally, such as Gulp and Webpack.
+**This tool doesn’t assume a Node backend**. The Node installation is only required for Create AutoFE App itself.
 
 ### Creating an App
 
@@ -84,7 +91,8 @@ Once the installation is done, you can run some commands inside the project fold
 Runs the app in development mode.<br>
 Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
 
-The page will reload if you make edits.
+The page will reload if you make edits.<br>
+You will see the build errors and lint warnings in the console.
 
 ### `npm run build`
 
