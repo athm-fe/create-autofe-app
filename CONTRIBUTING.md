@@ -3,7 +3,7 @@
 ## 本地开发
 
 ```
-git clone https://github.com/jpuncle/create-autofe-app
+git clone https://github.com/athm-fe/create-autofe-app
 cd create-autofe-app
 npm install
 ```
