@@ -9,6 +9,6 @@
     "publish": "tasks/release.sh"
   },
   "devDependencies": {
-    "lerna": "2.0.0-beta.30"
+    "lerna": "^2.0.0-rc.5"
   }
 }
