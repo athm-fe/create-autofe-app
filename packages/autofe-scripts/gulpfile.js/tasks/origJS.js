@@ -8,7 +8,7 @@ const origJSTask = function () {
   return gulp.src(config.origJS.src)
     .pipe(vinylPaths(del))
     .pipe(rename({
-      suffix: '-orig',
+      suffix: '.orig',
     }))
     .pipe(gulp.dest(config.origJS.dest));
 };

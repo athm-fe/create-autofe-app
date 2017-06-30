@@ -56,7 +56,7 @@ module.exports = {
     }
   },
   js: {
-    src: path.join(root.src, '/**/*-orig.js'),
+    src: path.join(root.src, '/**/*.orig.js'),
     dest: root.dest,
   },
   origJS: {
