@@ -39,6 +39,7 @@
     "gulp-markdown": "^1.2.0",
     "gulp-nunjucks-render": "2.0.0",
     "gulp-postcss": "^6.2.0",
+    "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.0.4",
     "gulp-sourcemaps": "^1.9.1",
     "gulp-uglify": "^1.4.2",
@@ -49,7 +50,8 @@
     "postcss-assets": "^4.1.0",
     "pretty-hrtime": "^1.0.3",
     "require-dir": "^0.3.0",
-    "run-sequence": "^1.1.4"
+    "run-sequence": "^1.1.4",
+    "vinyl-paths": "^2.1.0"
   },
   "devDependencies": {}
 }

@@ -11,10 +11,11 @@ switch (script) {
   case 'build':
   case 'test':
   case 'eject':
+  case 'origJS':
     result = spawn.sync(
       'node',
-      [require.resolve('../scripts/' + script)].concat(args),
-      { stdio: 'inherit' }
+      [require.resolve(`../scripts/${script}`)].concat(args),
+      { stdio: 'inherit' },
     );
     process.exit(result.status);
     break;

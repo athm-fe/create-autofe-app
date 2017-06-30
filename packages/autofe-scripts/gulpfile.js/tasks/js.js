@@ -1,17 +1,21 @@
-var gulp = require('gulp');
-var config = require('../config');
-var browserSync = require('../lib/browserSync');
-var uglify = require('gulp-uglify');
-var gulpif = require('gulp-if');
-var gutil = require('gulp-util');
+const gulp = require('gulp');
+const config = require('../config');
+const browserSync = require('../lib/browserSync');
+const uglify = require('gulp-uglify');
+const gulpif = require('gulp-if');
+const gutil = require('gulp-util');
+const rename = require('gulp-rename');
 
-var jsTask = function () {
+const jsTask = function () {
   return gulp.src(config.js.src)
     .pipe(gulpif(process.env.NODE_ENV === 'production', uglify({
       output: {
-        ascii_only: true
-      }
+        ascii_only: true,
+      },
     })))
+    .pipe(rename((path) => {
+      path.basename = path.basename.replace(/-orig$/, '');
+    }))
     .pipe(gulp.dest(config.js.dest))
     .pipe(browserSync.stream());
 };
