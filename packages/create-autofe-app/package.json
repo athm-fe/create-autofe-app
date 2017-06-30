@@ -18,9 +18,9 @@
   },
   "dependencies": {
     "chalk": "^1.1.1",
+    "commander": "^2.10.0",
     "cross-spawn": "^4.0.0",
-    "minimist": "^1.2.0",
-    "path-exists": "^2.1.0",
+    "fs-extra": "^3.0.1",
     "semver": "^5.0.3"
   }
 }
