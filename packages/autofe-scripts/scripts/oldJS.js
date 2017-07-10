@@ -10,6 +10,6 @@ process.chdir(config.appDirectory);
 console.log('cwd:', process.cwd());
 console.log('argv:', args);
 
-gulp.start('origJS', () => {
+gulp.start('oldJS', () => {
   // do nothing...
 });

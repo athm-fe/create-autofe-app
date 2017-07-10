@@ -56,10 +56,10 @@ module.exports = {
     },
   },
   js: {
-    src: path.join(root.src, '/**/*.orig.js'),
+    src: path.join(root.src, '/**/*.old.js'),
     dest: root.dest,
   },
-  origJS: {
+  oldJS: {
     src: path.join(root.src, '/**/*.js'),
     dest: root.src,
   },

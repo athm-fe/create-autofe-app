@@ -4,14 +4,14 @@ const rename = require('gulp-rename');
 const del = require('del');
 const vinylPaths = require('vinyl-paths');
 
-const origJSTask = function () {
-  return gulp.src(config.origJS.src)
+const oldJSTask = function () {
+  return gulp.src(config.oldJS.src)
     .pipe(vinylPaths(del))
     .pipe(rename({
-      suffix: '.orig',
+      suffix: '.old',
     }))
-    .pipe(gulp.dest(config.origJS.dest));
+    .pipe(gulp.dest(config.oldJS.dest));
 };
 
-gulp.task('origJS', origJSTask);
-module.exports = origJSTask;
+gulp.task('oldJS', oldJSTask);
+module.exports = oldJSTask;

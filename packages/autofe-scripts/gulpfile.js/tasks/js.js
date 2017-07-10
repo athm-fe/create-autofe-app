@@ -13,7 +13,7 @@ const jsTask = function () {
       },
     })))
     .pipe(rename((path) => {
-      path.basename = path.basename.replace(/\.orig$/, '');
+      path.basename = path.basename.replace(/\.old$/, '');
     }))
     .pipe(gulp.dest(config.js.dest))
     .pipe(browserSync.stream());
