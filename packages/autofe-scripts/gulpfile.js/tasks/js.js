@@ -3,7 +3,6 @@ const config = require('../config');
 const browserSync = require('../lib/browserSync');
 const uglify = require('gulp-uglify');
 const gulpif = require('gulp-if');
-const gutil = require('gulp-util');
 const rename = require('gulp-rename');
 
 const jsTask = function () {

@@ -1,13 +1,12 @@
-var fs = require('fs-extra');
-var path = require('path');
-var spawn = require('cross-spawn');
-var pathExists = require('path-exists');
-var chalk = require('chalk');
+const fs = require('fs-extra');
+const path = require('path');
+// const spawn = require('cross-spawn');
+const chalk = require('chalk');
 
-module.exports = function(appPath, appName, verbose, originalDirectory) {
-  var ownPackageName = require(path.join(__dirname, '..', 'package.json')).name;
-  var ownPath = path.join(appPath, 'node_modules', ownPackageName);
-  var appPackage = require(path.join(appPath, 'package.json'));
+module.exports = (appPath, appName, verbose, originalDirectory) => {
+  const ownPackageName = require(path.join(__dirname, '..', 'package.json')).name;
+  const ownPath = path.join(appPath, 'node_modules', ownPackageName);
+  const appPackage = require(path.join(appPath, 'package.json'));
 
   // Copy over some of the devDependencies
   appPackage.dependencies = appPackage.dependencies || {};
@@ -15,18 +14,15 @@ module.exports = function(appPath, appName, verbose, originalDirectory) {
 
   // Setup the script rules
   appPackage.scripts = {
-    'start': 'autofe-scripts start',
-    'build': 'autofe-scripts build'
+    start: 'autofe-scripts start',
+    build: 'autofe-scripts build',
     // 'test': 'autofe-scripts test --env=jsdom',
     // 'eject': 'autofe-scripts eject'
   };
 
-  fs.writeFileSync(
-    path.join(appPath, 'package.json'),
-    JSON.stringify(appPackage, null, 2)
-  );
+  fs.writeFileSync(path.join(appPath, 'package.json'), JSON.stringify(appPackage, null, 2));
 
-  var readmeExists = pathExists.sync(path.join(appPath, 'README.md'));
+  const readmeExists = fs.pathExistsSync(path.join(appPath, 'README.md'));
   if (readmeExists) {
     fs.renameSync(path.join(appPath, 'README.md'), path.join(appPath, 'README.old.md'));
   }
@@ -36,11 +32,11 @@ module.exports = function(appPath, appName, verbose, originalDirectory) {
 
   // Rename gitignore after the fact to prevent npm from renaming it to .npmignore
   // See: https://github.com/npm/npm/issues/1862
-  fs.move(path.join(appPath, 'gitignore'), path.join(appPath, '.gitignore'), [], function (err) {
+  fs.move(path.join(appPath, 'gitignore'), path.join(appPath, '.gitignore'), [], (err) => {
     if (err) {
       // Append if there's already a `.gitignore` file there
       if (err.code === 'EEXIST') {
-        var data = fs.readFileSync(path.join(appPath, 'gitignore'));
+        const data = fs.readFileSync(path.join(appPath, 'gitignore'));
         fs.appendFileSync(path.join(appPath, '.gitignore'), data);
         fs.unlinkSync(path.join(appPath, 'gitignore'));
       } else {
@@ -76,7 +72,7 @@ module.exports = function(appPath, appName, verbose, originalDirectory) {
     // Display the most elegant way to cd.
     // This needs to handle an undefined originalDirectory for
     // backward compatibility with old global-cli's.
-    var cdpath;
+    let cdpath;
     if (originalDirectory &&
         path.join(originalDirectory, appName) === appPath) {
       cdpath = appName;
@@ -85,7 +81,7 @@ module.exports = function(appPath, appName, verbose, originalDirectory) {
     }
 
     console.log();
-    console.log('Success! Created ' + appName + ' at ' + appPath);
+    console.log(`Success! Created ${appName} at ${appPath}`);
     console.log('Inside that directory, you can run several commands:');
     console.log();
     console.log(chalk.cyan('  npm start'));
@@ -104,7 +100,7 @@ module.exports = function(appPath, appName, verbose, originalDirectory) {
     console.log('We suggest that you begin by typing:');
     console.log();
     console.log(chalk.cyan('  cd'), cdpath);
-    console.log('  ' + chalk.cyan('npm start'));
+    console.log(`  ${chalk.cyan('npm start')}`);
     if (readmeExists) {
       console.log();
       console.log(chalk.yellow('You had a `README.md` file, we renamed it to `README.old.md`'));

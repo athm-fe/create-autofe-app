@@ -1,7 +1,7 @@
-var gulp = require('gulp');
-var runSequence = require('run-sequence');
+const gulp = require('gulp');
+const runSequence = require('run-sequence');
 
-gulp.task('default', function (cb) {
+gulp.task('default', (cb) => {
   runSequence(
     ['clean'],
     // ['fonts', 'iconFont', 'images', 'svgSprite'],
