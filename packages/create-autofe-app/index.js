@@ -148,6 +148,7 @@ function install(packageToInstall, verbose, callback) {
       'install',
       '--save-dev',
       '--save-exact',
+      '--sass-binary-site=https://npm.taobao.org/mirrors/node-sass/',
       '--loglevel',
       'error',
       packageToInstall,
