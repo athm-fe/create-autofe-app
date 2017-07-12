@@ -1,3 +1,4 @@
+const gulp = require('gulp');
 const gutil = require('gulp-util');
 const prettyTime = require('pretty-hrtime');
 const chalk = require('chalk');
@@ -9,7 +10,7 @@ process.once('exit', (code) => {
   }
 });
 
-module.exports = logEvents;
+logEvents(gulp);
 
 // Wire up logging events
 function logEvents(gulpInst) {

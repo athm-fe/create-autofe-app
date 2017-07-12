@@ -1,7 +1,7 @@
 const gulp = require('gulp');
 const paths = require('../config/paths');
 require('../gulpfile.js');
-require('../gulpfile.js/log')(gulp);
+require('../gulpfile.js/log');
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
