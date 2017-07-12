@@ -1,6 +1,6 @@
 const path = require('path');
 const glob = require('glob');
-const config = require('./config/paths');
+const config = require('./paths');
 
 const context = config.appDirectory;
 

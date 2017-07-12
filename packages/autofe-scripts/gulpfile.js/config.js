@@ -85,7 +85,10 @@ module.exports = {
       },
     },
   },
+  webpack: {
+    src: path.join(root.src, '/**/*.js'),
+  },
   watch: {
-    tasks: ['copy', 'fonts', 'images', 'sass', 'js', 'html', 'markdown'],
+    tasks: ['copy', 'fonts', 'images', 'sass', 'js', 'webpack', 'html', 'markdown'],
   },
 };

@@ -7,5 +7,5 @@ export default function modA() {
 }
 
 export const name = 'modA';
-export const desc = `Thi is ${name}`;
+export const desc = `This is ${name}.`;
 export const child = modB;

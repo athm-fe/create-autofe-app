@@ -6,7 +6,7 @@ gulp.task('default', (cb) => {
     ['clean'],
     // ['fonts', 'iconFont', 'images', 'svgSprite'],
     ['copy', 'fonts', 'images'],
-    ['sass', 'js', 'html', 'markdown'],
+    ['sass', 'js', 'webpack', 'html', 'markdown'],
     ['watch'],
     cb);
 });
