@@ -1,8 +1,8 @@
 const path = require('path');
 const glob = require('glob');
-const config = require('./paths');
+const paths = require('./paths');
 
-const context = config.appDirectory;
+const context = paths.appDirectory;
 
 function getEntries() {
   const entries = {};
