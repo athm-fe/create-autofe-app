@@ -5,7 +5,7 @@ const browserSync = require('../lib/browserSync');
 const fontsTask = function () {
   return gulp.src(config.fonts.src)
     .pipe(gulp.dest(config.fonts.dest))
-    .pipe(browserSync.stream());
+    .on('end', browserSync.reload);
 };
 
 gulp.task('fonts', fontsTask);

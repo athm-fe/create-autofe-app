@@ -16,7 +16,7 @@ const jsTask = function () {
       path.basename = path.basename.replace(/\.old$/, '');
     }))
     .pipe(gulp.dest(config.js.dest))
-    .pipe(browserSync.stream());
+    .on('end', browserSync.reload);
 };
 
 gulp.task('js', jsTask);

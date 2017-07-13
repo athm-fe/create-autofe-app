@@ -88,7 +88,7 @@ const htmlTask = function () {
     }))
     .pipe(render(options).on('error', render.logError))
     .pipe(gulp.dest(config.html.dest))
-    .pipe(browserSync.stream());
+    .on('end', browserSync.reload);
 };
 
 gulp.task('html', htmlTask);

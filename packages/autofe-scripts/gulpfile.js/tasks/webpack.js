@@ -10,7 +10,7 @@ const webpackTask = function (cb) {
     if (err) {
       gutil.log('Error', err);
       if (cb) {
-        cb();
+        cb(err);
       }
     } else {
       Object.keys(stats.compilation.assets).forEach((key) => {

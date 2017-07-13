@@ -16,7 +16,7 @@ const markdownTask = function () {
     }))
     .pipe(wrap({ src: join(__dirname, 'markdown.html') }))
     .pipe(gulp.dest(config.markdown.dest))
-    .pipe(browserSync.stream());
+    .on('end', browserSync.reload);
 };
 
 gulp.task('markdown', markdownTask);

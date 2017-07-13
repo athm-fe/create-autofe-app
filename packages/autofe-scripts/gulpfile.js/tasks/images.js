@@ -7,7 +7,7 @@ const imagesTask = function () {
   return gulp.src(config.images.src)
     .pipe(imagemin(config.images.imagemin))
     .pipe(gulp.dest(config.images.dest))
-    .pipe(browserSync.stream());
+    .on('end', browserSync.reload);
 };
 
 gulp.task('images', imagesTask);
