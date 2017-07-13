@@ -2,14 +2,9 @@ const gulp = require('gulp');
 const del = require('del');
 const config = require('../config');
 
-const cleanTask = function (cb) {
+const cleanTask = function () {
   const patterns = config.clean.dest;
-
-  del(patterns).then(() => {
-    cb();
-  }).catch(() => {
-    console.log(arguments);
-  });
+  return del(patterns);
 };
 
 gulp.task('clean', cleanTask);
