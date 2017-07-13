@@ -1,15 +1,3 @@
-const gulp = require('gulp');
-const paths = require('../config/paths');
-require('../gulpfile.js');
-require('../gulpfile.js/log');
+const runner = require('./lib/runner');
 
-const args = process.argv.slice(2);
-
-process.chdir(paths.appDirectory);
-
-console.log('cwd:', process.cwd());
-console.log('argv:', args);
-
-gulp.start('oldJS', () => {
-  // do nothing...
-});
+runner('oldJS');
