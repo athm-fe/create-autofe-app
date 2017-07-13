@@ -6,6 +6,6 @@ gulp.task('build', (cb) => {
     ['clean'],
     ['copy', 'fonts', 'images'],
     ['sass', 'js', 'webpack', 'html', 'markdown'],
-    'html-bundle',
+    ['html-bundle'],
     cb);
 });
