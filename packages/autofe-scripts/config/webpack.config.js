@@ -26,6 +26,8 @@ module.exports = () => ({
   entry: getEntries(),
   output: {
     filename: '[name].js',
+    chunkFilename: '[name].js',
     path: path.join(context, 'build'),
+    publicPath: '/',
   },
 });
