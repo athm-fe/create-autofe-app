@@ -6,21 +6,15 @@ const webpack = require('webpack');
 const webpackConfig = require('../../config/webpack.config');
 
 const webpackTask = function (cb) {
-  webpack(webpackConfig).run((err, stats) => {
-    if (err) {
-      gutil.log('Error', err);
-      if (cb) {
-        cb(err);
-      }
-    } else {
-      Object.keys(stats.compilation.assets).forEach((key) => {
-        gutil.log('Webpack: output ', gutil.colors.green(key));
-      });
-      if (cb) {
-        cb();
-        browserSync.reload();
-      }
-    }
+  webpack(webpackConfig()).run((err, stats) => {
+    if (err) throw new gutil.PluginError('webpack', err);
+
+    gutil.log('Webpack:', stats.toString({
+      colors: true,
+    }));
+
+    cb();
+    browserSync.reload();
   });
 };
 

@@ -1,5 +1,5 @@
 import modA, { name, child } from './modA';
 
-alert(name);
-alert(child);
-alert(modA());
+console.log(name);
+console.log(child);
+console.log(modA());

@@ -21,11 +21,11 @@ function getEntries() {
   return entries;
 }
 
-module.exports = {
+module.exports = () => ({
   context,
   entry: getEntries(),
   output: {
     filename: '[name].js',
     path: path.join(context, 'build'),
   },
-};
+});
