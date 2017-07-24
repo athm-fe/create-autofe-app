@@ -1,6 +1,4 @@
 const modB = require('./modB');
-// import modB from './modB';
-
 
 export default function modA() {
   return 'modA';

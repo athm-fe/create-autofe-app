@@ -1,19 +1,10 @@
-import modA, { name, child } from './modA';
+console.log('======== webpack + babel ========');
 
-console.log(name);
-console.log(child);
-console.log(modA());
-
-import(/* webpackChunkName: "rank" */ './rank').then(rank => {
-  console.log(rank.name, rank.default);
+import(/* webpackChunkName: "es6-modules" */ './es6-modules').then(() => {
+  console.log('-------- es6-modules --------');
 });
-
-require.ensure([], function (require) {
-  const rank = require('./rank-commonjs');
-  console.log('rank-commonjs', rank);
-}, 'rank-commonjs');
-
-require.ensure([], function (require) {
-  const rank = require('./rank-test');
-  console.log('rank-test', rank);
-}, 'rank');
+import(/* webpackChunkName: "commonjs" */ './commonjs').then(() => {
+  console.log('-------- commonjs --------');
+});
+import(/* webpackChunkName: "es6-code" */ './es6-code');
+import(/* webpackChunkName: "dynamic-import" */ './dynamic-import');

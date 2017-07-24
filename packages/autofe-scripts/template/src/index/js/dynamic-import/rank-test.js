@@ -1,4 +1,4 @@
-module.exports = [
+exports.list = [
   'Webpack',
   'Rollup',
   'Browserify',

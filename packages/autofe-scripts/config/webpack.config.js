@@ -22,6 +22,8 @@ function getEntries() {
 }
 
 module.exports = () => ({
+  // TODO only for development
+  devtool: 'eval',
   context,
   entry: getEntries(),
   output: {
@@ -39,7 +41,13 @@ module.exports = () => ({
           loader: 'babel-loader',
           options: {
             presets: [
-              ['env', { modules: false }],
+              ['env', {
+                modules: false,
+                target: {
+                  browsers: ['last 2 versions', 'ie >= 7', 'safari >= 7'],
+                  // browsers: ['ios >= 6', 'android >= 4.0', 'Explorer >= 6', 'Firefox >= 20', 'Opera > 10'],
+                },
+              }],
             ],
             plugins: [
               'syntax-dynamic-import',
