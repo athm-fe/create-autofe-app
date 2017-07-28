@@ -11,7 +11,7 @@ const templateStr = `In ${name} this is
 console.log('templateStr === "In ES5 this is\n  not legal."',
   templateStr === 'In ES5 this is\n  not legal.');
 
-// alert`123`;
+// alert`123${name}`;
 
 // function echo(str) {
 //   return str;

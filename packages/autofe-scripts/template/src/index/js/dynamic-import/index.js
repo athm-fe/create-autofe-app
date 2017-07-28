@@ -12,10 +12,12 @@
  * 4. ES6 Module，需要自己 rank.default，
  *    因为 import() 代表 import * from './rank'，
  *    而不是 import rank from './rank
+ * 5. 用到了 Function.prototype.bind
  *
  * 转换说明
  * 1. 依赖 Promise 对象，需要引用 es6-promise 或者 babel-polyfill
- * 2. 直接使用 rank.default 在 IE 有问题，需要改用 rank['default']
+ * 2. 直接使用 rank.default 在 IE8 有问题，需要改用 rank['default']
+ *    有插件可以解决这个问题
  */
 import(/* webpackChunkName: "rank" */ './rank').then((rank) => {
   console.log(rank.name, rank.default);

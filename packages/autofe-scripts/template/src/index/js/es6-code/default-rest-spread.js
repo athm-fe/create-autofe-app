@@ -1,5 +1,16 @@
 /**
- * 如下的代码都没有兼容性问题
+ * 如下的代码大多数没有兼容性问题
+ *
+ * 有问题的用法
+ * 1. string spread
+ *    Array.isArray(), Array.from()
+ * 2. nested rest destructuring, declarations
+ *    nested rest destructuring, parameters
+ *    不支持
+ * 3. object rest
+ *    object spread
+ *    Object.assign, _extends
+ *    _objectWithoutProperties, [].indexOf()
  */
 
 // default parameter values
@@ -23,11 +34,40 @@ function bar2(x, ...y) {
 console.log('bar2(3, "hello", true)[0] === "hello"', bar2(3, 'hello', true)[0] === 'hello');
 console.log('bar2(3, "hello", true)[1] === true', bar2(3, 'hello', true)[1] === true);
 
+// rest destructuring, declarations
+const [x, ...y] = [1, 2, 3, 4];
+console.log('const [x, ...y] = [1, 2, 3, 4]', x === 1 && y[2] === 4);
+
+// nested rest destructuring, declarations
+// const [x, ...[y, ...z]] = [1, 2, 3, 4];
+// x === 1 && y === 2 && z + '' === '3,4';
+
+// nested rest destructuring, parameters
+// function nestRest([x, ...[y, ...z]]) {
+//   return x === 1 && y === 2 && z + '' === '3,4';
+// }([1, 2, 3, 4]);
+
+// object rest
+const { a, ...rest } = { a: 1, b: 2, c: 3 };
+console.log(a === 1 && rest.a === undefined && rest.b === 2 && rest.c === 3);
+
 // spread
-function too(x, y, z, a = 10) {
-  return x + y + z + a;
+function too(s, t, u, v = 10) {
+  return s + t + u + v;
 }
 // Pass each elem of array as argument
 console.log('too(1, ...[2, 3], 20) === 26', too(1, ...[2, 3], 20) === 26);
+
+// string spread
+// 依赖 Array.isArray(), Array.from()
+console.log(
+  '["a", ..."bcd", "e"][3] === "d"',
+  ['a', ...'bcd', 'e'][3] === 'd',
+);
+
+// object spread
+const spread = { b: 2, c: 3 };
+const spreadResult = { a: 1, ...spread };
+console.log(spreadResult !== spread && (spreadResult.a + spreadResult.b + spreadResult.c) === 6);
 
 console.log('-------- default, rest, spread --------');

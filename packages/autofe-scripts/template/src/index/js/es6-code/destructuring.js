@@ -2,12 +2,19 @@
  * Destructuring 解构
  *
  * 当前的代码都没有兼容性问题
+ *
+ * string matching 依赖 Iterator
  */
 
 // array matching
 const [a, , b] = [1, 2, 3];
 console.log('a === 1', a === 1);
 console.log('b === 3', b === 3);
+
+// string matching
+const [s1, , , , s5] = 'hello';
+console.log('s1 === "h"', s1 === 'h');
+console.log('s5 === "o"', s5 === 'o');
 
 // object matching
 const { name: c, age: d } = { name: 'Tom', age: 30, weight: 70 };

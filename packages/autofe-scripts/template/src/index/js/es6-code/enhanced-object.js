@@ -33,6 +33,8 @@ const enhancedObj = {
   say() {
     return 'hello world';
   },
+  // reserved words
+  default: 3,
   // Shorthand
   bar,
   toString() {
@@ -45,6 +47,7 @@ const enhancedObj = {
   [`prop_${(() => 42)()}`]: 42,
 };
 console.log('enhancedObj.say():', enhancedObj.say());
+console.log('enhancedObj.default', enhancedObj.default === 3);
 console.log('enhancedObj.bar:', enhancedObj.bar);
 console.log('enhancedObj.toString():', enhancedObj.toString());
 console.log('enhancedObj.foo:', enhancedObj.foo);

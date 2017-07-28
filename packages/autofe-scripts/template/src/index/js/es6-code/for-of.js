@@ -12,6 +12,9 @@
  * 依赖 Symbol 和 Iterator
  * for...of是坑，转换后的代码太难看，而且有兼容性问题
  *
+ * Iterator 还好，如果是针对 Generator 的 Iterator 暂时不要用，
+ * 因为 Generator 太重了
+ *
  * 对于数组的转换进行了优化
  */
 let sum = 0;

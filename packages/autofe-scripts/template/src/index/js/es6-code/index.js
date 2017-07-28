@@ -20,7 +20,7 @@ import './binary-octal';
 // babel polyfill 可以提供全面的支持
 
 
-// Math + Number + String + Object APIs
+// Math + Number + String + Object APIs + RegExp + Array + Date
 // babel polyfill 可以支持大多数
 // Object.setPrototypeOf 需要原生 __proto__ 支持
 // String.prototype.normalize 需要额外支持
@@ -29,6 +29,14 @@ import './binary-octal';
 
 // Promise
 // babel polyfill 提供全面支持
+
+
+// Generator and Async/await
+// 太重，不适合用，Promise 先凑合吧
+
+
+// Decorator
+// 待定
 
 
 // Reflect
@@ -46,3 +54,7 @@ import './binary-octal';
 // babel-plugin-transform-builtin-extend
 // 依赖 Object.setPrototypeOf 和 Reflect.construct
 // 兼容性有限
+
+
+// ArrayBuffer, typed arrays
+// 待定

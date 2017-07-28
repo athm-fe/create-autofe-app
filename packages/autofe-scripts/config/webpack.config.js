@@ -42,15 +42,45 @@ module.exports = () => ({
           options: {
             presets: [
               ['env', {
+                // use webpack modules solution
                 modules: false,
                 target: {
-                  browsers: ['last 2 versions', 'ie >= 7', 'safari >= 7'],
-                  // browsers: ['ios >= 6', 'android >= 4.0', 'Explorer >= 6', 'Firefox >= 20', 'Opera > 10'],
+                  ie: '7',
                 },
+                // transform-es2015-classes
+                // transform-es2015-computed-properties
+                // transform-es2015-for-of
+                // transform-es2015-spread
+                // transform-es2015-template-literals
+                // transform-es2015-modules-commonjs
+                // loose: true,
+                // transform-es2015-arrow-functions
+                // transform-es2015-template-literals
+                // spec: true,
               }],
             ],
             plugins: [
+              // for <=IE8
+              // var foo = {
+              //   default: function () {}
+              // };
+              // ---->
+              // var foo = {
+              //   'default': function () {}
+              // };
+              'transform-es3-property-literals',
+              // for <=IE8
+              // foo.default; ----> foo['default'];
+              'transform-es3-member-expression-literals',
+              // import() now is in stage
               'syntax-dynamic-import',
+              // object rest and spread
+              // TODO useBuiltIns
+              'transform-object-rest-spread',
+              // Transforms class properties, property and static
+              // TODO spec: true
+              'transform-class-properties',
+              // TODO transform-runtime
             ],
           },
         },
