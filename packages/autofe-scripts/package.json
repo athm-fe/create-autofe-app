@@ -1,6 +1,6 @@
 {
   "name": "autofe-scripts",
-  "version": "0.6.2",
+  "version": "0.7.0",
   "description": "Configuration and scripts for Create AutoFE App.",
   "repository": "athm-fe/create-autofe-app",
   "author": "jpuncle",
@@ -57,6 +57,5 @@
     "run-sequence": "^1.1.4",
     "vinyl-paths": "^2.1.0",
     "webpack": "^3.0.0"
-  },
-  "devDependencies": {}
+  }
 }
