@@ -51,18 +51,24 @@ module.exports = {
     // class { handleClick = () => { } }
     // TODO spec: true
     'transform-class-properties',
+
     // Polyfills the runtime needed for async/await and generators
     // TODO transform-runtime
     // helpers: false,
     // polyfill: false,
     // regenerator: true,
+
     // function* () { yield 42; yield 43; }
     // TODO transform-regenerator,
     // Async functions are converted to generators by babel-preset-env
     // async: false
+    // TODO transform-async-to-generator in preset-es2017
+    // TODO transform-async-generator-functions in stage-3
 
     // Compiles import() to a deferred require()
     // 应该是没必要的，不过也研究一下吧
     // dynamic-import-node,
+
+    // transform-export-extensions
   ],
 };
