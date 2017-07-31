@@ -4,6 +4,9 @@
 
 * 如果使用 `import()` 或 `require.ensure` 加载 chunk 的话，webpack `publicPath` 需要配置正确
 * `env` preset 的 `useBuiltIns` 选项
+* `babel-polyfill` 太大，抢先执行，而且我们不需要那么多 API，故不考虑
+* `babel-runtime` 是为了减少重复代码而生的。Babel编译生成的代码，可能会用到一些_extend()，classCallCheck()之类的工具函数。默认情况下，这些工具函数的代码会被引入在编译后的文件中。如果存在多个文件，那每个文件都有可能含有一份重复工具函数的代码。
+
 
 ## ie678
 
