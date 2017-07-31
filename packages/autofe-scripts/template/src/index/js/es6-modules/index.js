@@ -7,7 +7,7 @@
  */
 import modA, { name, child } from './modA';
 import * as math from './math';
-import { counter, incCounter } from './counter';
+import { counter, incCounter as addCounter } from './counter';
 
 console.log('modA() === "modA"', modA() === 'modA');
 console.log('name === "modA"', name === 'modA');
@@ -17,7 +17,7 @@ console.log('math.sum(3, 5) === 8', math.sum(3, 5) === 8);
 console.log('math.pi === 3.141593', math.pi === 3.141593);
 
 console.log('counter === 3', counter === 3); // 3
-incCounter();
+addCounter();
 console.log('counter === 4', counter === 4); // 3
 
 console.log('-------- es6-modules --------');
