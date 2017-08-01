@@ -39,6 +39,10 @@ module.exports = {
     // for <=IE8
     // foo.default; ----> foo['default'];
     'transform-es3-member-expression-literals',
+    // it lets you create code that isn’t a syntax error in ES3
+    // even though the functions might not exist, the file would parse in ES3
+    // without that transform, the whole file would crap out
+    'transform-es5-property-mutators',
     // Adds syntax support for import()
     // import() now is in stage
     'syntax-dynamic-import',
