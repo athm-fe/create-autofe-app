@@ -53,6 +53,8 @@ class ColorPoint extends Point {
   toString() {
     return `${this.color} ${super.toString()}`;
   }
+  instanceProperty = 'test';
+  boundFunction = () => this.instanceProperty;
   static randomColor() {
     return '#F60';
   }
@@ -62,6 +64,10 @@ const cp = new ColorPoint(100, 100, 'red');
 console.log('cp.x === 100', cp.x === 100);
 console.log('cp.y === 100', cp.y === 100);
 console.log('cp.color === "red"', cp.color === 'red');
+console.log(
+  'cp.boundFunction.call(undefined) === "test"',
+  cp.boundFunction.call(undefined) === 'test',
+);
 console.log('ColorPoint.randomColor() === "#F60"',
   ColorPoint.randomColor() === '#F60');
 
