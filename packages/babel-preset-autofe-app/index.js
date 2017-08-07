@@ -1,78 +1,111 @@
-module.exports = {
-  presets: [
-    ['env', {
-      target: {
-        // React parses on ie 9, so we should too
-        // ie: '9',
-        ie: '7',
-        // We currently minify with uglify
-        // Remove after https://github.com/mishoo/UglifyJS2/issues/448
-        // uglify: true,
-      },
-      // Do not transform modules to CJS
-      // use webpack modules solution
-      modules: false,
-      // Disable polyfill transforms
-      // useBuiltIns: false,
-      // transform-es2015-classes
-      // transform-es2015-computed-properties
-      // transform-es2015-for-of
-      // transform-es2015-spread
-      // transform-es2015-template-literals
-      // transform-es2015-modules-commonjs
-      // loose: true,
-      // transform-es2015-arrow-functions
-      // transform-es2015-template-literals
-      // spec: true,
-    }],
-  ],
-  plugins: [
-    // for <=IE8
-    // var foo = {
-    //   default: function () {}
-    // };
-    // ---->
-    // var foo = {
-    //   'default': function () {}
-    // };
-    'transform-es3-property-literals',
-    // for <=IE8
-    // foo.default; ----> foo['default'];
-    'transform-es3-member-expression-literals',
-    // it lets you create code that isn’t a syntax error in ES3
-    // even though the functions might not exist, the file would parse in ES3
-    // without that transform, the whole file would crap out
-    'transform-es5-property-mutators',
-    // Adds syntax support for import()
-    // import() now is in stage
-    'syntax-dynamic-import',
-    // object rest and spread
-    // TODO useBuiltIns: true
-    // use Object.assign directly, instead of Babel's extends helper.
-    // Note that this assumes `Object.assign` is available.
-    'transform-object-rest-spread',
-    // Transforms class properties, property and static
-    // class { handleClick = () => { } }
-    // TODO spec: true
-    'transform-class-properties',
+const defaultTargets = {
+  android: 30,
+  chrome: 35,
+  edge: 14,
+  explorer: 9,
+  firefox: 52,
+  safari: 8,
+  ucandroid: 1,
+};
+// const defaultTargets = {
+//   // React parses on ie 9, so we should too
+//   ie: '9',
+//   // We currently minify with uglify, so all plugins work.
+//   // Note: This will be deprecated in 2.x and replaced with a forceAllTransforms option.
+//   uglify: true,
+// };
 
-    // Polyfills the runtime needed for async/await and generators
-    // TODO transform-runtime
-    // helpers: false,
-    // polyfill: false,
-    // regenerator: true,
+function buildTargets(options) {
+  return Object.assign({}, defaultTargets, options.additionalTargets);
+}
 
-    // function* () { yield 42; yield 43; }
-    // TODO transform-regenerator,
-    // Async functions are converted to generators by babel-preset-env
-    // async: false
-    // TODO transform-async-to-generator in preset-es2017
-    // TODO transform-async-generator-functions in stage-3
+/**
+ * @param options.targets 重新指定 targets
+ * @param options.additionalTargets 合并 defaultTargets 和 additionalTargets
+ * @param options.debug 是否开启调试模式
+ */
+module.exports = function buildPreset(context, options) {
+  const transpileTargets = (options && options.targets) ||
+    buildTargets(options || {});
 
-    // Compiles import() to a deferred require()
-    // 应该是没必要的，不过也研究一下吧
-    // dynamic-import-node,
+  const debug = (options && typeof options.debug === 'boolean') ? !!options.debug : false;
 
-    // transform-export-extensions
-  ],
+  return {
+    presets: [
+      ['env', {
+        // Output some debug info
+        debug,
+        // Set the targets
+        targets: transpileTargets,
+        // Do not transform modules to CJS
+        // use webpack modules solution
+        modules: false,
+        // TODO Disable polyfill transforms
+        useBuiltIns: false,
+        // disable some transform
+        exclude: [
+          // Need set spec for this plugin
+          'transform-es2015-template-literals',
+          // Need set loose for this plugin
+          'transform-es2015-computed-properties',
+          // Need set loose for this plugin
+          'transform-es2015-classes',
+          // regenerator-runtime is too heavyweight
+          'transform-async-to-generator',
+          // regenerator-runtime is too heavyweight
+          'transform-regenerator',
+        ],
+      }],
+    ],
+    plugins: [
+      // https://github.com/babel/babel/issues/1065
+      ['transform-es2015-template-literals', {
+        spec: true,
+      }],
+      // use simple assignments instead of Object.defineProperty.
+      ['transform-es2015-computed-properties', {
+        loose: true,
+      }],
+      // Transforms class properties, property and static
+      'transform-class-properties',
+      // For classes that have supers, the super class won’t resolve correctly.(IE10 and below)
+      // so enable loose mode
+      ['transform-es2015-classes', {
+        loose: true,
+      }],
+      // Adds syntax support for import()
+      'syntax-dynamic-import',
+      // object rest and spread
+      ['transform-object-rest-spread', {
+        // use Object.assign directly, instead of Babel's extends helper.
+        // Note that this assumes `Object.assign` is available.
+        useBuiltIns: true,
+      }],
+      // it lets you create code that isn’t a syntax error in ES3
+      // even though the functions might not exist, the file would parse in ES3
+      // without that transform, the whole file would crap out
+      'transform-es5-property-mutators',
+      // Reserved words as property names, for <=IE8
+      'transform-es3-property-literals',
+      // Reserved words as property names, for <=IE8
+      'transform-es3-member-expression-literals',
+
+      // Runtime transform
+      // ['transform-runtime', {
+      //   // Externalise references to helpers
+      //   helpers: false,
+      //   // Polyfills ES6 static methods and new built-ins(Promise, Set, Map, etc).
+      //   // NOTE: Instance methods such as "foobar".includes("foo") will not work
+      //   // since that would require modification of existing built-ins.
+      //   polyfill: false,
+      //   // Polyfills the regeneratorRuntime.
+      //   regenerator: false,
+      // }],
+
+      // https://babeljs.io/docs/plugins/transform-jscript/
+      // https://kangax.github.io/nfe/#jscript-bugs
+      // TODO 这个有 Bug，https://github.com/babel/babel/issues/6040
+      // 'transform-jscript',
+    ],
+  };
 };

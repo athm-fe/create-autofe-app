@@ -1,12 +1,13 @@
 import './let-const';
 import './template-string';
 import './arrow-function';
+import './named-function-expression';
 import './class';
 import './enhanced-object';
 import './destructuring';
 import './default-rest-spread';
 import './for-of';
-import './generators';
+// import './generators';
 import './unicode';
 import './regexp';
 import './binary-octal';

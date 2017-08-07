@@ -5,11 +5,12 @@
  * http://babeljs.io/docs/usage/caveats/#internet-explorer-classes-10-and-below-
  *
  * _classCallCheck(instance, Constructor)
- * 只允许 new 调用，不允许普通函数调用
+ * 只允许 new 调用, 不允许普通函数调用, instanceof
  *
  * _createClass(Constructor, protoProps, staticProps)
  * 添加原型属性和静态属性
- * 依赖 Object.defineProperty()
+ * 依赖 Object.defineProperty(), value 方式，所以可 polyfill
+ * 均不可枚举
  *
  * _inherits(subClass, superClass)
  * 实现继承效果
@@ -20,6 +21,10 @@
  * super()
  * 依赖 _possibleConstructorReturn(self, call)
  * 依赖 Object.prototype.__proto__ 或 Object.getPrototypeOf() 调用父类
+ *
+ * 关于 _inherits() 和 super()
+ * 这里有一个巧妙的机制，保证了即使不支持 getPrototypeOf, setPrototypeOf, __proto__ 也可以保证正常运行。
+ * 不支持的情况下，就可以当作普通的设置 __proto__ 属性来获取父类
  *
  * _possibleConstructorReturn(self, call)
  * 有可能父类构造器有 return 语句返回 call ，则用 call ，否则用 self
@@ -38,11 +43,14 @@ class Point {
   constructor(x, y) {
     this.x = x;
     this.y = y;
+    this.name = 'point';
   }
   toString() {
     return `(${this.x},${this.y})`;
   }
+  static defaultX = 100
 }
+Point.defaultY = 200;
 
 class ColorPoint extends Point {
   constructor(x, y, color) {
@@ -56,6 +64,7 @@ class ColorPoint extends Point {
   instanceProperty = 'test';
   boundFunction = () => this.instanceProperty;
   static randomColor() {
+    console.log(super.defaultX);
     return '#F60';
   }
 }

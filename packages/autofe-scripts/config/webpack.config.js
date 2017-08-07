@@ -40,7 +40,9 @@ module.exports = () => ({
         use: {
           loader: 'babel-loader',
           options: {
-            presets: ['autofe-app'],
+            presets: [['autofe-app', {
+              debug: true,
+            }]],
           },
         },
       },

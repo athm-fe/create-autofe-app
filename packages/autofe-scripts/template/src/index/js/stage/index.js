@@ -4,9 +4,8 @@
 // Object rest/spread
 // 参见 es6-code 下的说明
 
-// Asynchronous Iterators
-// async generators
-// for await of
+// async generator functions
+// for-await-of
 // babel 支持
 
 
@@ -17,7 +16,6 @@
 // trimLeft, trimRight, trimStart, trimEnd
 // Polyfills
 
-// class field
 // class properties
 // babel 插件支持
 class C {
@@ -28,8 +26,6 @@ console.log(
   "new C().x + C.y === 'xy'",
   new C().x + C.y === 'xy',
 );
-// private fields
-// bable 不支持
 
 
 // stage 1
