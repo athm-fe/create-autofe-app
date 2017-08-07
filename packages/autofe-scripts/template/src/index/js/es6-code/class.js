@@ -72,6 +72,7 @@ class ColorPoint extends Point {
 const cp = new ColorPoint(100, 100, 'red');
 console.log('cp.x === 100', cp.x === 100);
 console.log('cp.y === 100', cp.y === 100);
+console.log("cp.name === 'point'", cp.name === 'point');
 console.log('cp.color === "red"', cp.color === 'red');
 console.log(
   'cp.boundFunction.call(undefined) === "test"',
