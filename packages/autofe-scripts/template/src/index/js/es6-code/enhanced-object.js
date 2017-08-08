@@ -4,7 +4,12 @@
  * super.xxx() 以及 Computed (dynamic) property names
  * 会导致不支持 IE8
  *
- * __proto__ in obj 不被 babel 支持，需要浏览器原生
+ * 开启对应插件的 loose 模式，支持 Computed (dynamic) property names
+ *
+ * __proto__ in obj 不被 babel 支持，需要浏览器原生，不过这里有取巧，不支持也OK
+ *
+ * 依赖
+ * Object.getOwnPropertyDescriptor()
  */
 
 const bar = 'bar';
