@@ -7,10 +7,6 @@
  * 2. nested rest destructuring, declarations
  *    nested rest destructuring, parameters
  *    不支持
- * 3. object rest
- *    object spread
- *    Object.assign, _extends
- *    _objectWithoutProperties, [].indexOf()
  */
 
 // default parameter values
@@ -47,10 +43,6 @@ console.log('const [x, ...y] = [1, 2, 3, 4]', x === 1 && y[2] === 4);
 //   return x === 1 && y === 2 && z + '' === '3,4';
 // }([1, 2, 3, 4]);
 
-// object rest
-const { a, ...rest } = { a: 1, b: 2, c: 3 };
-console.log(a === 1 && rest.a === undefined && rest.b === 2 && rest.c === 3);
-
 // spread
 function too(s, t, u, v = 10) {
   return s + t + u + v;
@@ -64,10 +56,5 @@ console.log(
   '["a", ..."bcd", "e"][3] === "d"',
   ['a', ...'bcd', 'e'][3] === 'd',
 );
-
-// object spread
-const spread = { b: 2, c: 3 };
-const spreadResult = { a: 1, ...spread };
-console.log(spreadResult !== spread && (spreadResult.a + spreadResult.b + spreadResult.c) === 6);
 
 console.log('-------- default, rest, spread --------');

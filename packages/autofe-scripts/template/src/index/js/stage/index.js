@@ -1,8 +1,28 @@
 // stage 3
 // ================
 
-// Object rest/spread
-// 参见 es6-code 下的说明
+/**
+ * object rest
+ * object spread
+ *
+ * 依赖
+ * Object.assign
+ * _objectWithoutProperties, Array.prototype.indexOf
+ */
+// object rest
+const { a, ...rest } = { a: 1, b: 2, c: 3 };
+console.log(
+  'object rest',
+  a === 1 && rest.a === undefined && rest.b === 2 && rest.c === 3,
+);
+
+// object spread
+const spread = { b: 2, c: 3 };
+const spreadResult = { a: 1, ...spread };
+console.log(
+  'object spread',
+  spreadResult !== spread && (spreadResult.a + spreadResult.b + spreadResult.c) === 6,
+);
 
 // async generator functions
 // for-await-of
