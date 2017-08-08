@@ -18,6 +18,6 @@ console.log('math.pi === 3.141593', math.pi === 3.141593);
 
 console.log('counter === 3', counter === 3); // 3
 addCounter();
-console.log('counter === 4', counter === 4); // 3
+console.log('counter === 4', counter === 4); // 4
 
 console.log('-------- es6-modules --------');
