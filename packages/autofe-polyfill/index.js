@@ -5,3 +5,9 @@
 // https://github.com/es-shims/es5-shim#shams
 // 只要下面这一个，其它的不要
 Object.create();
+
+// Object spread
+Object.assign();
+
+// Object rest
+Array.prototype.indexOf();
