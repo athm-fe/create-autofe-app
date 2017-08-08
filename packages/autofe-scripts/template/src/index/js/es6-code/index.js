@@ -9,7 +9,7 @@ import './default-rest-spread';
 import './for-of';
 // import './generators';
 import './unicode';
-import './regexp';
+// import './regexp';
 import './binary-octal';
 
 
