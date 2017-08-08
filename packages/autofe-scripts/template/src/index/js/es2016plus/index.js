@@ -16,9 +16,14 @@ console.log('let a = 2; a **= 3; a === 8', a === 8);
 // Array.prototype.includes
 // Polyfills
 
-// nested rest destructuring, declarations
-// nested rest destructuring, parameters
 // TODO 这两个有疑问，babel 好像不支持，但是 compat-table 显示 babel 支持
+// nested rest destructuring, declarations
+// const [x, ...[y, ...z]] = [1, 2, 3, 4];
+// x === 1 && y === 2 && z + '' === '3,4';
+// nested rest destructuring, parameters
+// function nestRest([x, ...[y, ...z]]) {
+//   return x === 1 && y === 2 && z + '' === '3,4';
+// }([1, 2, 3, 4]);
 
 
 // 2017 features

@@ -4,9 +4,6 @@
  * 有问题的用法
  * 1. string spread
  *    Array.isArray(), Array.from()
- * 2. nested rest destructuring, declarations
- *    nested rest destructuring, parameters
- *    不支持
  */
 
 // default parameter values
@@ -33,15 +30,6 @@ console.log('bar2(3, "hello", true)[1] === true', bar2(3, 'hello', true)[1] === 
 // rest destructuring, declarations
 const [x, ...y] = [1, 2, 3, 4];
 console.log('const [x, ...y] = [1, 2, 3, 4]', x === 1 && y[2] === 4);
-
-// nested rest destructuring, declarations
-// const [x, ...[y, ...z]] = [1, 2, 3, 4];
-// x === 1 && y === 2 && z + '' === '3,4';
-
-// nested rest destructuring, parameters
-// function nestRest([x, ...[y, ...z]]) {
-//   return x === 1 && y === 2 && z + '' === '3,4';
-// }([1, 2, 3, 4]);
 
 // spread
 function too(s, t, u, v = 10) {
