@@ -40,7 +40,7 @@ module.exports = function buildPreset(context, options) {
         // Do not transform modules to CJS
         // use webpack modules solution
         modules: false,
-        // TODO Disable polyfill transforms
+        // Disable polyfill transforms
         useBuiltIns: false,
         // disable some transform
         exclude: [
