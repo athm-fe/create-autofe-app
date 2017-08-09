@@ -74,18 +74,6 @@ module.exports = function buildPreset(context, options) {
       // Reserved words as property names, for <=IE8
       'transform-es3-member-expression-literals',
 
-      // Runtime transform
-      // ['transform-runtime', {
-      //   // Externalise references to helpers
-      //   helpers: false,
-      //   // Polyfills ES6 static methods and new built-ins(Promise, Set, Map, etc).
-      //   // NOTE: Instance methods such as "foobar".includes("foo") will not work
-      //   // since that would require modification of existing built-ins.
-      //   polyfill: false,
-      //   // Polyfills the regeneratorRuntime.
-      //   regenerator: false,
-      // }],
-
       // https://babeljs.io/docs/plugins/transform-jscript/
       // https://kangax.github.io/nfe/#jscript-bugs
       // TODO 这个有 Bug，https://github.com/babel/babel/issues/6040
