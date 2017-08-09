@@ -1,22 +1,21 @@
-var gulp = require('gulp');
-var config = require('../config');
-var browserSync = require('../lib/browserSync');
-var sass = require('gulp-sass');
-var postcss = require('gulp-postcss');
-var assets  = require('postcss-assets');
-var autoprefixer = require('autoprefixer');
-var clean = require('gulp-clean-css');
-var sourcemaps = require('gulp-sourcemaps');
-var gulpif = require('gulp-if');
-var gutil = require('gulp-util');
+const gulp = require('gulp');
+const config = require('../config');
+const browserSync = require('../lib/browserSync');
+const sass = require('gulp-sass');
+const postcss = require('gulp-postcss');
+const assets = require('postcss-assets');
+const autoprefixer = require('autoprefixer');
+const clean = require('gulp-clean-css');
+const sourcemaps = require('gulp-sourcemaps');
+const gulpif = require('gulp-if');
 
-var sassTask = function () {
+const sassTask = function () {
   return gulp.src(config.sass.src)
     .pipe(gulpif(process.env.NODE_ENV !== 'production', sourcemaps.init()))
     .pipe(sass(config.sass.option).on('error', sass.logError))
     .pipe(postcss([
       assets(config.postcssAssets.option),
-      autoprefixer(config.autoprefixer.option)
+      autoprefixer(config.autoprefixer.option),
     ]))
     .pipe(gulpif(process.env.NODE_ENV !== 'production', sourcemaps.write('./maps')))
     .pipe(gulpif(process.env.NODE_ENV === 'production', clean({ compatibility: 'ie7' })))

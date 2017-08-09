@@ -5,7 +5,7 @@
 Create AutoFE apps with no build configuration.
 
 * [Getting Started](#getting-started) – How to create a new app.
-* [User Guide](https://github.com/jpuncle/create-autofe-app/blob/master/packages/autofe-scripts/template/README.md) – How to develop apps bootstrapped with Create AutoFE App.
+* [User Guide](https://github.com/athm-fe/create-autofe-app/blob/master/packages/autofe-scripts/template/README.md) – How to develop apps bootstrapped with Create AutoFE App.
 
 Create AutoFE App works on macOS, Windows, and Linux.<br>
 If something doesn’t work please [file an issue](https://github.com/athm-fe/create-autofe-app/issues/new).

@@ -1,14 +1,14 @@
 {
   "name": "create-autofe-app",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Create AutoFE apps with no build configuration.",
-  "repository": "jpuncle/create-autofe-app",
+  "repository": "athm-fe/create-autofe-app",
   "author": "jpuncle",
   "engines": {
-    "node": ">=4"
+    "node": ">=6"
   },
   "bugs": {
-    "url": "https://github.com/jpuncle/create-autofe-app/issues"
+    "url": "https://github.com/athm-fe/create-autofe-app/issues"
   },
   "files": [
     "index.js"
@@ -18,9 +18,9 @@
   },
   "dependencies": {
     "chalk": "^1.1.1",
+    "commander": "^2.10.0",
     "cross-spawn": "^4.0.0",
-    "minimist": "^1.2.0",
-    "path-exists": "^2.1.0",
+    "fs-extra": "^3.0.1",
     "semver": "^5.0.3"
   }
 }

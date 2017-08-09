@@ -1,45 +1,45 @@
-var gulp = require('gulp');
-var config = require('../config');
-var browserSync = require('../lib/browserSync');
-var render = require('gulp-nunjucks-render');
-var data = require('gulp-data');
-var path = require('path');
-var gutil = require('gulp-util');
+const gulp = require('gulp');
+const config = require('../config');
+const browserSync = require('../lib/browserSync');
+const render = require('gulp-nunjucks-render');
+const data = require('gulp-data');
+const path = require('path');
+const gutil = require('gulp-util');
 
-var manageEnvironment = function(env) {
+const manageEnvironment = function (env) {
   // IncludePrettyExtension
   function IncludePrettyExtension() {
-    var tagName = 'includePretty';
+    const tagName = 'includePretty';
     this.tags = [tagName];
-    this.parse = function (parse, nodes, lexer) {
-      var tag = parse.peekToken();
+    this.parse = function (parse, nodes) {
+      const tag = parse.peekToken();
       if (!parse.skipSymbol(tagName)) {
-        parse.fail('parseTemplateRef: expected ' + tagName);
+        parse.fail(`parseTemplateRef: expected ${tagName}`);
       }
 
-      var args = parse.parseSignature(null, true);
+      const args = parse.parseSignature(null, true);
 
       // var node = new nodes.Include(tag.lineno, tag.colno);
       // node.template = parse.parseExpression();
 
       parse.advanceAfterBlockEnd(tag.value);
 
-      var indentValue = new nodes.Output(0, 0, [new nodes.TemplateData(0, 0, tag.colno)]);
+      const indentValue = new nodes.Output(0, 0, [new nodes.TemplateData(0, 0, tag.colno)]);
 
-      var node = new nodes.CallExtension(this, 'run', args, [indentValue]);
+      const node = new nodes.CallExtension(this, 'run', args, [indentValue]);
 
       return node;
     };
     this.run = function (context, url, indentValue) {
-      var output = '';
-      var indentWidth = indentValue() - 1;
-      var indentFilter = env.getFilter('indent');
-      var trimFilter = env.getFilter('trim');
-      var safeFilter = env.getFilter('safe');
+      let output = '';
+      const indentWidth = indentValue() - 1;
+      const indentFilter = env.getFilter('indent');
+      const trimFilter = env.getFilter('trim');
+      const safeFilter = env.getFilter('safe');
 
       try {
-        var tmpl = env.getTemplate(url);
-        var result = tmpl.render(context.getVariables());
+        const tmpl = env.getTemplate(url);
+        let result = tmpl.render(context.getVariables());
         if (indentWidth > 0) {
           result = indentFilter(result, indentWidth);
         }
@@ -56,39 +56,39 @@ var manageEnvironment = function(env) {
 
   // Filter: assets
   env.addFilter('assets', function (assetpath) {
-    var url = path.join(this.ctx.__ctx_file.prefix || '', assetpath);
+    const url = path.join(this.ctx.__ctx_file.prefix || '', assetpath);
     return url;
   });
 };
 
-var options = {
+const options = {
   path: [config.src],
-  manageEnv: manageEnvironment
+  manageEnv: manageEnvironment,
 };
 
 render.logError = function (error) {
-  var message = new gutil.PluginError('nunjucks', error).toString();
-  process.stderr.write(message + '\n');
+  const message = new gutil.PluginError('nunjucks', error).toString();
+  process.stderr.write(`${message}\n`);
   this.emit('end');
 };
 
 
-var htmlTask = function () {
+const htmlTask = function () {
   return gulp.src([config.html.src, config.html.exclude])
-    .pipe(data(function (file) {
-      var obj = {
+    .pipe(data((file) => {
+      const obj = {
         path: file.path,
         relative: file.relative,
         base: file.base,
-        prefix: path.relative(path.resolve(file.path, '..'), file.base)
+        prefix: path.relative(path.resolve(file.path, '..'), file.base),
       };
       return {
-        __ctx_file: obj
+        __ctx_file: obj,
       };
     }))
     .pipe(render(options).on('error', render.logError))
     .pipe(gulp.dest(config.html.dest))
-    .pipe(browserSync.stream());
+    .on('end', browserSync.reload);
 };
 
 gulp.task('html', htmlTask);

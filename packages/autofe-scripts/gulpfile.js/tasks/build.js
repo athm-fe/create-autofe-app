@@ -1,11 +1,11 @@
-var gulp = require('gulp');
-var runSequence = require('run-sequence');
+const gulp = require('gulp');
+const runSequence = require('run-sequence');
 
-gulp.task('build', function (cb) {
+gulp.task('build', (cb) => {
   runSequence(
     ['clean'],
     ['copy', 'fonts', 'images'],
-    ['sass', 'js', 'html', 'markdown'],
-    'html-bundle',
+    ['sass', 'js', 'webpack', 'html', 'markdown'],
+    ['html-bundle'],
     cb);
 });

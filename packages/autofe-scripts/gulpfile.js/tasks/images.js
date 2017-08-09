@@ -1,13 +1,13 @@
-var gulp = require('gulp');
-var config = require('../config');
-var browserSync = require('../lib/browserSync');
-var imagemin = require('gulp-imagemin');
+const gulp = require('gulp');
+const config = require('../config');
+const browserSync = require('../lib/browserSync');
+const imagemin = require('gulp-imagemin');
 
-var imagesTask = function () {
+const imagesTask = function () {
   return gulp.src(config.images.src)
     .pipe(imagemin(config.images.imagemin))
     .pipe(gulp.dest(config.images.dest))
-    .pipe(browserSync.stream());
+    .on('end', browserSync.reload);
 };
 
 gulp.task('images', imagesTask);

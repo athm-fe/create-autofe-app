@@ -1,7 +1,7 @@
-This project was bootstrapped with [Create AutoFE App](https://github.com/jpuncle/create-autofe-app).
+This project was bootstrapped with [Create AutoFE App](https://github.com/athm-fe/create-autofe-app).
 
 Below you will find some information on how to perform common tasks.
-You can find the most recent version of this guide [here](https://github.com/jpuncle/create-autofe-app/blob/master/packages/autofe-scripts/template/README.md).
+You can find the most recent version of this guide [here](https://github.com/athm-fe/create-autofe-app/blob/master/packages/autofe-scripts/template/README.md).
 
 ## Table of Contents
 
@@ -32,7 +32,7 @@ Create AutoFE App 分成两个包：
 
 当运行 `create-autofe-app` 来创建新项目的时候，它总是会去 npm 下载最新发布的 `autofe-scripts`，所以你能够自动获得所有的新的功能或者优化。
 
-如果你已经有了一个项目，并且想把该项目的 `autofe-scripts` 升级到新版本。请先[打开版本修改日志](https://github.com/jpuncle/create-autofe-app/blob/master/CHANGELOG.md)，找到你的当前版本（在 `package.json` 可以找到）和新版本之间的差异。有可能新版本和老版本不兼容，需要你按照 `CHANGELOG.md` 的说明来修改你的代码。
+如果你已经有了一个项目，并且想把该项目的 `autofe-scripts` 升级到新版本。请先[打开版本修改日志](https://github.com/athm-fe/create-autofe-app/blob/master/CHANGELOG.md)，找到你的当前版本（在 `package.json` 可以找到）和新版本之间的差异。有可能新版本和老版本不兼容，需要你按照 `CHANGELOG.md` 的说明来修改你的代码。
 
 但是我们会尽量保证 `autofe-scripts` 新老版本之间的兼容，做的不需要你修改代码，或者仅仅是修改少量的代码，即可迁移成功。
 
@@ -426,4 +426,4 @@ for html
 
 ## 还缺啥?
 
-文档写的不好？写的不全？欢迎[来找茬](https://github.com/jpuncle/create-autofe-app/issues)。
+文档写的不好？写的不全？欢迎[来找茬](https://github.com/athm-fe/create-autofe-app/issues)。
