@@ -11,19 +11,14 @@ function buildTargets(options) {
 /**
  * @param options.targets 重新指定 targets
  * @param options.additionalTargets 合并 defaultTargets 和 additionalTargets
- * @param options.debug 是否开启调试模式
  */
 module.exports = function buildPreset(context, options) {
   const transpileTargets = (options && options.targets) ||
     buildTargets(options || {});
 
-  const debug = (options && typeof options.debug === 'boolean') ? !!options.debug : false;
-
   return {
     presets: [
       ['env', {
-        // Output some debug info
-        debug,
         // Set the targets
         targets: transpileTargets,
         // Do not transform modules to CJS
