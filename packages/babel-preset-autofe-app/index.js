@@ -1,19 +1,8 @@
+// Use all plugins
 const defaultTargets = {
-  android: 30,
-  chrome: 35,
-  edge: 14,
-  explorer: 9,
-  firefox: 52,
-  safari: 8,
-  ucandroid: 1,
+  // React parses on ie 9, so we should too
+  ie: '9',
 };
-// const defaultTargets = {
-//   // React parses on ie 9, so we should too
-//   ie: '9',
-//   // We currently minify with uglify, so all plugins work.
-//   // Note: This will be deprecated in 2.x and replaced with a forceAllTransforms option.
-//   uglify: true,
-// };
 
 function buildTargets(options) {
   return Object.assign({}, defaultTargets, options.additionalTargets);
