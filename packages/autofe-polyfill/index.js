@@ -43,3 +43,7 @@ Array.isArray();
 // _get helper
 // 是否有 loose 模式？
 Object.getOwnPropertyDescriptor();
+
+// Symbols
+// [Symbol.iterator]()
+// Iterators

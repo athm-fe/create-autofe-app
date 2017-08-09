@@ -29,4 +29,8 @@ console.log('sum === 6 after for...of', sum === 6);
 //   console.log(item);
 // }
 
+for (const item of '123') {
+  console.log(item);
+}
+
 console.log('-------- for...of --------');
