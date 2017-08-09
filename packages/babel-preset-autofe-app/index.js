@@ -18,7 +18,7 @@ module.exports = function buildPreset(context, options) {
 
   return {
     presets: [
-      ['env', {
+      require('babel-preset-env').default(null, {
         // Set the targets
         targets: transpileTargets,
         // Do not transform modules to CJS
@@ -39,28 +39,29 @@ module.exports = function buildPreset(context, options) {
           // regenerator-runtime is too heavyweight
           'transform-regenerator',
         ],
-      }],
+      }),
+      // require('babel-preset-react'),
     ],
     plugins: [
       // https://github.com/babel/babel/issues/1065
-      ['transform-es2015-template-literals', {
+      [require('babel-plugin-transform-es2015-template-literals'), {
         spec: true,
       }],
       // use simple assignments instead of Object.defineProperty.
-      ['transform-es2015-computed-properties', {
+      [require('babel-plugin-transform-es2015-computed-properties'), {
         loose: true,
       }],
       // Transforms class properties, property and static
-      'transform-class-properties',
+      require('babel-plugin-transform-class-properties'),
       // For classes that have supers, the super class won’t resolve correctly.(IE10 and below)
       // so enable loose mode
-      ['transform-es2015-classes', {
+      [require('babel-plugin-transform-es2015-classes'), {
         loose: true,
       }],
       // Adds syntax support for import()
-      'syntax-dynamic-import',
+      require('babel-plugin-syntax-dynamic-import'),
       // object rest and spread
-      ['transform-object-rest-spread', {
+      [require('babel-plugin-transform-object-rest-spread'), {
         // use Object.assign directly, instead of Babel's extends helper.
         // Note that this assumes `Object.assign` is available.
         useBuiltIns: true,
@@ -68,11 +69,11 @@ module.exports = function buildPreset(context, options) {
       // it lets you create code that isn’t a syntax error in ES3
       // even though the functions might not exist, the file would parse in ES3
       // without that transform, the whole file would crap out
-      'transform-es5-property-mutators',
+      require('babel-plugin-transform-es5-property-mutators'),
       // Reserved words as property names, for <=IE8
-      'transform-es3-property-literals',
+      require('babel-plugin-transform-es3-property-literals'),
       // Reserved words as property names, for <=IE8
-      'transform-es3-member-expression-literals',
+      require('babel-plugin-transform-es3-member-expression-literals'),
 
       // https://babeljs.io/docs/plugins/transform-jscript/
       // https://kangax.github.io/nfe/#jscript-bugs
