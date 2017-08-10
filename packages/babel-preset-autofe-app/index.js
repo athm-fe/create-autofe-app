@@ -62,9 +62,8 @@ module.exports = function buildPreset(context, options) {
       require('babel-plugin-syntax-dynamic-import'),
       // object rest and spread
       [require('babel-plugin-transform-object-rest-spread'), {
-        // use Object.assign directly, instead of Babel's extends helper.
-        // Note that this assumes `Object.assign` is available.
-        useBuiltIns: true,
+        // Do not use `Object.assign` directly
+        useBuiltIns: false,
       }],
       // it lets you create code that isn’t a syntax error in ES3
       // even though the functions might not exist, the file would parse in ES3

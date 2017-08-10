@@ -2,7 +2,6 @@
  * Usage
  *
  * in entry config
- * require.resolve('./polyfills')
  * require.resolve('autofe-polyfill')
  */
 
@@ -46,29 +45,22 @@ require('es5-shim/es5-sham');
 /**
  * es6
  *
- * [][Symbol.iterator]();
- * string destructuring, _slicedToArray helper
- * Symbols, Iterators
+ * Symbol + Iterator
+ * string destructuring: _slicedToArray helper
+ * for-of: [Symbol.iterator]
  * https://github.com/medikoo/es6-symbol
  * core-js
  */
-// core-js(/library)/es6/symbol
-// core-js(/library)/fn/symbol
-// core-js(/library)/fn/symbol/iterator
-
-// core-js(/library)/fn/array/iterator
-// core-js(/library)/fn/string/iterator
+// Doesn't use Iterator, for-of, string destructuring
 
 /**
  * Array.from();
  * string spread
- * https://www.npmjs.com/package/array.from
  */
-// require('array.from');
-require('core-js/fn/array/from');
+require('./array-from');
 
 /**
- * Object.assign();
+ * Object.assign
  * Object spread
  * https://github.com/ljharb/object.assign
  * https://github.com/sindresorhus/object-assign
