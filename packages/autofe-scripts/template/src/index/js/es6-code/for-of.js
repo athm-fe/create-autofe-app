@@ -22,6 +22,16 @@ for (const item of [1, 2, 3]) {
   sum += item;
 }
 console.log('sum === 6 after for...of', sum === 6);
+
+function from(a1, a2, a3) {
+  return [a1 * 2, a2 * 2, a3 * 2];
+}
+sum = 0;
+for (const item of from(1, 2, 3)) {
+  sum += item;
+}
+console.log('sum === 12 after for...of', sum === 12);
+
 // Outputs:
 // var _arr = [1, 2, 3];
 // for (var _i = 0; _i < _arr.length; _i++) {

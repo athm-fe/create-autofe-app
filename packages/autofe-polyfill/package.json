@@ -12,5 +12,12 @@
   },
   "files": [
     "index.js"
-  ]
+  ],
+  "dependencies": {
+    "array.from": "^1.0.3",
+    "core-js": "^2.5.0",
+    "es5-shim": "^4.5.9",
+    "es6-promise": "^4.1.1",
+    "object-assign": "^4.1.1"
+  }
 }
