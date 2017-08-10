@@ -11,13 +11,14 @@ const templateStr = `In ${name} this is
 console.log('templateStr === "In ES5 this is\n  not legal."',
   templateStr === 'In ES5 this is\n  not legal.');
 
-function echo(str) {
-  return str;
-}
-console.log(
-  'echo`name`[0] === "name"',
-  echo`name`[0] === 'name',
-);
+// Don't use tagged template strings
+// function echo(str) {
+//   return str;
+// }
+// console.log(
+//   'echo`name`[0] === "name"',
+//   echo`name`[0] === 'name',
+// );
 
 // Unescaped template strings
 // String.raw`In ES5 "\n" is a line-feed.`;

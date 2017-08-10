@@ -1,9 +1,9 @@
 console.log('======== webpack + babel ========');
 
-import(/* webpackChunkName: "commonjs" */ './commonjs');
-import(/* webpackChunkName: "es6-modules" */ './es6-modules');
-import(/* webpackChunkName: "es5-code" */ './es5-code');
-import(/* webpackChunkName: "es6-code" */ './es6-code');
-import(/* webpackChunkName: "es2016plus" */ './es2016plus');
-import(/* webpackChunkName: "stage" */ './stage');
-import(/* webpackChunkName: "dynamic-import" */ './dynamic-import');
+require('./commonjs');
+require('./es5-code');
+require('./es6-code');
+require('./es2016plus');
+require('./stage');
+require('./es6-modules');
+require('./dynamic-import');

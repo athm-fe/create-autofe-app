@@ -21,13 +21,17 @@ console.log(
 // Getter accessors
 // Setter accessors
 // IE8 不支持，不要用
-console.log(
-  'Getter accessors',
-  ({ get x() { return 1; } }).x === 1,
-);
-let value = 0;
-({ set x(v) { value = v; } }).x = 1;
-console.log('Setter accessors', value === 1);
+try {
+  console.log(
+    'Getter accessors',
+    ({ get x() { return 1; } }).x === 1,
+  );
+  let value = 0;
+  ({ set x(v) { value = v; } }).x = 1;
+  console.log('Setter accessors', value === 1);
+} catch (e) {
+  console.warn('Getter/Setter accessors does not support');
+}
 
 // Trailing commas in object literals
 // Trailing commas in array literals
@@ -94,12 +98,17 @@ console.log("'foobar'[3] === 'b'", 'foobar'[3] === 'b');
 // bind
 
 // Function.prototype.apply permits array-likes
-(function (a, b) {
-  console.log(
-    'Function.prototype.apply permits array-likes',
-    a === 1 && b === 2,
-  );
-}).apply({}, { 0: 1, 1: 2, length: 2 });
+try {
+  (function (a, b) {
+    console.log(
+      'Function.prototype.apply permits array-likes',
+      a === 1 && b === 2,
+    );
+  }).apply({}, { 0: 1, 1: 2, length: 2 });
+} catch (e) {
+  console.warn('Function.prototype.apply permits array-likes does not support');
+}
+
 
 // parseInt ignores leading zeros
 // Polyfills, es5-shim
@@ -110,22 +119,22 @@ console.log(
 
 // Immutable globals
 // undefined, NaN, Infinity
-// IE8 不支持，不过也没有什么影响
-undefined = 12345;
-console.log(
-  'undefined is Immutable',
-  typeof undefined === 'undefined',
-);
-NaN = false;
-console.log(
-  'NaN is Immutable',
-  typeof NaN === 'number',
-);
-Infinity = 12345;
-console.log(
-  'Infinity is Immutable',
-  typeof Infinity === 'number',
-);
+// IE8 不支持，不过也没有什么影响，这里不测了
+// undefined = 12345;
+// console.log(
+//   'undefined is Immutable',
+//   typeof undefined === 'undefined',
+// );
+// NaN = false;
+// console.log(
+//   'NaN is Immutable',
+//   typeof NaN === 'number',
+// );
+// Infinity = 12345;
+// console.log(
+//   'Infinity is Immutable',
+//   typeof Infinity === 'number',
+// );
 
 // Strict mode
 // IE10 才支持，不过不支持也没关系，不用管它
