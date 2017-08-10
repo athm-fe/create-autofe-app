@@ -2,6 +2,15 @@
  * 放心用，低版本 IE 也没有问题
  */
 
+function equal(arr1, arr2) {
+  const length = arr1.length;
+  if (length !== arr2.length) return false;
+  for (let i = 0; i < length; i += 1) {
+    if (arr1[i] !== arr2[i]) return false;
+  }
+  return true;
+}
+
 // Expression bodies
 const array = [1, 2, 3].map(value => value + 10);
 console.log('array[0] === 11', array[0] === 11);
@@ -13,8 +22,12 @@ const bob = {
   name: 'Bob',
   friends: ['John', 'Jack', 'Tom', 'Lily'],
   printFriends() {
-    this.friends.forEach(f =>
-      console.log(`${this.name} knows ${f}`));
+    const temp = [];
+    this.friends.forEach((f) => {
+      console.log('Lexical this', this === bob);
+      temp.push(f);
+    });
+    console.log('Lexical this', equal(temp, bob.friends));
   },
 };
 bob.printFriends();
@@ -33,15 +46,6 @@ function square() {
   };
 
   return example();
-}
-
-function equal(arr1, arr2) {
-  const length = arr1.length;
-  if (length !== arr2.length) return false;
-  for (let i = 0; i < length; i += 1) {
-    if (arr1[i] !== arr2[i]) return false;
-  }
-  return true;
 }
 
 console.log(

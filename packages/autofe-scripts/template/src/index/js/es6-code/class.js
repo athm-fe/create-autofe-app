@@ -64,7 +64,7 @@ class ColorPoint extends Point {
   instanceProperty = 'test';
   boundFunction = () => this.instanceProperty;
   static randomColor() {
-    console.log(super.defaultX);
+    console.log('super static', super.defaultX === 100);
     return '#F60';
   }
 }

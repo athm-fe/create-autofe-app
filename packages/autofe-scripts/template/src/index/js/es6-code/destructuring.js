@@ -12,9 +12,13 @@ console.log('a === 1', a === 1);
 console.log('b === 3', b === 3);
 
 // string matching
-const [s1, , , , s5] = 'hello';
-console.log('s1 === "h"', s1 === 'h');
-console.log('s5 === "o"', s5 === 'o');
+try {
+  const [s1, , , , s5] = 'hello';
+  console.log('s1 === "h"', s1 === 'h');
+  console.log('s5 === "o"', s5 === 'o');
+} catch (e) {
+  console.warn('string destructuring does not support');
+}
 
 // object matching
 const { name: c, age: d } = { name: 'Tom', age: 30, weight: 70 };

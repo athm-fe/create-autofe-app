@@ -17,12 +17,15 @@ console.log(
   '\u{20BB7}' === '𠮷' && '𠮷' === '\uD842\uDFB7',
 );
 
-// new String ops
-console.log(
-  '"𠮷".codePointAt(0) === 0x20BB7',
-  '𠮷'.codePointAt(0) === 0x20BB7,
-);
-
+if (String.prototype.codePointAt) {
+  // new String ops
+  console.log(
+    '"𠮷".codePointAt(0) === 0x20BB7',
+    '𠮷'.codePointAt(0) === 0x20BB7,
+  );
+} else {
+  console.warn('String.prototype.codePointAt does not support');
+}
 
 // u for RegExp
 console.log(

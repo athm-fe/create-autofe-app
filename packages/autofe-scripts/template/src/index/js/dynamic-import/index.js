@@ -20,15 +20,15 @@
  *    有插件可以解决这个问题
  */
 import(/* webpackChunkName: "rank" */ './rank').then((rank) => {
-  console.log(rank.name, rank.default);
+  console.log(rank.name, rank.default, rank.default.length === 4);
 });
 
 require.ensure([], (require) => {
   const rank = require('./rank-commonjs');
-  console.log('rank-commonjs', rank);
+  console.log('rank-commonjs', rank, rank.length === 4);
 }, 'rank-commonjs');
 
 require.ensure([], (require) => {
   const rank = require('./rank-test');
-  console.log('rank-test', rank.list);
+  console.log('rank-test', rank.list, rank.list.length === 4);
 }, 'rank');

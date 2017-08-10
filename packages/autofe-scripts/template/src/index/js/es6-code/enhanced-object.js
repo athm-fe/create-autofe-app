@@ -51,11 +51,14 @@ const enhancedObj = {
   // 导致使用 defineProperty
   [`prop_${(() => 42)()}`]: 42,
 };
-console.log('enhancedObj.say():', enhancedObj.say());
+console.log('enhancedObj.say():', enhancedObj.say() === 'hello world');
 console.log('enhancedObj.default', enhancedObj.default === 3);
-console.log('enhancedObj.bar:', enhancedObj.bar);
-console.log('enhancedObj.toString():', enhancedObj.toString());
-console.log('enhancedObj.foo:', enhancedObj.foo);
-console.log('enhancedObj.prop_42L', enhancedObj.prop_42);
+console.log('enhancedObj.bar:', enhancedObj.bar === 'bar');
+console.log(
+  'enhancedObj.toString():',
+  enhancedObj.toString() === 'enhancedObj.toString() ---- theProtoObj.toString()',
+);
+console.log('enhancedObj.foo:', enhancedObj.foo === 'foo');
+console.log('enhancedObj.prop_42L', enhancedObj.prop_42 === 42);
 
 console.log('-------- enhanced object --------');
