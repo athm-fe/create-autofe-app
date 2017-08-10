@@ -1,0 +1,22 @@
+{
+  "name": "autofe-polyfill",
+  "version": "0.1.1",
+  "description": "Polyfills used by AutoFE apps",
+  "repository": "athm-fe/create-autofe-app",
+  "author": "jpuncle",
+  "engines": {
+    "node": ">=6"
+  },
+  "bugs": {
+    "url": "https://github.com/athm-fe/create-autofe-app/issues"
+  },
+  "files": [
+    "index.js",
+    "array-from.js"
+  ],
+  "dependencies": {
+    "es5-shim": "^4.5.9",
+    "es6-promise": "^4.1.1",
+    "object-assign": "^4.1.1"
+  }
+}
