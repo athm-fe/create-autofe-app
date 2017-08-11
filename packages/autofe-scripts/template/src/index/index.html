@@ -20,10 +20,15 @@
     {% includePretty "index/_part1.html" %}
     {% includePretty "index/_part2.html" %}
     {% includePretty "component/footer/_index.html" %}
-    <!-- 如有必要，其实一般都不需要了 -->
+
+    <!-- 如果需要兼容 IE67 -->
     <!-- <script src="js/vendor/json3.min.js"></script> -->
-    <!-- 需要使用 Promise 或者使用了 Webpack 的 import()/require.ensure() -->
-    <!-- <script src="js/vendor/es6-promise/es6-promise.auto.min.js"></script> -->
+    <!-- 如果需要兼容 IE678 -->
+    <!-- <script src="js/vendor/es5-shim.min.js"></script> -->
+    <!-- <script src="js/vendor/es5-sham.min.js"></script> -->
+    <!-- Promise Polyfill -->
+    <script src="js/vendor/es6-promise.auto.min.js"></script>
+    <script src="js/polyfills.js"></script>
     <script src="js/main.js"></script>
     <script src="js/commonjs/index.js"></script>
     <script src="js/es5-code/index.js"></script>
