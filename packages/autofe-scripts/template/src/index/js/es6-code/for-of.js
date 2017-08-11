@@ -43,9 +43,11 @@ try {
 }
 
 try {
+  const array = [];
   for (const item of '123') {
-    console.log(item);
+    array.push(item);
   }
+  console.log('string for-of', array.length === 3 && array[2] === '3');
 } catch (e) {
   console.warn('for-of iterator does not support');
 }
