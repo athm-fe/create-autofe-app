@@ -24,7 +24,6 @@
     "autofe-scripts": "./bin/autofe-scripts.js"
   },
   "dependencies": {
-    "autofe-polyfill": "^0.1.1",
     "autoprefixer": "^6.5.3",
     "babel-core": "^6.25.0",
     "babel-loader": "^7.1.1",

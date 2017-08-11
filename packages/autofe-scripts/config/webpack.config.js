@@ -13,10 +13,7 @@ function getEntries() {
   for (let i = 0; i < entryFiles.length; i += 1) {
     const filePath = entryFiles[i];
     const key = path.join(path.dirname(filePath), path.basename(filePath, '.entry.js'));
-    entries[key] = [
-      require.resolve('autofe-polyfill'),
-      `.${path.sep}${path.join('src', filePath)}`,
-    ];
+    entries[key] = `.${path.sep}${path.join('src', filePath)}`;
   }
 
   console.log(entries);
