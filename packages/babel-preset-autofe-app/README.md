@@ -5,8 +5,6 @@
 > Thanks for [babel-preset-airbnb](https://github.com/airbnb/babel-preset-airbnb).
 
 Based on `babel-preset-env`, except for the following:
-- generators: `regenerator-runtime` is too heavyweight for our use.
-- `async/await`: `regenerator-runtime` is too heavyweight for our use, and [async-to-promises](https://www.npmjs.com/package/babel-plugin-async-to-promises) is not yet complete enough to be safely used.
 - `SIMD`: this is a performance feature, so is pretty pointless to polyfill/transpile.
 - lifted template literal restrictions: we do not use tagged template literals, nor implement custom DSLs, otherwise we would enable this.
 

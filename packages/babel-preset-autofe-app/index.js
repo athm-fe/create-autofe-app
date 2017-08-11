@@ -34,10 +34,6 @@ module.exports = function buildPreset(context, options) {
           'transform-es2015-computed-properties',
           // Need set loose for this plugin
           'transform-es2015-classes',
-          // regenerator-runtime is too heavyweight
-          'transform-async-to-generator',
-          // regenerator-runtime is too heavyweight
-          'transform-regenerator',
         ],
       }),
       // require('babel-preset-react'),
@@ -64,6 +60,12 @@ module.exports = function buildPreset(context, options) {
       [require('babel-plugin-transform-object-rest-spread'), {
         // Do not use `Object.assign` directly
         useBuiltIns: false,
+      }],
+      require('babel-plugin-transform-async-generator-functions'),
+      [require('babel-plugin-transform-runtime'), {
+        helpers: false,
+        polyfill: false,
+        regenerator: true,
       }],
       // it lets you create code that isn’t a syntax error in ES3
       // even though the functions might not exist, the file would parse in ES3

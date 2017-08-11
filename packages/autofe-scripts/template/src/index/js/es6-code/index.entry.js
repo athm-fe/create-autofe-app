@@ -7,7 +7,7 @@ require('./enhanced-object');
 require('./destructuring');
 require('./default-rest-spread');
 require('./for-of');
-// require('./generators');
+require('./generators');
 require('./unicode');
 // require('./regexp');
 require('./binary-octal');
