@@ -5,7 +5,7 @@
   "repository": "athm-fe/create-autofe-app",
   "author": "jpuncle",
   "engines": {
-    "node": ">=6"
+    "node": ">=8"
   },
   "bugs": {
     "url": "https://github.com/athm-fe/create-autofe-app/issues"
