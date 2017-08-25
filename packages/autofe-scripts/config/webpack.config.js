@@ -16,8 +16,6 @@ function getEntries() {
     entries[key] = `.${path.sep}${path.join('src', filePath)}`;
   }
 
-  console.log(entries);
-
   return entries;
 }
 
