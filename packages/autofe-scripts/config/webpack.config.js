@@ -1,6 +1,9 @@
 const path = require('path');
 const glob = require('glob');
+const webpack = require('webpack');
 const paths = require('./paths');
+
+const isProd = process.env.NODE_ENV === 'production';
 
 const context = paths.appDirectory;
 
@@ -19,9 +22,30 @@ function getEntries() {
   return entries;
 }
 
+const plugins = [];
+
+if (isProd) {
+  plugins.push(new webpack.optimize.UglifyJsPlugin({
+    compress: {
+      // optimize property access: a["foo"] → a.foo
+      properties: false,
+      // warn about potentially dangerous optimizations/code
+      warnings: false,
+    },
+    output: {
+      // quote all keys in object literals
+      quote_keys: true,
+    },
+    mangle: {
+      // mangler to name function expressions
+      screw_ie8: false,
+    },
+    sourceMap: true,
+  }));
+}
+
 module.exports = () => ({
-  // TODO only for development
-  devtool: 'eval',
+  devtool: isProd ? 'source-map' : 'eval',
   context,
   entry: getEntries(),
   output: {
@@ -44,4 +68,5 @@ module.exports = () => ({
       },
     ],
   },
+  plugins,
 });
