@@ -17,7 +17,7 @@ const sassTask = function () {
       assets(config.postcssAssets.option),
       autoprefixer(config.autoprefixer.option),
     ]))
-    .pipe(gulpif(process.env.NODE_ENV !== 'production', sourcemaps.write('./maps')))
+    .pipe(gulpif(process.env.NODE_ENV !== 'production', sourcemaps.write('.')))
     .pipe(gulpif(process.env.NODE_ENV === 'production', clean({ compatibility: 'ie7' })))
     .pipe(gulp.dest(config.sass.dest))
     .pipe(browserSync.stream());
