@@ -101,7 +101,25 @@ It correctly bundles assets in production mode and optimizes the build for the b
 
 Your app is ready to be deployed!
 
+## User Guide
+
+The [User Guide](https://github.com/athm-fe/create-autofe-app/blob/master/packages/autofe-scripts/template/README.md) includes information on different topics.
+
+A copy of the user guide will be created as `README.md` in your project folder.
+
+## How to Update to New Versions?
+
+Please refer to the [User Guide](https://github.com/athm-fe/create-autofe-app/blob/master/packages/autofe-scripts/template/README.md#%E6%9B%B4%E6%96%B0%E5%88%B0%E6%96%B0%E7%89%88%E6%9C%AC) for this and other information.
+
+## Philosophy
+
+- **One Dependency:** There is just one build dependency. It uses Webpack, Babel, ESLint, and other amazing projects, but provides a cohesive curated experience on top of them.
+- **No Configuration Required:** You don't need to configure anything. Reasonably good configuration of both development and production builds is handled for you so you can focus on writing code.
+- <del>**No Lock-In:** You can “eject” to a custom setup at any time. Run a single command, and all the configuration and build dependencies will be moved directly into your project, so you can pick up right where you left off.</del>
+
 ## Why Use This?
+
+TODO
 
 ## What’s Inside?
 
@@ -120,15 +138,12 @@ All of them are transitive dependencies of the provided npm package.
 
 We'd love to have your helping hand on `create-autofe-app`! See [CONTRIBUTING.md](CONTRIBUTING.md) for more information on what we're looking for and how to get started.
 
-
 ## TODO
 
 * `rev` 相关功能需要重新考虑
-* 阿金的那种控件需求
 * 文件上传 FastDFS
 * 反向代理到后端 API
 * 模块的开发、下载、引用、预览和发布，形成模块云服务，js+css+img+tpl
-* js 打包，es6，amd，cmd，commonjs，webpack
 * 自动雪碧图
 * 资源加 CND 前缀
 * 打包时，警告 console, alert, debugger ？
