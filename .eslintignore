@@ -1,0 +1,5 @@
+node_modules/
+build
+my-app*
+packages/autofe-scripts/template
+packages/autofe-scripts/fixtures
