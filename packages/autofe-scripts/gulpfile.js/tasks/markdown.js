@@ -1,3 +1,5 @@
+'use strict';
+
 const gulp = require('gulp');
 const markdown = require('gulp-markdown');
 const wrap = require('gulp-wrap');

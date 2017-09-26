@@ -1,3 +1,5 @@
+'use strict';
+
 const gulp = require('gulp');
 const gutil = require('gulp-util');
 const prettyTime = require('pretty-hrtime');

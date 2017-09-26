@@ -30,11 +30,13 @@
 // tell people to update their global version of create-react-app.
 //
 // Also be careful with new language features.
-// This file must work on Node 0.10+.
+// This file must work on Node 8+.
 //
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 //   /!\ DO NOT MODIFY THIS FILE /!\
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+'use strict';
 
 const chalk = require('chalk');
 const commander = require('commander');
@@ -182,7 +184,7 @@ function run(root, appName, version, verbose, originalDirectory) {
       'node_modules',
       packageName,
       'scripts',
-      'init.js',
+      'init.js'
     );
     const init = require(scriptsPath);
     init(root, appName, verbose, originalDirectory);
@@ -220,7 +222,7 @@ function checkNodeVersion(packageName) {
     process.cwd(),
     'node_modules',
     packageName,
-    'package.json',
+    'package.json'
   );
   const packageJson = require(packageJsonPath);
   if (!packageJson.engines || !packageJson.engines.node) {
@@ -234,7 +236,7 @@ function checkNodeVersion(packageName) {
           'Create AutoFE App requires Node %s or higher. \n' +
           'Please update your version of Node.'),
       process.version,
-      packageJson.engines.node,
+      packageJson.engines.node
     );
     process.exit(1);
   }

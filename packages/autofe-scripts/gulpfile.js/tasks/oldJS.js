@@ -1,3 +1,5 @@
+'use strict';
+
 const gulp = require('gulp');
 const config = require('../config');
 const rename = require('gulp-rename');

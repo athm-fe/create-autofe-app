@@ -1,3 +1,5 @@
+'use strict';
+
 const gulp = require('gulp');
 const paths = require('../../config/paths');
 require('../../gulpfile.js');
