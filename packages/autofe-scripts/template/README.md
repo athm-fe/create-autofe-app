@@ -46,7 +46,7 @@ Create AutoFE App 分成两个包：
 ```
 my-app/
   README.md
-  node_modules/
+  node_modules
   package.json
   .gitignore
   src/
@@ -60,7 +60,16 @@ my-app/
       img/
         bg.png
       js/
-        main.js
+        vendor/
+          json3.min.old.js
+          es6-promise.auto.min.old.js
+        es6-code
+          index.entry.js
+          class.js
+          arrow-function.js
+          ...
+        main.old.js
+        polyfills.entry.js
       pic/
         01.jpg
       _part1.html
