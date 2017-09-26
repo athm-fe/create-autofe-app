@@ -5,7 +5,7 @@
     "build": "node packages/autofe-scripts/scripts/build.js",
     "test": "node packages/autofe-scripts/scripts/test.js",
     "create-autofe-app": "tasks/cra.sh",
-    "postinstall": "lerna bootstrap",
+    "postinstall": "node bootstrap.js",
     "publish": "tasks/release.sh"
   },
   "devDependencies": {
