@@ -42,7 +42,6 @@ module.exports = {
   sass: {
     src: path.join(root.src, '/**/*.{scss,css}'),
     dest: root.dest,
-    option: {},
   },
   postcssAssets: {
     option: {

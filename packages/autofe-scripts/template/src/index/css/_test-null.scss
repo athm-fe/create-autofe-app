@@ -1,0 +1,8 @@
+@keyframes slideout-null {
+  0% { opacity: 1;}
+  100% { opacity: 1;}
+}
+
+.null {
+  animation: slideout-null 10ms;
+}
