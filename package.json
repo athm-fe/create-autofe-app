@@ -9,6 +9,7 @@
     "publish": "tasks/release.sh"
   },
   "devDependencies": {
+    "eslint": "^4.7.2",
     "lerna": "^2.0.0-rc.5"
   }
 }

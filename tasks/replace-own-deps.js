@@ -7,6 +7,7 @@
  * LICENSE file in the root directory of this source tree. An additional grant
  * of patent rights can be found in the PATENTS file in the same directory.
  */
+'use strict';
 
 // Replaces internal dependencies in package.json with local package paths.
 
@@ -24,6 +25,8 @@ fs.readdirSync(packagesDir).forEach((name) => {
 });
 
 fs.writeFile(pkgFilename, JSON.stringify(data, null, 2), 'utf8', (err) => {
-  if (err) throw err;
+  if (err) {
+    throw err;
+  }
   console.log('Replaced local dependencies.');
 });
