@@ -11,7 +11,8 @@
     "url": "https://github.com/athm-fe/create-autofe-app/issues"
   },
   "files": [
-    "index.js"
+    "index.js",
+    "createApp.js"
   ],
   "bin": {
     "create-autofe-app": "./index.js"
