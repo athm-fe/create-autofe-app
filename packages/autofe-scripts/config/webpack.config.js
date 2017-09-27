@@ -65,6 +65,14 @@ module.exports = () => ({
           loader: require.resolve('babel-loader'),
           options: {
             presets: [require.resolve('babel-preset-autofe-app')],
+            plugins: [
+              // Polyfills the runtime needed for async/await and generators
+              [require('babel-plugin-transform-runtime'), {
+                helpers: false,
+                polyfill: false,
+                regenerator: true,
+              }],
+            ],
           },
         },
       },
