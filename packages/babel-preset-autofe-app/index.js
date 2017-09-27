@@ -68,6 +68,7 @@ module.exports = function buildPreset(context, options) {
         helpers: false,
         polyfill: false,
         regenerator: true,
+        moduleName: require.resolve('babel-runtime'),
       }],
       // it lets you create code that isn’t a syntax error in ES3
       // even though the functions might not exist, the file would parse in ES3
