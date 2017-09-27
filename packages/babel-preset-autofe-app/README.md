@@ -5,6 +5,7 @@
 > Thanks for [babel-preset-airbnb](https://github.com/airbnb/babel-preset-airbnb).
 
 Based on `babel-preset-env`, except for the following:
+- regenerator: `regenerator-runtime` is too heavyweight for our use. But, we convert async generator functions to generator, and convert async to generator.
 - `SIMD`: this is a performance feature, so is pretty pointless to polyfill/transpile.
 - lifted template literal restrictions: we do not use tagged template literals, nor implement custom DSLs, otherwise we would enable this.
 
@@ -12,6 +13,8 @@ We have also enabled the following:
 - object rest/spread
 - class properties
 - Syntax Dynamic Import. Allow parsing of `import()`. [source](https://babeljs.io/docs/plugins/syntax-dynamic-import/)
+- async generator functions to generator
+- async to generator
 
 ## Install
 
