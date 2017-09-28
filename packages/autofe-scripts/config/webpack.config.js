@@ -56,6 +56,17 @@ module.exports = () => ({
     path: path.join(context, 'build'),
     publicPath: '/',
   },
+  resolve: {
+    alias: {
+      // Resolve Babel runtime relative to autofe-scripts.
+      // It usually still works on npm 3 without this but it would be
+      // unfortunate to rely on, as autofe-scripts could be symlinked,
+      // and thus babel-runtime might not be resolvable from the source.
+      'babel-runtime': path.dirname(
+        require.resolve('babel-runtime/package.json')
+      ),
+    },
+  },
   module: {
     rules: [
       {
