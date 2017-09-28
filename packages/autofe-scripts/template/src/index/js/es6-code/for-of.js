@@ -29,10 +29,11 @@ console.log('sum === 6 after for...of', sum === 6);
 //   console.log(item);
 // }
 
+function from(a1, a2, a3) {
+  return [a1 * 2, a2 * 2, a3 * 2];
+}
+
 try {
-  function from(a1, a2, a3) {
-    return [a1 * 2, a2 * 2, a3 * 2];
-  }
   sum = 0;
   for (const item of from(1, 2, 3)) {
     sum += item;

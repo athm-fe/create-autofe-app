@@ -71,6 +71,22 @@ module.exports = () => ({
     rules: [
       {
         test: /\.js$/,
+        enforce: 'pre',
+        use: [
+          {
+            options: {
+              eslintPath: require.resolve('eslint'),
+              baseConfig: {
+                extends: [require.resolve('eslint-config-autofe-app')],
+              },
+            },
+            loader: require.resolve('eslint-loader'),
+          },
+        ],
+        include: paths.appSrc,
+      },
+      {
+        test: /\.js$/,
         exclude: /(node_modules|bower_components)/,
         use: {
           loader: require.resolve('babel-loader'),
