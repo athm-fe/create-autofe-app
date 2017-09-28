@@ -36,6 +36,8 @@ module.exports = function buildPreset(context, options) {
           'transform-es2015-computed-properties',
           // Need set loose for this plugin
           'transform-es2015-classes',
+          // Need custom config for this plugin
+          'transform-regenerator',
         ],
       }),
       // require('babel-preset-react'),
@@ -66,6 +68,18 @@ module.exports = function buildPreset(context, options) {
 
       // Async generator functions are converted to generators
       require('babel-plugin-transform-async-generator-functions'),
+
+      // regenerator config
+      [require('babel-plugin-transform-regenerator'), {
+        // Async generator functions are converted to generators by
+        // babel-plugin-transform-async-generator-functions
+        asyncGenerators: false,
+        // Async functions are converted to generators by babel-preset-env
+        // which has babel-plugin-transform-async-to-generator
+        async: false,
+        // Generators are converted to regeneratorRuntime
+        generators: true,
+      }],
 
       // Polyfills the runtime needed for async/await and generators
       [require('babel-plugin-transform-runtime'), {
