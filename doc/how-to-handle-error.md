@@ -4,7 +4,7 @@
 
 ## 理想情况
 
-* 开发构建阶段，不终止 gulp 进程，错误提示有如下几种
+* 开发构建阶段，不终止 gulp 进程，错误提示有如下几种：
   1. 打印错误到控制台
   2. gulp-notify or beeper 之类的错误通知
   3. 错误信息显示到页面
@@ -139,7 +139,7 @@ module.exports = function (error) {
 然后使用这个模块
 
 ```javascript
-const errorHandler = require('./errorHandler);
+const errorHandler = require('./errorHandler');
 
 gulp.task('styles', function() {
   return gulp.src('src')
@@ -154,3 +154,8 @@ gulp.task('styles', function() {
 ## webpack 处理错误
 
 未完待续。
+
+## TODO
+
+1. 错误信息如何显示到页面
+2. webpack 的错误处理
