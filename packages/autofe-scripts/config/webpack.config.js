@@ -47,7 +47,7 @@ if (isProd) {
 }
 
 module.exports = () => ({
-  devtool: isProd ? 'source-map' : 'eval',
+  devtool: isProd ? 'false' : 'eval',
   context,
   entry: getEntries(),
   output: {
