@@ -6,6 +6,7 @@ const browserSync = require('../lib/browserSync');
 const uglify = require('gulp-uglify');
 const gulpif = require('gulp-if');
 const rename = require('gulp-rename');
+const gutil = require('gulp-util');
 
 const jsTask = function () {
   return gulp.src(config.js.src)
@@ -14,6 +15,11 @@ const jsTask = function () {
         ascii_only: true,
       },
     })))
+    .on('error', function(err) {
+      var message = new gutil.PluginError('js', err).toString();
+      process.stderr.write(`${message}\n`);
+      process.exit(1);
+    })
     .pipe(rename((path) => {
       path.basename = path.basename.replace(/\.old$/, '');
     }))
