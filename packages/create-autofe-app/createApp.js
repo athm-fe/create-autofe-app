@@ -142,6 +142,7 @@ function install(packageToInstall, verbose, callback) {
       'add',
       '--dev',
       '--exact',
+      '--sass-binary-site=https://npm.taobao.org/mirrors/node-sass/',
       packageToInstall,
     ];
   } else {
