@@ -1,3 +1,5 @@
+/* eslint no-undef: "off" */
+
 console.log(
   "typeof g === 'undefined'",
   typeof g === 'undefined',
