@@ -8,6 +8,8 @@ const data = require('gulp-data');
 const path = require('path');
 const gutil = require('gulp-util');
 
+const isProd = process.env.NODE_ENV === 'production';
+
 const manageEnvironment = function (env) {
   // IncludePrettyExtension
   function IncludePrettyExtension() {
@@ -68,13 +70,6 @@ const options = {
   manageEnv: manageEnvironment,
 };
 
-render.logError = function (error) {
-  const message = new gutil.PluginError('nunjucks', error).toString();
-  process.stderr.write(`${message}\n`);
-  this.emit('end');
-};
-
-
 const htmlTask = function () {
   return gulp.src([config.html.src, config.html.exclude])
     .pipe(data((file) => {
@@ -88,7 +83,17 @@ const htmlTask = function () {
         __ctx_file: obj,
       };
     }))
-    .pipe(render(options).on('error', render.logError))
+    .pipe(render(options))
+    .on('error', function (error) {
+      const message = new gutil.PluginError('nunjucks', error).toString();
+      process.stderr.write(`${message}\n`);
+
+      if (isProd) {
+        process.exit(1);
+      } else {
+        this.emit('end');
+      }
+    })
     .pipe(gulp.dest(config.html.dest))
     .on('end', browserSync.reload);
 };
