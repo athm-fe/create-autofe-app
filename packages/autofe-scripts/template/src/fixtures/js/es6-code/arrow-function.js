@@ -4,9 +4,13 @@
 
 function equal(arr1, arr2) {
   const length = arr1.length;
-  if (length !== arr2.length) return false;
+  if (length !== arr2.length) {
+    return false;
+  }
   for (let i = 0; i < length; i += 1) {
-    if (arr1[i] !== arr2[i]) return false;
+    if (arr1[i] !== arr2[i]) {
+      return false;
+    }
   }
   return true;
 }

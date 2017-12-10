@@ -1,0 +1,4 @@
+template/build
+template/src/fixtures
+template/.eslintignore
+*.tgz
