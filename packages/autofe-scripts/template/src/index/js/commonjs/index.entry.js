@@ -15,8 +15,8 @@ console.log('say() === "modB say..."', say() === 'modB say...');
 console.log('modC.name === "modC"', modC.name === 'modC');
 console.log('modC.say() === "modC say..."', modC.say() === 'modC say...');
 
-console.log('counter.counter === 3', counter.counter === 3);  // 3
+console.log('counter.counter === 3', counter.counter === 3); // 3
 counter.incCounter();
-console.log('counter.counter === 3', counter.counter === 3);  // 3
+console.log('counter.counter === 3', counter.counter === 3); // 3
 
 console.log('-------- commonjs --------');

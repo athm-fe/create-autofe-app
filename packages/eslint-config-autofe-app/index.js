@@ -1,17 +1,21 @@
 'use strict';
-const restrictedGlobals = require('eslint-restricted-globals');
+
+const customExtends = [
+  './rules/best-practices',
+  './rules/errors',
+  './rules/node',
+  './rules/style',
+  './rules/variables',
+  './rules/es6',
+  './rules/imports',
+].map(require.resolve);
 
 module.exports = {
   extends: [
-    'eslint:recommended',
-  ],
-  plugins: [
-    'import',
-  ],
+    // 'eslint:recommended',
+  ].concat(customExtends),
   env: {
     browser: true,
-    es6: true,
-    node: true,
     commonjs: true,
     amd: true,
   },
@@ -23,7 +27,6 @@ module.exports = {
     },
   },
   rules: {
-    'no-restricted-globals': ['error', 'isFinite', 'isNaN'].concat(restrictedGlobals),
-    "no-console": "warn",
+    strict: 'off',
   },
 };

@@ -10,9 +10,6 @@
   "bugs": {
     "url": "https://github.com/athm-fe/create-autofe-app/issues"
   },
-  "files": [
-    "index.js"
-  ],
   "dependencies": {
     "eslint-restricted-globals": "^0.1.1"
   },
