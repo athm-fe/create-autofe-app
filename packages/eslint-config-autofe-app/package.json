@@ -1,6 +1,6 @@
 {
   "name": "eslint-config-autofe-app",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "ESLint configuration used by AutoFE apps",
   "repository": "athm-fe/create-autofe-app",
   "author": "jpuncle",
