@@ -1,237 +1,492 @@
-# Creator 之 ESLint 指南
+# 玩转 ESLint
 
+[ESLint](https://eslint.org/) 是一个 JavaScript 代码质量工具，它可以帮助我们保持一致的代码风格，以及预先避免一些不必要的问题。而且 ESLint 是插件化的，你可以自定义规则。
 
-## 大纲
+基于 [athm-fe/create-autofe-app](https://github.com/athm-fe/create-autofe-app) 管理的项目就是使用 ESLint 来对 ES6+ 代码进行质量检查的。一开始使用的是 [Airbnb JavaScript](https://github.com/airbnb/javascript) 分享的 ESLint 配置，但是很多人反馈太过于严格，而且老的代码存在和这个代码风格严重不符的情况，导致需要进行大量的修改。
 
-* Course Overview
-* Setting up ESLint in Your Project
-  * Introduction
-  * Installing and Running ESLint
-  * Resolving ESLint Errors
-  * Summary
-* ESLint Rules Explained
-  * Introduction
-  * Common ESLint Rules
-  * Picking and Adding More ESLint Rules
-  * ESLint Rules Under the Hood
-  * ESLint and Abstract Syntax Trees(AST)
-  * Writing Your First Rule
-  * No-FIXME-comment Rule
-  * Expiring-code Rule
-  * Passing Parameters to Rules
-  * Verify-parameters Rule
-  * Making Rules fixble with `--fix`
-  * Summary
-* Exploring the ESLint Ecosystem
-  * Introduction
-  * Shareable Configs and Plugins
-  * Adding an ESLint Plugin from NPM
-  * Adding an ESLing Config from NPM
-  * Creating a Shareable Config
-  * Creating a Shareable Plugin
-  * Summary
-* Common ESLint Use Case
-  * Introduction
-  * Linting Client and Server JavaScript
-  * Linting ES6/7 JavaScript
-  * Linting Angular Code
-  * Linting React Code
-  * Integrate with VSCode or Atom
-  * Integrate with Webpack or Gulp
-  * Integrate with Git Hooks
-  * Integrate with Mocha.js
-  * Overriding and Ignoring Files
-  * Summary
-
-
-## 背景
-
-eslint 检查太严格：airbnb -> aribnb-base -> eslint:recommended ，所以这里给大家介绍一下 ESLint ，并且告诉大家如何 “绕过” 检查。
+在我给大家解决这些问题时，发现大家对 ESLint 还不是很了解。因此就有了这篇文章，主要给大家介绍一下 ESLint 的用法，这样大家就可以轻松地 **“绕过”** 检查。😂
 
 
 ## ESLint 简介
 
-The pluggable linting utility for JavaScript and JSX.
-
-The goals:
-- making code more consistent
-- avoiding bugs
-
-Similar to JSLint, JSHint, with a few exceptions:
-- ESLint uses Espree for JavaScript parsing.
-- ESLint uses an AST to evaluate patterns in code.
-- ESLint is completely pluggable, every single rule is a plugin and you can add more at runtime.
-
-**TODO: 这里贴代码或者图, 演示基本使用及识别错误信息, 参考官网 Getting Started**
+ESlint 即可以全局安装，也可以局部安装，比较推荐局部安装：
 
 ```
 $ npm install eslint --save-dev
 ```
 
+默认情况下，ESLint 不会进行任何规则检查，可以先通过如下命令创建配置文件：
+
 ```
 $ ./node_modules/.bin/eslint --init
 ```
 
+*.eslintrc.js*
+
+```javascript
+module.exports = {
+  "env": {
+    "browser": true
+  },
+  "extends": "eslint:recommended",
+  "rules": {
+    "indent": ["error", 4],
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"]
+  }
+};
 ```
-$ ./node_modules/.bin/eslint yourfile.js
+
+假设代码如下：
+
+*index.js* and *lib/mod.js*
+
+```javascript
+var test = function () {
+    console.log("Test")
+};
 ```
 
-**Any plugins or shareable configs that you use must also be installed locally to work with a locally-installed ESLint.**
+接下来，就可以对代码进行质量检测：
 
-同样, `eslint` 可以全局安装使用, 这里不在详述
+```
+$ ./node_modules/.bin/eslint .
+```
 
-**Any plugins or shareable configs that you use must also be installed globally to work with a globally-installed ESLint.**
+![](./img/eslint01.png)
 
+从上图中可以看到，这两个文件加起来一共有三个错误，而且每一条错误都告诉我们详细的信息，比如
+- 错误所在的位置 `2:17`
+- 错误的级别 `error`
+- 错误内容 `Strings must use singlequote`
+- 对应的 ESLint 规则 `quotes`
 
-## Creator 的 eslint
+全局使用是类似的：
 
-- `eslint-config-autofe-app` 自定义共享配置包
-- `eslint-loader` 与 webpack 集成
-- 只 Lint ES6 代码
-
-辅助调试：
-- `--print-config` Print the configuration for the given file
-- `--debug` Output debugging information
-
-
-## 配置方式
-
-1. Command line options, 不建议用
-2. Configuration Comments, 酌情使用
-3. Configuration Files, `.eslintrc.js` or `eslintConfig` in a `package.json`
-  `eslint --init` 可以帮助生成配置文件
-  配置文件格式：（ESLint 按顺序查找，一个目录下只用一个）
-    .eslintrc.js
-    .eslintrc.yaml
-    .eslintrc.yml
-    .eslintrc.json
-    .eslintrc （JSON or YAML ，已废弃）
-    package.json `eslintConfig`
+```
+$ npm install -g eslint
+$ eslint --init
+$ eslint yourfile.js
+```
 
 
-## 配置优先级
+## 配置简介
+
+前面说过，默认情况下，ESLint 不会进行任何规则检查，需要我们自己进行配置来添加规则。至于配置方式有如下几种
+
+- 命令行配置，因为写起来不方便，维护性较差，所以**不建议用**。
+- 注释配置，顾名思义，也就是在 JavaScript 文件内可以使用 JavaScript 注释添加配置，针对单个脚本文件的配置，可以**酌情使用**。
+- 文件配置，可以给整个目录提供配置，**推荐使用**。
+
+我们最常用的是文件配置方式，它支持 JavaScript 、 JSON 和 YAML 三种格式。需要注意的是，在同一个目录下，ESLint 会按照如下顺序依此查找配置文件，当存在多种格式的配置文件时，只取一个：
+1. `.eslintrc.js`
+2. `.eslintrc.yaml`
+3. `.eslintrc.yml`
+4. `.eslintrc.json`
+5. `.eslintrc` （JSON or YAML ，已废弃）
+6. `package.json` `eslintConfig`
+
+通常，我们需要配置如下内容：
+* `rules` 配置具体规则，以及每条规则的错误级别
+* `env` 指定脚本的运行环境。每一个环境都定义了一组预设的全局变量
+* `global` 额外配置的一些全局变量
+* `parserOptions` 指定解析器选项
+* `parser` 指定解析器
+
+
+### 配置 `rules`
+
+ESLint 内置了大量的[规则](https://eslint.org/docs/rules/)，你可以使用这些规则来制定你自己的代码风格。
+
+我们来看一个简单配置，假设 `.eslintrc.js` 内容如下所示：
+
+```javascript
+module.exports = {
+  "rules": {
+    "indent": ["error", 4],
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["error", "single"],
+    "semi": ["error", "always"]
+  }
+};
+```
+
+在这个例子中，`"semi"` 和 `"quotes"` 是规则的名字，而他们的第一个值表示错误级别：
+- `"off"` or `0` - 关闭规则
+- `"warn"` or `1` - 警告，不影响进程 exitCode
+- `"error"` or `2` - 报错，进程以 exitCode 为 1 退出
+
+`"quotes": ["error", "single"]` 表示字符串应当使用单引号，否则报错，`"semi": ["error", "always"]` 表示必须使用分号，否则报错。
+
+错误的级别是固定的，但是每一条规则的具体配置项各不相同，需要你自己去 [ESLint Rules](https://eslint.org/docs/rules/) 页面进行查看，下面是一个比较复杂的配置示例：
+
+```json
+{
+  "rules": {
+    "comma-spacing": ["error", {
+      "before": false,
+      "after": true
+    }],
+  }
+}
+```
+
+这个配置表示逗号的前面不能时候空格，而其后面必须紧跟空格，否则就会报错。
+
+#### 行内注释配置规则
+
+配置规则
+
+```javascript
+/* eslint eqeqeq: "off", curly: "error" */
+/* eslint quotes: ["error", "double"], curly: 2 */
+```
+
+#### 行内注释禁用规则
+
+多行禁用所有规则
+
+```javascript
+/* eslint-disable */
+
+alert('foo');
+console.log('bar');
+```
+
+多行禁用若干规则
+
+```javascript
+/* eslint-disable no-alert, no-console */
+
+alert('foo');
+console.log('bar');
+```
+
+禁用后再启用规则
+
+```javascript
+/* eslint-disable no-alert, no-console */
+
+alert('foo');
+console.log('bar');
+
+/* eslint-enable no-alert, no-console */
+
+console.log('zoo');
+```
+
+单行禁用规则
+
+```javascript
+alert('foo'); // eslint-disable-line
+
+// eslint-disable-next-line
+alert('foo');
+
+alert('foo'); // eslint-disable-line no-alert
+
+// eslint-disable-next-line no-alert
+alert('foo');
+
+alert('foo'); // eslint-disable-line no-alert, quotes, semi
+
+// eslint-disable-next-line no-alert, quotes, semi
+alert('foo');
+```
+
+
+### 配置环境 `env`
+
+指定脚本的运行环境，每一个环境都定义了一组预设的全局变量。ESLint 内置的环境有：
+* `browser`
+* `node`
+* `commonjs`
+* `es6` 这个会自动设置 `parseOptions.ecmaVersion` 为 6
+* `worker`
+* `amd`
+* `mocha`
+* `jasmine`
+* `jquery`
+* [更多](https://eslint.org/docs/user-guide/configuring#specifying-environments)
+
+有如下两种配置方式：
+
+*注释*
+```javascript
+`/* eslint-env browser, node */`
+```
+
+*文件*
+```json
+{
+  "env": {
+    "browser": true,
+    "node": true
+  }
+}
+```
+
+
+### 配置全局变量 `global`
+
+为什么需要配置全局变量呢，看如下代码：
+
+```javascript
+console.log(AHVP);
+```
+
+上面的代码使用了 `AHVP` ，但是我们没有定义这个变量，这个代码是有风险的。因此 ESLint 内置了规则 [`no-undef`](https://eslint.org/docs/rules/no-undef) 来警告我们使用了未定义的全局变量，提醒我们引入具体的 JavaScript 文件。
+
+通过 `env` 可以配置 ESLint 预定义的全局变量，但是在日常开发中，我们经常会有这种额外的全局变量，这个时候我们可以通过 `global` 来进行配置。
+
+有如下两种配置方式：
+
+*注释*
+```javascript
+`/* global AHVP */`
+`/* global var1, var2 */`
+`/* global var1:false, var2:false */`
+```
+
+*文件*
+```json
+{
+  "globals": {
+    "var1": true,
+    "var2": false
+  }
+}
+```
+
+另外，你可能注意到我们给 `var2` 设置了 `false` ，它表示不允许重新给 `var2` 赋值。向下面这样的代码会报错
+
+```javascript
+var2 = 'another value';
+```
+
+当然，这个需要开启规则 [`no-global-assign`](https://eslint.org/docs/rules/no-global-assign) 以提供支持。
+
+
+### 指定解析器选项 `parserOptions`
+
+ESLint 在检查规则之前，首先要能够解析 JavaScript 文件。默认情况下，ESLint 可以识别 ES5 语法。如果你想用 ESLint 来检查使用 ES6+ 的 JavaScript 文件，首先得让 ESLint 能够解析 ES6+ 语法。
+
+这可以通过 `parserOptions` 来进行配置：
+* `ecmaVersion` 值可以是 `3` ， `5` ， `6` / `2015` ， `7` / `2016` ， `8` / `2017` ，默认为 ES5 语法，可以修改这个开启 ES6+ 语法支持。
+* `sourceType` 默认 `"script"` , 如果使用 ECMAScript 模块可修改为 `"module"`
+* `ecmaFeatures` 开启一些额外的语言特性
+  * `jsx` JSX 语法
+  * `experimentalObjectRestSpread` Object Rest/Spread 语法
+
+配置示例：
+
+```json
+{
+  "parserOptions": {
+    "ecmaVersion": 2017,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true,
+      "experimentalObjectRestSpread": true
+    }
+  },
+  "rules": {
+    "semi": 2
+  }
+}
+```
+
+需要注意的是，仅仅配置 `{ "parserOptions": { "ecmaVersion": 6 } }` 是不够的，它告诉 ESLint 支持 ES6 语法检查，但是 ESLint 还是无法识别那些 ES6 新增的全局变量（比如，`Set`、`Map`、`WeakMap` 等），怎么办呢？答案很简单，配置 `{ "env": { "es6": true } }` 即可。
+
+
+### 指定解析器 `parser`
+
+ESLint 默认使用 [Espree](https://github.com/eslint/espree) 做为解析器，你可以使用其他的解析器，比如 [Babel-ESLint](https://www.npmjs.com/package/babel-eslint) 。
+
+推荐使用 ESLint 默认的解析器，只有在 ESLint 还不支持的如下情况下才需要 `babel-eslint` ：
+* 需要使用 Flow
+* 需要使用一些 ECMAScript 的实验特性，而 ESLint 目前只支持到 ES2017 。
+
+
+**注意：** 当使用自定义解析器时，为了使 ESLint 支持 ES6+ 语法，仍然需要配置 `parserOptions.ecmaVersion` 。
+
+
+## 配置的优先级
+
+前面，我们说过 ESLint 有三种配置方式，那这些配置的优先级是什么样的呢？看下面，优先级从高到底：
 
 1. 行内配置
-  1. /*eslint-disable*/ 和 /*eslint-enable*/
-  2. /*global*/
-  3. /*eslint*/
-  4. /*eslint-env*/
+    1. /*eslint-disable*/ 和 /*eslint-enable*/
+    2. /*global*/
+    3. /*eslint*/
+    4. /*eslint-env*/
 2. 命令行选项：
-  1. --global
-  2. --rule
-  3. --env
-  4. -c、--config
+    1. --global
+    2. --rule
+    3. --env
+    4. -c、--config
 3. 项目级配置：
-  1. 与要检测的文件在同一目录下的 .eslintrc.* 或 package.json 文件
-  2. 继续在父级目录寻找 .eslintrc 或 package.json文件，直到根目录（包括根目录）或直到发现一个有"root": true的配置。
-  3. 如果不是（1）到（3）中的任何一种情况，退回到 `~/.eslintrc` 中自定义的默认配置。
+    1. 与要检测的文件在同一目录下的 `.eslintrc.*` 或 `package.json` 文件
+    2. 继续在父级目录寻找 `.eslintrc.*` 或 `package.json` 文件，直到文件根目录，或直到发现一个有 `"root": true` 配置的文件。（这个过程中排除 `~/.eslintrc` ）
+    3. 当找不到任何配置文件时，则使用 `~/.eslintrc` 。
 
-  找到项目根目录为止还是一直到文件系统根目录？
-  多级 eslint 配置文件会合并，子目录优先级更高。并且会覆盖默认设置 `baseConfig` 。
+以上所有配置会合并，并且覆盖默认配置 `baseConfig` 。
+
+举例说明：
 
 ```
 home
+├── .eslintrc <- [1]
 └── user
-    ├── .eslintrc <- Always skipped if other configs present
-    └── projectA
-        ├── .eslintrc  <- Not used
-        └── lib
-            ├── .eslintrc  <- { "root": true }
-            └── main.js
+    ├── .eslintrc <- [2] Always skipped if other configs present
+    ├── projectA
+    │   ├── .eslintrc  <- [3]
+    │   ├── libA
+    │   │   ├── .eslintrc <- [4]
+    │   │   └── main.js
+    │   └── libB
+    │       ├── .eslintrc  <- [5] { "root": true }
+    │       └── main.js
+    └── projectB
+        └── other.js
 ```
 
-问题
-  项目目录之外的 eslintrc 配置文件可能导致 `npm start` 报错，比如找不到 `eslint-config-airbnb` 。在项目的根目录下，在 package.json 的 `eslintConfig` 字段中配置 `"root": true` ，或者在 eslintrc 文件中配置 `"root": true` ，可以解决这个问题。
+解释说明：
+* `projectA/libA/main.js` 配置是 `[4]` + `[3]` + `[1]` 。
+* `projectA/libB/main.js` 配置是 `[5]` 。
+* 假如 `[1]` 不存在，则 `projectB/other.js` 使用 `[2]` 。
 
 
-## 配置项
+## 共享配置 Shareable Configs
 
-1. `parserOptions` 指定想要支持的 JavaScript 语言选项
-  ecmaVersion 默认为 ES5 语法，可以修改这个开启 ES6+
-  sourceType 默认 "script" , 如果使用 ECMAScript 可修改为 "module"
-  ecmaFeatures 指定一些额外的语言特性
-    globalReturn
-    impliedStrict
-    jsx JSX 语法
-    experimentalObjectRestSpread
-2. `parser`
-  ESLint 默认使用 Espree 做为解析器，你可以使用其他的解析器，比如 babel-eslint
+前面讲了那么多配置，都是我们自己进行的。但是有人已经总结并写好了一份非常不错的配置，那我应当怎么使用呢。最笨的办法是 Copy 大法，不过我们还有更好的方式。ESLint 提供了配置扩展机制，别人写好的配置就叫共享配置。
 
-  You only need to use babel-eslint if you are using types (Flow) or experimental features(ES6+ ?) not supported in ESLint itself yet.
+共享配置约定 `eslint-config-xxx` 命名规则，自己开发的共享配置需要发布到 npm 上。你也可以直接使用别人开发好的配置，以 `eslint-config-airbnb` 为例：
 
-  注意，当使用自定义解析器时，为了使 ESLint 在非 ECMAScript 5 特性下正常工作，配置属性 parserOptions 仍然是必须的。解析器被传入 parserOptions，可能会也可能不会使用它们来决定开启哪个特征。
-3. `env` 配置，指定脚本的运行环境。每一个 environment 都预设了一组预设的 global 变量
-  browser
-  node
-  commonjs
-  es6 这个会自动设置 parseOptions.ecmaVersion 为 6
-  worker
-  amd
-  mocha, jasmine, jest, phantomjs, protractor, qunit
-  jquery, prototypejs
-  ...
+首先需要下载对应插件：
 
-  `/* eslint-env node, mocha */`
+```
+npm install --save-dev eslint-config-airbnb
+```
 
-  `"browser": true`
-  `"example/custom": true` 使用插件中提供的环境预设
-4. `global` 配置，额外配置的一些全局变量
-  `/* global var1, var2 */`
-  `/* global var1:false, var2:false */` 只读
-5. `rules` 配置，一些具体的规则配置
-  - `"off"` or `0` - 关闭
-  - `"warn"` or `1` - 警告 (doesn’t affect exit code)
-  - `"error"` or `2` - 报错 (exit code is 1 when triggered)
+然后配置 `extends` 即可使用：
 
-  `/* eslint eqeqeq: "off", curly: "error" */`
-  `/* eslint quotes: ["error", "double"], curly: 2 */`
-  `/* eslint "plugin1/rule1": "error" */` 插件内规则
-  `/* eslint-disable */`
-  `/* eslint-enable */`
-  `/* eslint-disable no-alert, no-console */`
-  `/* eslint-enable no-alert, no-console */`
-  `// eslint-disable-line`
-  `// eslint-disable-next-line`
-  `// eslint-disable-line no-alert`
-  `// eslint-disable-line no-alert, quotes, semi`
-  `// eslint-disable-line example/rule-name`
-6. `settings`
-   ESLint 支持在配置文件添加共享设置。你可以添加 `settings` 对象到配置文件，它会提供给每一个将被执行的规则。如果你想添加自定义规则而且使它们可以访问到相同的信息，这将会很有用，并且很容易配置。
-7. `plugins` 插件，约定 `eslint-plugin-xxx` 命名规则
-   通常输出规则。一些插件也可以输出一个或多个命名的共享配置
+```json
+{
+  "extends": [
+    "airbnb"
+  ]
+}
+```
 
-   比如 `eslint-plugin-react` ，这样 ESLint 可以识别 React 语法
+或者：
 
-   **Due to the behaviour of Node’s `require` function, a globally-installed instance of ESLint can only use globally-installed ESLint plugins, and locally-installed version can only use locally-installed plugins. Mixing local and global plugins is not supported.**
-8. `extends` 配置文件可扩展
-   可以基于别人写好的配置文件来扩展
-   可接受格式：
-   1. 可共享配置包
-   2. 插件中的可共享配置内容
-   3. 配置文件
-
-   关于 `eslint:recommended`
-   1. 就是 ESLint 官方提供的的配置集，你可以基于它扩展，设置 `"extends": "eslint:recommended"` 即可。
-   2. 它开启了 Rules 页面中所有打 **“对勾”** 的规则。
-   3. 这个推荐的子集只能在 ESLint 主要版本进行更新。
-
-   开发可共享配置包
-   1. 约定 `eslint-config-xxx` 命名规则
-   2. 开发者会把包发布到 npm
-   3. 使用的时候下载到 `node_modules` 目录下
-   4. 使用方式，可以省略包名前缀 `eslint-config-`
-     `"airbnb"` 世纪使用的是 `eslint-config-airbnb`
-   4. 使用插件包中的共享配置，可以省略包名前缀 `eslint-plugin-`
-     `"plugin:react/recommended"`
-9. `overrides`
-  有时，你可能需要更精细的配置，比如，如果同一个目录下的文件需要有不同的配置。因此，你可以在配置中使用 `overrides` 键，它只适用于匹配特定的 glob 模式的文件，比如 `app/**/*.test.js` 。
-
-  `overrides` 下不能配置 `extends`, `overrides`, and `root`
+```json
+{
+  "extends": [
+    "eslint-config-airbnb"
+  ]
+}
+```
 
 
-## `.eslintignore` 忽略某些文件
+### 使用 `eslint:recommended`
 
-可以在项目根目录创建 `.eslintignore` 文件，一次只有一个 `.eslintignore` 文件会被使用，不是当前工作目录下的 `.eslintignore` 文件将不会被用到。
+其实， ESLint 官方内置了一个共享配置 `eslint:recommended` ，你可以基于它进行配置：
+
+```javascript
+module.exports = {
+  "extends": "eslint:recommended",
+  "rules": {
+    // 添加 eslint:recommended 没有的规则
+    "indent": ["error", 4],
+    "linebreak-style": ["error", "unix"],
+    "quotes": ["error", "double"],
+    "semi": ["error", "always"],
+
+    // 覆盖 eslint:recommended 的规则
+    "comma-dangle": ["error", "always"],
+    "no-cond-assign": ["error", "always"],
+
+    // 禁用 eslint:recommended 的规则
+    "no-console": "off",
+  }
+}
+```
+
+那 `eslint:recommended` 具体包括哪些规则呢，可以查看 [ESLint Rules](https://eslint.org/docs/rules/) 页面的规则列表，其中所有打 **“对勾”** 的规则就是 `eslint:recommended` 启用的规则。
+
+
+## 插件 Plugins
+
+插件是 ESLint 的强大之处，通过插件，我们可以识别新的语法，自定义更多的规则，还可以提供共享配置。
+
+插件约定 `eslint-plugin-xxx` 命名规则，自己开发的插件需要发布到 npm 上。你也可以直接使用别人开发好的插件，以 `eslint-plugin-react` 为例：
+
+首先需要下载对应插件：
+
+```
+npm install --save-dev eslint-plugin-react
+```
+
+然后配置 `plugins` 即可使用：
+
+```json
+{
+  "plugins": [
+    "react"
+  ]
+}
+```
+
+或者：
+
+```json
+{
+  "plugins": [
+    "eslint-plugin-react"
+  ]
+}
+```
+
+
+## Global or Local
+
+由于 Node 的 `require` 函数，一个全局安装的 ESLint 只能使用全局安装的 Plugin 或 Shareable Config 。同样，一个本地安装的 ESLint 也只能使用本地安装的 Plugin 或 Shareable Config 。混合使用全局和本地的 Plugin 或 Shareable Config 是不允许的。
+
+所以，项目目录之外的 `.eslintrc.*` 配置文件可能导致 `./node_modules/.bin/eslint .` 报错，比如找不到 `eslint-config-airbnb` 。配置 `"root": true` 可以解决这个问题。
+
+
+## 同一目录下实现不同配置
+
+利用前文的配置查找原理，我们可以实现不同目录下使用不同配置的需求。但是有时候我们需要一种更细粒度的配置，比如针对同一个目录下的不同文件采用不同的配置，这个时候就需要用到 `overrides` 了。
+
+`overrides` 使用 Glob Patterns 来匹配文件，比如：
+```json
+{
+  "rules": {
+    "quotes": [2, "double"]
+  },
+
+  "overrides": [
+    {
+      "files": ["bin/*.js", "lib/*.js"],
+      "excludedFiles": "*.test.js",
+      "rules": {
+        "quotes": [2, "single"]
+      }
+    }
+  ]
+}
+```
+
+**注意：** `overrides` 下不能配置 `extends` 、 `overrides` 和 `root` 。
+
+
+## 用 `.eslintignore` 忽略某些文件
+
+可以创建 `.eslintignore` 文件，不过只有项目根目录下（ `cwd` ）的该文件才有效。
 
 ESLint 默认忽略 `/node_modules/*` 和 `/bower_components/*`
 
@@ -246,17 +501,23 @@ build/*
 ```
 
 
-## 课外阅读
+## Creator 的 eslint
 
-- https://github.com/dustinspecker/awesome-eslint
-- https://eslint.org/docs/user-guide/integrations
-- https://eslint.org/docs/user-guide/formatters/
-- Parser https://github.com/babel/babel-eslint
-- Config, 开发可共享配置包
-   https://github.com/airbnb/javascript/tree/master/packages/eslint-config-airbnb
-- Plugin, 开发插件
-  https://github.com/yannickcr/eslint-plugin-react
-  https://github.com/evcohen/eslint-plugin-jsx-a11y
-- https://github.com/standard/standard
-- https://eslint.org/docs/developer-guide/nodejs-api
-  https://eslint.org/docs/developer-guide/nodejs-api#cliengine
+- `eslint-config-autofe-app` 自定义共享配置包，照搬了 `airbnb-base`，但是做了一些定制，比 `airbnb-base` 宽松，比 `eslint:recommended` 严格。
+- 在项目根目录默认有一个 `.eslintrc.js` ，配置了 `root: true` 来防止受到外部 `.eslintrc.*` 的影响
+- `eslint-loader` 与 webpack 集成。
+- 只 Lint ES6 代码。
+
+
+## 延伸阅读
+
+- [Integrations](https://eslint.org/docs/user-guide/integrations)
+  Editors(VSCode, Atom), Build tools(Webpack, Gulp), Source Control(Git), Testing(Mocha) and Others
+- [Formatters](https://eslint.org/docs/user-guide/formatters/)
+  stylish, checkstyle, html, json and so on.
+- Developer Guide
+  - Rules, 规则
+  - Plugins, 插件, 提供 Rules + Environments + Processors + Config, 比如 `eslint-plugin-react`
+  - Shareable Configs, 可共享配置包, 比如 `eslint-config-airbnb`
+  - Custom Formatters, 自定义报告格式
+- [awesome-eslint](https://github.com/dustinspecker/awesome-eslint)
