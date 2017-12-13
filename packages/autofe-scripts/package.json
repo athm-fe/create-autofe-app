@@ -1,6 +1,6 @@
 {
   "name": "autofe-scripts",
-  "version": "0.11.0",
+  "version": "0.11.1",
   "description": "Configuration and scripts for Create AutoFE App.",
   "repository": "athm-fe/create-autofe-app",
   "author": "jpuncle",
