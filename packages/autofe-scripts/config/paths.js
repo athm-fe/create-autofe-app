@@ -14,6 +14,7 @@ module.exports = {
   appDirectory,
   appSrc: resolveApp('src'),
   appBuild: resolveApp('build'),
+  appConfig: resolveApp('creator.config.js'),
 };
 
 function resolveOwn(relativePath) {
@@ -25,5 +26,6 @@ if (__dirname.indexOf(path.join('packages', 'autofe-scripts', 'config')) !== -1)
     appDirectory: resolveOwn('../template'),
     appSrc: resolveOwn('../template/src'),
     appBuild: resolveOwn('../template/build'),
+    appConfig: resolveOwn('../template/creator.config.js'),
   };
 }

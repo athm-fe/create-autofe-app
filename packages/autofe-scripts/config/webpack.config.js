@@ -4,6 +4,7 @@ const path = require('path');
 const glob = require('glob');
 const webpack = require('webpack');
 const paths = require('./paths');
+const config = require('./index');
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -56,6 +57,7 @@ module.exports = () => ({
     path: path.join(context, 'build'),
     publicPath: '/',
   },
+  externals: config.externals,
   resolve: {
     alias: {
       // Resolve Babel runtime relative to autofe-scripts.
