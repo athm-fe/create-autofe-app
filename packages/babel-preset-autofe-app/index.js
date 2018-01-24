@@ -13,14 +13,22 @@ function buildTargets(options) {
 /**
  * @param options.targets 重新指定 targets
  * @param options.additionalTargets 合并 defaultTargets 和 additionalTargets
+ * @param options.debug 开启 babel-preset-env 的调试模式
+ * @param options.exclude 去掉 babel-preset-env 的部分插件
  */
-module.exports = function buildPreset(context, options) {
+module.exports = function buildPreset(context, options = {}) {
   const transpileTargets = (options && options.targets) ||
     buildTargets(options || {});
+
+  const debug = (options && typeof options.debug === 'boolean') ? !!options.debug : false;
+
+  const excludeList = options.exclude || [];
 
   return {
     presets: [
       require('babel-preset-env').default(null, {
+        // Set the debug
+        debug,
         // Set the targets
         targets: transpileTargets,
         // Do not transform modules to CJS
@@ -38,6 +46,7 @@ module.exports = function buildPreset(context, options) {
           'transform-es2015-classes',
           // Need custom config for this plugin
           'transform-regenerator',
+          ...excludeList,
         ],
       }),
       // require('babel-preset-react'),
