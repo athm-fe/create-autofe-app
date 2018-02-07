@@ -11,5 +11,5 @@ console.log('sum(3, 5)', sum(3, 5));
 console.log('PI', PI);
 
 $(function () {
-  console.log('jQuery document.ready');
+  console.log('jQuery document.ready 中文');
 });

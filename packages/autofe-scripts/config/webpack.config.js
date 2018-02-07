@@ -38,6 +38,7 @@ if (isProd) {
     output: {
       // quote all keys in object literals
       quote_keys: true,
+      ascii_only: true,
     },
     mangle: {
       // mangler to name function expressions
