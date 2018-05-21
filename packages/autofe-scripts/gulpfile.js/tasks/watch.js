@@ -14,5 +14,5 @@ const watchTask = function () {
   });
 };
 
-gulp.task('watch', ['browserSync'], watchTask);
+gulp.task('watch', watchTask);
 module.exports = watchTask;

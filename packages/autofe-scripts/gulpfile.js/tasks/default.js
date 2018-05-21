@@ -9,5 +9,6 @@ gulp.task('default', (cb) => {
     ['copy', 'fonts', 'images'],
     ['sass', 'js', 'webpack', 'html', 'markdown'],
     ['watch'],
+    ['browserSync'],
     cb);
 });
