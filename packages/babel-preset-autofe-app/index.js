@@ -52,31 +52,36 @@ module.exports = function buildPreset(context, options = {}) {
       // require('babel-preset-react'),
     ],
     plugins: [
-      // https://github.com/babel/babel/issues/1065
-      [require('babel-plugin-transform-es2015-template-literals'), {
-        spec: true,
-      }],
-      // use simple assignments instead of Object.defineProperty.
-      [require('babel-plugin-transform-es2015-computed-properties'), {
-        loose: true,
-      }],
-      // Transforms class properties, property and static
+      // [Stage-2 to Stage-3] Transforms class properties, property and static
       require('babel-plugin-transform-class-properties'),
-      // For classes that have supers, the super class won’t resolve correctly.(IE10 and below)
-      // so enable loose mode
-      [require('babel-plugin-transform-es2015-classes'), {
-        loose: true,
-      }],
-      // Adds syntax support for import()
+
+      // [Stage-2 to Stage-3] Adds syntax support for import()
       require('babel-plugin-syntax-dynamic-import'),
-      // object rest and spread
+
+      // [Stage-3 to ES2018] object rest and spread
       [require('babel-plugin-transform-object-rest-spread'), {
         // Do not use `Object.assign` directly
         useBuiltIns: false,
       }],
 
-      // Async generator functions are converted to generators
+      // [Stage-3 to ES2018] Async generator functions are converted to generators
       require('babel-plugin-transform-async-generator-functions'),
+
+      // https://github.com/babel/babel/issues/1065
+      [require('babel-plugin-transform-es2015-template-literals'), {
+        spec: true,
+      }],
+
+      // use simple assignments instead of Object.defineProperty.
+      [require('babel-plugin-transform-es2015-computed-properties'), {
+        loose: true,
+      }],
+
+      // For classes that have supers, the super class won’t resolve correctly.(IE10 and below)
+      // so enable loose mode
+      [require('babel-plugin-transform-es2015-classes'), {
+        loose: true,
+      }],
 
       // regenerator config
       [require('babel-plugin-transform-regenerator'), {
@@ -105,11 +110,6 @@ module.exports = function buildPreset(context, options = {}) {
       require('babel-plugin-transform-es3-property-literals'),
       // Reserved words as property names, for <=IE8
       require('babel-plugin-transform-es3-member-expression-literals'),
-
-      // https://babeljs.io/docs/plugins/transform-jscript/
-      // https://kangax.github.io/nfe/#jscript-bugs
-      // TODO 这个有 Bug，https://github.com/babel/babel/issues/6040
-      // 'transform-jscript',
     ],
   };
 };

@@ -4,14 +4,9 @@
 
 > Thanks for [babel-preset-airbnb](https://github.com/airbnb/babel-preset-airbnb).
 
-Based on `babel-preset-env`, except for the following:
-- `SIMD`: this is a performance feature, so is pretty pointless to polyfill/transpile.
+Currently contains transforms for all standard syntax that is [stage 4](https://github.com/tc39/ecma262) (ES2018) or [stage 3](https://github.com/tc39/proposals#active-proposals), except for the following:
+- [async-to-promises](https://www.npmjs.com/package/babel-plugin-async-to-promises) is not yet complete enough to be safely used
 - lifted template literal restrictions: we do not use tagged template literals, nor implement custom DSLs, otherwise we would enable this.
-
-We have also enabled the following:
-- object rest/spread
-- class properties
-- Syntax Dynamic Import. Allow parsing of `import()`. [source](https://babeljs.io/docs/plugins/syntax-dynamic-import/)
 
 ## Install
 
@@ -88,6 +83,16 @@ If you wish, you can also inherit our default list of browsers and extend them u
       "chrome": 42,
       "explorer": 8
     }
+  }]]
+}
+```
+
+You may override our default debug option by providing your own `debug` key.
+
+```json
+{
+  "presets": [["autofe-app", {
+    "debug": true
   }]]
 }
 ```
