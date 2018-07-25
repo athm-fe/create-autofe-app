@@ -6,7 +6,7 @@ const browserSync = require('../lib/browserSync');
 const uglify = require('gulp-uglify');
 const gulpif = require('gulp-if');
 const rename = require('gulp-rename');
-const gutil = require('gulp-util');
+const PluginError = require('plugin-error');
 
 const jsTask = function () {
   return gulp.src(config.js.src)
@@ -16,7 +16,7 @@ const jsTask = function () {
       },
     })))
     .on('error', function(err) {
-      var message = new gutil.PluginError('js', err).toString();
+      var message = new PluginError('js', err).toString();
       process.stderr.write(`${message}\n`);
       process.exit(1);
     })

@@ -14,7 +14,7 @@
     "eslint-restricted-globals": "^0.1.1"
   },
   "peerDependencies": {
-    "eslint": "^4.13.0",
-    "eslint-plugin-import": "^2.8.0"
+    "eslint": "^5.2.0",
+    "eslint-plugin-import": "^2.13.0"
   }
 }

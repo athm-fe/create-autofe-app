@@ -6,7 +6,7 @@ const browserSync = require('../lib/browserSync');
 const render = require('gulp-nunjucks-render');
 const data = require('gulp-data');
 const path = require('path');
-const gutil = require('gulp-util');
+const PluginError = require('plugin-error');
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -85,7 +85,7 @@ const htmlTask = function () {
     }))
     .pipe(render(options))
     .on('error', function (error) {
-      const message = new gutil.PluginError('nunjucks', error).toString();
+      const message = new PluginError('nunjucks', error).toString();
       process.stderr.write(`${message}\n`);
 
       if (isProd) {

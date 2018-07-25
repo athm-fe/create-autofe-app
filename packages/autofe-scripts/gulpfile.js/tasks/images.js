@@ -10,7 +10,17 @@ const imagesTask = function () {
   return gulp.src(config.images.src)
     .pipe(gulpif(
       process.env.NODE_ENV === 'production',
-      imagemin(config.images.imagemin)
+      imagemin([
+        imagemin.gifsicle(),
+        imagemin.jpegtran({progressive: true}),
+        imagemin.optipng(),
+        imagemin.svgo({
+          plugins: [
+            {removeViewBox: false},
+            {cleanupIDs: false}
+          ]
+        })
+      ])
     ))
     .pipe(gulp.dest(config.images.dest))
     .on('end', browserSync.reload);

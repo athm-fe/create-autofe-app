@@ -16,15 +16,13 @@ module.exports = {
   ].concat(customExtends),
   env: {
     browser: true,
+    node: true,
     commonjs: true,
     amd: true,
   },
   parserOptions: {
-    ecmaVersion: 2017,
+    ecmaVersion: 2018,
     sourceType: 'module',
-    ecmaFeatures: {
-      experimentalObjectRestSpread: true,
-    },
   },
   rules: {
     strict: 'off',

@@ -1,5 +1,3 @@
-'use strict';
-
 module.exports = {
   rules: {
     // enforces getter/setter pairs in objects
@@ -7,7 +5,7 @@ module.exports = {
 
     // enforces return statements in callbacks of array's methods
     // https://eslint.org/docs/rules/array-callback-return
-    'array-callback-return': 'error',
+    'array-callback-return': ['error', { allowImplicit: true }],
 
     // treat var statements as if they were block scoped
     'block-scoped-var': 'error',
@@ -43,6 +41,11 @@ module.exports = {
 
     // make sure for-in loops have an if statement
     'guard-for-in': 'error',
+
+    // enforce a maximum number of classes per file
+    // https://eslint.org/docs/rules/max-classes-per-file
+    // TODO: semver-major (eslint 5): enable
+    'max-classes-per-file': ['off', 1],
 
     // disallow the use of alert, confirm, and prompt
     'no-alert': 'warn',
@@ -101,6 +104,8 @@ module.exports = {
     // disallow reassignments of native objects or read-only globals
     // https://eslint.org/docs/rules/no-global-assign
     'no-global-assign': ['error', { exceptions: [] }],
+    // deprecated in favor of no-global-assign
+    'no-native-reassign': 'off',
 
     // disallow implicit type conversions
     // https://eslint.org/docs/rules/no-implicit-coercion
@@ -173,6 +178,7 @@ module.exports = {
       props: true,
       ignorePropertyModificationsFor: [
         'acc', // for reduce accumulators
+        'accumulator', // for reduce accumulators
         'e', // for e.returnvalue
         'ctx', // for Koa routing
         'req', // for Express requests
@@ -225,10 +231,10 @@ module.exports = {
     }, {
       property: '__defineSetter__',
       message: 'Please use Object.defineProperty instead.',
-    // }, {
-    //   object: 'Math',
-    //   property: 'pow',
-    //   message: 'Use the exponentiation operator (**) instead.',
+    }, {
+      object: 'Math',
+      property: 'pow',
+      message: 'Use the exponentiation operator (**) instead.',
     }],
 
     // disallow use of assignment in return statement
@@ -242,7 +248,10 @@ module.exports = {
 
     // disallow self assignment
     // https://eslint.org/docs/rules/no-self-assign
-    'no-self-assign': 'error',
+    // TODO: semver-major: props -> true
+    'no-self-assign': ['error', {
+      props: false,
+    }],
 
     // disallow comparisons where both sides are exactly the same
     'no-self-compare': 'error',

@@ -9,7 +9,7 @@ const assets = require('postcss-assets');
 const autoprefixer = require('autoprefixer');
 const sourcemaps = require('gulp-sourcemaps');
 const gulpif = require('gulp-if');
-const gutil = require('gulp-util');
+const PluginError = require('plugin-error');
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -21,7 +21,7 @@ const sassTask = function () {
     }))
     .on('error', function (err) {
       if (isProd) {
-        var message = new gutil.PluginError('sass', err.messageFormatted).toString();
+        var message = new PluginError('sass', err.messageFormatted).toString();
         process.stderr.write(message + '\n');
         process.exit(1);
       } else {

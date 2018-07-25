@@ -1,7 +1,9 @@
 'use strict';
 
 const gulp = require('gulp');
-const gutil = require('gulp-util');
+const PluginError = require('plugin-error');
+const log = require('fancy-log');
+const chalk = require('chalk');
 // const config = require('../config');
 const browserSync = require('../lib/browserSync');
 const webpack = require('webpack');
@@ -15,17 +17,17 @@ const webpackTask = function (cb) {
   const config = webpackConfig();
 
   if (isEmpty(config.entry)) {
-    gutil.log('webpack:', gutil.colors.red('no entries'));
+    log('webpack:', chalk.red('no entries'));
     cb();
     return;
   }
 
   webpack(config).run((err, stats) => {
     if (err) {
-      throw new gutil.PluginError('webpack', err);
+      throw new PluginError('webpack', err);
     }
 
-    gutil.log('webpack:', stats.toString({
+    log('webpack:', stats.toString({
       colors: true,
     }));
 

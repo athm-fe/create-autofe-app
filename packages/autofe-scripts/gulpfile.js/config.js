@@ -34,10 +34,6 @@ module.exports = {
   images: {
     src: path.join(root.src, '/**/*.{png,jpg,gif,svg}'),
     dest: path.join(root.dest),
-    imagemin: {
-      progressive: true,
-      svgoPlugins: [{ removeViewBox: false, cleanupIDs: false }],
-    },
   },
   sass: {
     src: path.join(root.src, '/**/*.{scss,css}'),
