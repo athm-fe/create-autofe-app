@@ -1,5 +1,3 @@
-'use strict';
-
 // Use all plugins
 const defaultTargets = {
   // React parses on ie 9, so we should too

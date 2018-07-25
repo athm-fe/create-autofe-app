@@ -4,7 +4,6 @@
  * in entry config
  * require.resolve('autofe-polyfill')
  */
-'use strict';
 
 /**
  * https://github.com/es-shims/es5-shim

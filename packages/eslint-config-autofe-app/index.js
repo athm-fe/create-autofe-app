@@ -1,5 +1,3 @@
-'use strict';
-
 const customExtends = [
   './rules/best-practices',
   './rules/errors',

@@ -36,8 +36,6 @@
 //   /!\ DO NOT MODIFY THIS FILE /!\
 // ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-'use strict';
-
 var chalk = require('chalk');
 
 var currentNodeVersion = process.versions.node;
