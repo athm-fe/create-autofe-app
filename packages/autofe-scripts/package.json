@@ -45,7 +45,7 @@
     "gulp-if": "^2.0.2",
     "gulp-imagemin": "^4.1.0",
     "gulp-include": "^2.3.1",
-    "gulp-markdown": "^2.0.1",
+    "gulp-markdown": "2.0.0",
     "gulp-nunjucks-render": "^2.2.2",
     "gulp-postcss": "^7.0.1",
     "gulp-rename": "^1.4.0",
