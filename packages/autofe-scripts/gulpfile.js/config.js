@@ -28,7 +28,7 @@ module.exports = {
     dest: path.join(root.dest),
   },
   fonts: {
-    src: path.join(root.src, '/**/*.{eot,svg,ttf,woff,woff2}'),
+    src: path.join(root.src, '/**/*.{eot,ttf,woff,woff2}'), // svg 交由 images 压缩
     dest: path.join(root.dest),
   },
   images: {
