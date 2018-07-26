@@ -2,7 +2,7 @@
 
 const path = require('path');
 const glob = require('glob');
-const webpack = require('webpack');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const paths = require('./paths');
 const config = require('./index');
 
@@ -25,30 +25,8 @@ function getEntries() {
   return entries;
 }
 
-const plugins = [];
-
-if (isProd) {
-  plugins.push(new webpack.optimize.UglifyJsPlugin({
-    compress: {
-      // optimize property access: a["foo"] → a.foo
-      properties: false,
-      // warn about potentially dangerous optimizations/code
-      warnings: false,
-    },
-    output: {
-      // quote all keys in object literals
-      quote_keys: true,
-      ascii_only: true,
-    },
-    mangle: {
-      // mangler to name function expressions
-      screw_ie8: false,
-    },
-    sourceMap: true,
-  }));
-}
-
 module.exports = () => ({
+  mode: isProd ? 'production' : 'development',
   devtool: isProd ? 'false' : 'eval',
   context,
   entry: getEntries(),
@@ -100,5 +78,15 @@ module.exports = () => ({
       },
     ],
   },
-  plugins,
+  optimization: {
+    minimizer: [
+      new UglifyJsPlugin({
+        uglifyOptions: {
+          output: {
+            ascii_only: true,
+          },
+        }
+      })
+    ],
+  },
 });

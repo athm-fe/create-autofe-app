@@ -58,6 +58,7 @@
     "pretty-hrtime": "^1.0.3",
     "require-dir": "^1.0.0",
     "run-sequence": "^2.2.1",
-    "webpack": "^3.12.0"
+    "uglifyjs-webpack-plugin": "^1.2.7",
+    "webpack": "^4.16.2"
   }
 }
