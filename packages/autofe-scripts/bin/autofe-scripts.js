@@ -11,8 +11,7 @@ switch (script) {
   case 'start':
   case 'build':
   case 'test':
-  case 'eject':
-  case 'oldJS': {
+  case 'eject': {
     const result = spawn.sync(
       'node',
       [require.resolve(`../scripts/${script}`)].concat(args),

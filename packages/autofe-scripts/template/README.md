@@ -434,11 +434,7 @@ for html
 1. `xxx.old.js` --> UglifyJS --> rename --> `xxx.js`
 2. `yyy.entry.js` ---> Webpack + Babel --> `yyy.js`
 
-原有的非 ES6 的代码怎么办？在项目目录下执行如下命令，可以将原有的 `xxx.js` 重命名为 `xxx.old.js` 。
-```
-./node_modules/autofe-scripts oldJS
-```
-即：`xxx.js` --> `autofe-scripts oldJS` 批量重命名 --> `xxx.old.js` 。
+原有的非 ES6 的代码怎么办？简单啊，把原有的 `xxx.js` 重命名为 `xxx.old.js` 即可。
 
 ## sourcemaps
 
