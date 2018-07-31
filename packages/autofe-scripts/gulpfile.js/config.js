@@ -49,7 +49,14 @@ module.exports = {
   },
   autoprefixer: {
     option: {
-      browsers: ['ios >= 6', 'android >= 4.0', 'Explorer >= 6', 'Firefox >= 20', 'Opera > 10'],
+      browsers: [
+        // defaults
+        // '> 0.5%', 'last 2 versions', 'Firefox ESR', 'not dead',
+        '> 0.2%', 'last 2 versions', 'Firefox ESR', 'not dead',
+        'iOS >= 8',
+        'Android >= 4.0',
+        'Explorer >= 9'
+      ],
     },
   },
   js: {
