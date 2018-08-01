@@ -153,8 +153,17 @@ NODE_ENV=development npm run build
 
 加浏览器前缀时，我们只考虑下面所列的浏览器：
 ```
-browsers: ['ios >= 6', 'android >= 4.0', 'Explorer >= 6', 'Firefox >= 20', 'Opera > 10']
+browsers: [
+  '> 0.2%', 'last 2 versions', 'Firefox ESR', 'not dead',
+  'iOS >= 8',
+  'Android >= 4.0',
+  'Explorer >= 9'
+]
 ```
+
+解释一下，`> 0.2%` 表示流行使用的浏览器版本，但是由于新发布的版本可能暂时未达到使用率，所以加上 `last 2 versions` 以及 `Firefox ESR`，另外前面的条件可能包含已经 `dead` 的浏览器版本，我们不打算考虑这些浏览器，所以使用 `not dead` 去掉这些浏览器版本。最后明确指定我们会进行测试的浏览器最低要求，即 `iOS >= 8, Android >= 4.0, Explorer >= 9` 。
+
+你可以使用 [browser.list](http://browserl.ist/?q=%3E+0.2%25%2C+last+2+versions%2C+Firefox+ESR%2C+not+dead%2C+iOS+%3E%3D+8%2C+Android+%3E%3D+4.0%2C+Explorer+%3E%3D+9) 来查看我们的规则包含了哪些浏览器版本。
 
 Autoprefixer 根据你所支持的浏览器配置，从 [Can I Use](http://caniuse.com/) 获取数据，然后只添加必要的厂商前缀。
 
@@ -211,6 +220,28 @@ Autoprefixer 还会去掉老旧的前缀，比如 `border-radius` ：
       -ms-transform: scale(0.5);
        -o-transform: scale(0.5);
           transform: scale(0.5);
+}
+```
+
+#### 怎么用 `-webkit-min-device-pixel-ratio`
+
+```css
+@media (min-resolution: 2dppx) {
+  .image {
+    background-image: url(image@2x.png);
+  }
+}
+```
+
+会被处理成
+
+```css
+@media (-webkit-min-device-pixel-ratio: 2),
+       (-o-min-device-pixel-ratio: 2/1),
+       (min-resolution: 2dppx) {
+  .image {
+    background-image: url(image@2x.png);
+  }
 }
 ```
 
