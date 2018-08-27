@@ -56,6 +56,7 @@ module.exports = () => ({
         use: [
           {
             options: {
+              emitWarning: true,
               eslintPath: require.resolve('eslint'),
               baseConfig: {
                 extends: [require.resolve('eslint-config-autofe-app')],
