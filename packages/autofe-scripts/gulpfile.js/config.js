@@ -2,6 +2,10 @@
 
 const path = require('path');
 
+const paths = require('../config/paths');
+const proxy = require('http-proxy-middleware');
+const appConfig = require(paths.appConfig);
+
 const root = {
   src: 'src',
   dest: 'build',
@@ -15,6 +19,24 @@ if (process.platform === 'darwin') {
   chromeName = 'google-chrome';
 } else if (process.platform === 'win32') {
   chromeName = 'chrome';
+}
+
+const browserSyncOption = {
+  browser: chromeName,
+  server: {
+    baseDir: root.dest,
+    directory: true,
+  },
+};
+
+if (appConfig.browserSync) {
+  const middleProxy = [];
+  for (const key in appConfig.browserSync.proxy) {
+    if (appConfig.browserSync.proxy.hasOwnProperty(key)) {
+      middleProxy.push(proxy(key, appConfig.browserSync.proxy[key]));
+    }
+  }
+  browserSyncOption.server.middleware = middleProxy;
 }
 
 module.exports = {
@@ -77,13 +99,7 @@ module.exports = {
     dest: root.dest,
   },
   browserSync: {
-    option: {
-      browser: chromeName,
-      server: {
-        baseDir: root.dest,
-        directory: true,
-      },
-    },
+    option: browserSyncOption,
   },
   webpack: {
     src: [path.join(root.src, '/**/*.js'), `!${path.join(root.src, '/**/*.old.js')}`],
