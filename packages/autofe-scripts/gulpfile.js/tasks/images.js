@@ -15,12 +15,12 @@ const imagesTask = function () {
         imagemin.gifsicle(),
         imagemin.jpegtran({progressive: true}),
         imagemin.optipng(),
-        imagemin.svgo({
-          plugins: [
-            {removeViewBox: false},
-            {cleanupIDs: false}
-          ]
-        })
+        // imagemin.svgo({
+        //   plugins: [
+        //     {removeViewBox: false},
+        //     {cleanupIDs: false}
+        //   ]
+        // })
       ])
     ))
     .pipe(gulp.dest(config.images.dest))

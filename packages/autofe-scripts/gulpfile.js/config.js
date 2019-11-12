@@ -28,11 +28,15 @@ module.exports = {
     dest: path.join(root.dest),
   },
   fonts: {
-    src: path.join(root.src, '/**/*.{eot,ttf,woff,woff2}'), // svg 交由 images 压缩
+    src: path.join(root.src, '/**/*.{eot,ttf,woff,woff2}'), // svg 单独处理
+    dest: path.join(root.dest),
+  },
+  svg: {
+    src: path.join(root.src, '/**/*.svg'),
     dest: path.join(root.dest),
   },
   images: {
-    src: path.join(root.src, '/**/*.{png,jpg,gif,svg}'),
+    src: path.join(root.src, '/**/*.{png,jpg,gif}'),
     dest: path.join(root.dest),
   },
   sass: {
@@ -89,6 +93,6 @@ module.exports = {
     src: [path.join(root.src, '/**/*.js'), `!${path.join(root.src, '/**/*.old.js')}`],
   },
   watch: {
-    tasks: ['copy', 'fonts', 'images', 'sass', 'js', 'webpack', 'html', 'markdown'],
+    tasks: ['copy', 'fonts', 'svg', 'images', 'sass', 'js', 'webpack', 'html', 'markdown'],
   },
 };
