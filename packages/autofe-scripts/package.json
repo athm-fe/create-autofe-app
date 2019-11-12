@@ -19,7 +19,7 @@
   "dependencies": {
     "ajv": "^6.5.2",
     "async": "^2.6.1",
-    "autoprefixer": "^9.0.1",
+    "autoprefixer": "^9.7.1",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
     "babel-preset-autofe-app": "^1.3.1",

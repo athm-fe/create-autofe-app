@@ -53,7 +53,7 @@ module.exports = {
   },
   autoprefixer: {
     option: {
-      browsers: [
+      overrideBrowserslist: [
         // defaults
         // '> 0.5%', 'last 2 versions', 'Firefox ESR', 'not dead',
         '> 0.2%', 'last 2 versions', 'Firefox ESR', 'not dead',
