@@ -19,7 +19,7 @@ module.exports = function(options = {}) {
 
     if (file.isBuffer()) {
       svgo.optimize(String(file.contents)).then(result => {
-        file.contents = new Buffer(result.data);
+        file.contents = Buffer.from(result.data);
         next(null, file);
       }).catch(error => {
         next(new PluginError(PLUGIN_NAME, error));
