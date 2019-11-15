@@ -39,6 +39,10 @@ module.exports = {
     src: path.join(root.src, '/**/*.{png,jpg,gif}'),
     dest: path.join(root.dest),
   },
+  sprite: {
+    src: path.join(root.src, '/**/*.png'),
+    dest: path.join(root.dest),
+  },
   sass: {
     src: path.join(root.src, '/**/*.{scss,css}'),
     dest: root.dest,
@@ -56,10 +60,13 @@ module.exports = {
       overrideBrowserslist: [
         // defaults
         // '> 0.5%', 'last 2 versions', 'Firefox ESR', 'not dead',
-        '> 0.2%', 'last 2 versions', 'Firefox ESR', 'not dead',
+        '> 0.2%',
+        'last 2 versions',
+        'Firefox ESR',
+        'not dead',
         'iOS >= 8',
         'Android >= 4.0',
-        'Explorer >= 9'
+        'Explorer >= 9',
       ],
     },
   },

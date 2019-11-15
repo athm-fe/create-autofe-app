@@ -47,6 +47,7 @@
     "gulp-rename": "^1.4.0",
     "gulp-sass": "^4.0.1",
     "gulp-sourcemaps": "^2.6.4",
+    "gulp.spritesmith": "^6.11.0",
     "gulp-uglify": "^3.0.1",
     "gulp-wrap": "^0.14.0",
     "highlight.js": "9.12.0",

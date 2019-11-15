@@ -21,13 +21,15 @@ You can find the most recent version of this guide [here](https://github.com/ath
   - [html-bundle](#html-bundle)
 - [编写 JavaScript](#编写-javascript)
 - [sourcemaps](#sourcemaps)
+- [自动雪碧图](#自动雪碧图)
 - [还缺啥?](#还缺啥)
 
 ## 更新到新版本
 
 Create AutoFE App 分成两个包：
-* `create-autofe-app` 是一个全局命令行工具，可以用来创建项目，之后就基本用不到。
-* `autofe-scripts` 是上面创建的项目在开发过程中所需要的一个依赖包，一般情况下，也只需要这个包就够了。
+
+- `create-autofe-app` 是一个全局命令行工具，可以用来创建项目，之后就基本用不到。
+- `autofe-scripts` 是上面创建的项目在开发过程中所需要的一个依赖包，一般情况下，也只需要这个包就够了。
 
 你基本上用不着更新 `create-autofe-app`，因为大多数的逻辑都在 `autofe-scripts`。如果实在是需要更新，运行 `npm install -g create-autofe-app` 即可。
 
@@ -102,21 +104,22 @@ It correctly bundles assets in production mode and optimizes the build for the b
 Your app is ready to be deployed!
 
 默认打包后的样式和脚本是被压缩后的，如果想得到不压缩的样式和脚本，可以执行下面的命令：
+
 ```sh
 NODE_ENV=development npm run build
 ```
 
 ## 功能支持
 
-* 使用 [Browsersync](http://browsersync.io/) 开启本地服务器
-  * 支持文件修改时自动刷新浏览器
-  * 支持目录浏览
-* 使用 [Nunjucks](https://mozilla.github.io/nunjucks/) 模版引擎来写 HTML
-* 使用 Sass 写 CSS
-* 使用 clean-css 压缩 CSS
-* 使用 UglifyJS2 压缩 JS，中文 to ASCII
-* 使用 imagemin 压缩图片
-* 使用 Markdown 写文档，并生成 HTML 方便查看
+- 使用 [Browsersync](http://browsersync.io/) 开启本地服务器
+  - 支持文件修改时自动刷新浏览器
+  - 支持目录浏览
+- 使用 [Nunjucks](https://mozilla.github.io/nunjucks/) 模版引擎来写 HTML
+- 使用 Sass 写 CSS
+- 使用 clean-css 压缩 CSS
+- 使用 UglifyJS2 压缩 JS，中文 to ASCII
+- 使用 imagemin 压缩图片
+- 使用 Markdown 写文档，并生成 HTML 方便查看
 
 ## 开发约定
 
@@ -130,6 +133,7 @@ NODE_ENV=development npm run build
 用 SASS 来写样式，没什么好说的。比如下面的例子：
 
 `_btn.scss`
+
 ```css
 .btn {
   display: inline-block;
@@ -137,8 +141,9 @@ NODE_ENV=development npm run build
 ```
 
 `main.scss`
+
 ```css
-@import "btn";
+@import 'btn';
 
 .some {
   color: red;
@@ -152,6 +157,7 @@ NODE_ENV=development npm run build
 有了 Autoprefixer，你不再需要手动写 `-webkit-` ，`-ms-` ，`-moz-` 等浏览器厂商前缀，也就不再需要使用 Sass 之类的语言来编写一堆 mixins。
 
 加浏览器前缀时，我们只考虑下面所列的浏览器：
+
 ```
 browsers: [
   '> 0.2%', 'last 2 versions', 'Firefox ESR', 'not dead',
@@ -170,16 +176,18 @@ Autoprefixer 根据你所支持的浏览器配置，从 [Can I Use](http://caniu
 #### 简单的例子
 
 原来你可能这么写：
+
 ```css
 .btn .icon {
   -webkit-transform: scale(0.5);
-      -ms-transform: scale(0.5);
-       -o-transform: scale(0.5);
-          transform: scale(0.5);
+  -ms-transform: scale(0.5);
+  -o-transform: scale(0.5);
+  transform: scale(0.5);
 }
 ```
 
 现在这么写就成：
+
 ```css
 .btn .icon {
   transform: scale(0.5);
@@ -189,6 +197,7 @@ Autoprefixer 根据你所支持的浏览器配置，从 [Can I Use](http://caniu
 #### 去掉老旧的前缀
 
 Autoprefixer 还会去掉老旧的前缀，比如 `border-radius` ：
+
 ```css
 .btn {
   -webkit-border-radius: 10px;
@@ -197,6 +206,7 @@ Autoprefixer 还会去掉老旧的前缀，比如 `border-radius` ：
 ```
 
 根据我们的浏览器支持配置，我们不再需要 `border-radius` 的 `-webkit-`，`-moz-` 等前缀。经过 Autoprefixer 处理后会变成这样：
+
 ```css
 .btn {
   border-radius: 10px;
@@ -217,9 +227,9 @@ Autoprefixer 还会去掉老旧的前缀，比如 `border-radius` ：
 ```css
 .btn .icon {
   -webkit-transform: scale(0.5);
-      -ms-transform: scale(0.5);
-       -o-transform: scale(0.5);
-          transform: scale(0.5);
+  -ms-transform: scale(0.5);
+  -o-transform: scale(0.5);
+  transform: scale(0.5);
 }
 ```
 
@@ -236,9 +246,7 @@ Autoprefixer 还会去掉老旧的前缀，比如 `border-radius` ：
 会被处理成
 
 ```css
-@media (-webkit-min-device-pixel-ratio: 2),
-       (-o-min-device-pixel-ratio: 2/1),
-       (min-resolution: 2dppx) {
+@media (-webkit-min-device-pixel-ratio: 2), (-o-min-device-pixel-ratio: 2/1), (min-resolution: 2dppx) {
   .image {
     background-image: url(image@2x.png);
   }
@@ -259,8 +267,8 @@ Autoprefixer 还会去掉老旧的前缀，比如 `border-radius` ：
 ```css
 .btn .icon4 {
   -ms-transform: scale(0.5);
-   -o-transform: scale(0.5);
-      transform: scale(0.5);
+  -o-transform: scale(0.5);
+  transform: scale(0.5);
   -webkit-transform: scale(0.6);
 }
 ```
@@ -275,17 +283,17 @@ Autoprefixer 还会去掉老旧的前缀，比如 `border-radius` ：
 .assets-svg {
   width: 400px;
   height: 72px;
-  background: inline("../img/postcss-assets.svg");
+  background: inline('../img/postcss-assets.svg');
 }
 .assets-png {
   width: 200px;
   height: 57px;
-  background: inline("../img/postcss-assets.png");
+  background: inline('../img/postcss-assets.png');
 }
 .assets-jpg {
   width: 190px;
   height: 190px;
-  background: inline("../img/postcss-assets.jpg");
+  background: inline('../img/postcss-assets.jpg');
 }
 ```
 
@@ -300,6 +308,7 @@ Autoprefixer 还会去掉老旧的前缀，比如 `border-radius` ：
 Nunjucks 自带的 `include` 无法保证输出 HTML 的对齐问题，所以自己开了这个。
 
 `_part1.html`
+
 ```html
 <div>
   <span>anything...</span>
@@ -307,11 +316,12 @@ Nunjucks 自带的 `include` 无法保证输出 HTML 的对齐问题，所以自
 ```
 
 `index.html`
+
 ```html
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>Index</title>
   </head>
   <body>
@@ -321,11 +331,12 @@ Nunjucks 自带的 `include` 无法保证输出 HTML 的对齐问题，所以自
 ```
 
 output:
+
 ```html
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>Index</title>
   </head>
   <body>
@@ -339,6 +350,7 @@ output:
 ### `assets`
 
 假设目录结构和是这样的：
+
 ```
 src/
   index.html
@@ -352,6 +364,7 @@ src/
 我们来看下代码：
 
 `index.html`
+
 ```html
 <div>
   {% includePretty "component/btn/index.html" %}
@@ -359,25 +372,26 @@ src/
 ```
 
 `component/btn/index.html`
+
 ```html
-<link rel="stylesheet" href="index.css">
-<img src="btn.png">
+<link rel="stylesheet" href="index.css" /> <img src="btn.png" />
 ```
 
 这样的话，输出的代码是这样的：
+
 ```html
 <div>
-  <link rel="stylesheet" href="index.css">
-  <img src="btn.png">
+  <link rel="stylesheet" href="index.css" />
+  <img src="btn.png" />
 </div>
 ```
 
 这样一来，就加载不到 `btn` 组件的样式文件和图片了。为了解决这个问题，引入了 `assets`。<br>
 代码如下：
 `component/btn/index.html`
+
 ```html
-<link rel="stylesheet" href="{{ 'component/btn/index.css' | assets }}">
-<img src="{{ 'component/btn/btn.png' | assets }}">
+<link rel="stylesheet" href="{{ 'component/btn/index.css' | assets }}" /> <img src="{{ 'component/btn/btn.png' | assets }}" />
 ```
 
 **注意：使用`assets`时需要从`src`之下开始写路径，不能直接写 `index.css` ，目前还没想到其它的办法。**
@@ -389,23 +403,23 @@ src/
 所以每次开发完成给开发的时候，我会提供两个 HTML 文件给他们，一个用来演示，一个用来直接给开发使用：
 
 `mini.html`
+
 ```html
 <!DOCTYPE html>
 <html>
   <head>
-    <meta charset="utf-8">
+    <meta charset="utf-8" />
     <title>全站导航条</title>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="renderer" content="webkit" />
     <!-- 这个不用，每个页面已经有了 -->
-    <link rel="stylesheet" href="//s.autoimg.cn/com/co.ashx?path=|as|css-3.0.0|global|autoshow.css">
+    <link rel="stylesheet" href="//s.autoimg.cn/com/co.ashx?path=|as|css-3.0.0|global|autoshow.css" />
     <!-- 唯一样式，直接用 -->
-    <link rel="stylesheet" href="css/mini.css">
+    <link rel="stylesheet" href="css/mini.css" />
   </head>
   <body>
     <div id="auto-header" class="topbar">
-      {% includePretty "widget/topbar/_minitop_mini.html" %}
-      {% includePretty "widget/topbar/_club.html" %}
+      {% includePretty "widget/topbar/_minitop_mini.html" %} {% includePretty "widget/topbar/_club.html" %}
     </div>
     <!-- 三个脚本 -->
     <script src="js/sync-login.js"></script>
@@ -419,14 +433,14 @@ src/
 ```
 
 `mini.bundle.html`
+
 ```html
 <!-- topbar begin -->
 <style type="text/css">
   /*=include css/mini.css */
 </style>
 <div id="auto-header" class="topbar">
-  {% includePretty "widget/topbar/_minitop_mini.html" %}
-  {% includePretty "widget/topbar/_club.html" %}
+  {% includePretty "widget/topbar/_minitop_mini.html" %} {% includePretty "widget/topbar/_club.html" %}
 </div>
 <script type="text/javascript">
   // sync-login.js
@@ -447,14 +461,19 @@ src/
 这个是如何做到的呢？答案是 [gulp-include](https://github.com/wiledal/gulp-include)，具体写法有如下几种：
 
 for js
+
 ```
 //=include relative/path/to/file.js
 ```
+
 for css
+
 ```
 /*=include relative/path/to/file.css */
 ```
+
 for html
+
 ```
 <!--=include relative/path/to/file.html -->
 ```
@@ -462,6 +481,7 @@ for html
 ## 编写 JavaScript
 
 打包策略
+
 1. `xxx.old.js` --> UglifyJS --> rename --> `xxx.js`
 2. `yyy.entry.js` ---> Webpack + Babel --> `yyy.js`
 
@@ -472,6 +492,59 @@ for html
 目前仅支持开发模式下的样式的 source map 。
 
 ![sourcemap](http://x.autoimg.cn/fe/create-autofe-app/sourcemap.png)
+
+## 自动雪碧图
+
+示例页面：
+src/m/brand-series-spec
+添加雪碧图文件夹，固定名称 sprite
+
+```
+src/m/brand-series-spec/sprite // 内部图片如下：
+    go@3x.png
+    p4-list-brand@3x.png
+    option1@2x.png
+    result-tag.png
+```
+
+图片要求 png 格式：
+三倍图以 ‘@3x’ 结尾
+二倍图以 ‘@2x’ 结尾
+一倍图不带 '@'
+
+npm run build 后，默认会生成
+
+```
+build/m/brand-series-spec/css/sprite.css
+build/m/brand-series-spec/img/sprite.png
+```
+
+生成的 sprite.css 中的 class 名称如下面示例：
+
+```
+.icon-go
+.icon-icon-p4-list-brand
+.icon-option1
+.icon-result-tag
+```
+
+生成规则是在图片名称前面加 'icon-', 去掉结尾的 '@' 后面的
+
+使用时，可在 html 中直接使用 class 名
+
+```
+<link rel="stylesheet" href="./css/index.css" />
+<link rel="stylesheet" href="./css/sprite.css" />
+```
+
+```
+<div class="icon-option1"></div>
+```
+
+==目前需要手动做的事：==
+
+1. 开发模式不需要手动操作
+2. build 后，上线前需要将 sprite.css 的内容合并到 index.css 中
 
 ## 还缺啥?
 
