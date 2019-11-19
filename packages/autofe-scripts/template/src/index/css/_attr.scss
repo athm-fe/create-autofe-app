@@ -19,10 +19,11 @@ a[href*="insensitive" i] {
 }
 
 /* Links with "cAsE" anywhere in the URL, 
-with matching capitalization */ 
-a[href*="cAsE" s] { 
-  color: pink; 
-}
+with matching capitalization */
+// node-sass 暂时不支持如下方式
+// a[href*="cAsE" s] {
+//   color: pink;
+// }
 
 /* Links that end in ".org" */
 a[href$=".org"] {

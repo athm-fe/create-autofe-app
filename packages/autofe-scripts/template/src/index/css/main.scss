@@ -11,3 +11,8 @@
 .test-ascii {
   content: '\e091';
 }
+
+.test-color {
+  background-color: #ff6633 - #000001;
+  background-color: adjust-color(#ff6633, $blue: -1);
+}
