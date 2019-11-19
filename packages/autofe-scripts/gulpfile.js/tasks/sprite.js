@@ -1,40 +1,21 @@
 const gulp = require('gulp');
 const config = require('../config');
 const spritesmith = require('gulp.spritesmith');
-const browserSync = require('../lib/browserSync');
 
-const isProd = process.env.NODE_ENV === 'production';
-
-var fs = require('fs');
 var path = require('path');
+const glob = require('glob');
 
 var filePath = path.resolve(config.src);
 
-var spriteDirArr = [];
-function fileDisplay(filePath) {
-  //根据文件路径读取文件，返回文件列表
-  var files = fs.readdirSync(filePath);
-  //遍历读取到的文件列表
-  files.forEach(function(filename) {
-    //获取当前文件的绝对路径
-    var filedir = path.join(filePath, filename);
-    //根据文件路径获取文件信息，返回一个fs.Stats对象
-    var stats = fs.statSync(filedir);
-    var isDir = stats.isDirectory(); //是文件夹
-    if (isDir) {
-      if (filedir.endsWith('/sprite')) {
-        spriteDirArr.push(filedir);
-      } else {
-        fileDisplay(filedir); //递归，如果是文件夹，就继续遍历该文件夹下面的文件
-      }
-    }
-  });
-}
+var spriteDirArr = glob.sync('**/sprite', {
+  cwd: filePath,
+});
+
+// console.log(spriteDirArr) // [ 'm/brand-series-spec/sprite', 'm/read-img/sprite' ]
 
 gulp.task('sprite', function(cb) {
-  fileDisplay(filePath);
   spriteDirArr.forEach(function(folder) {
-    // var cdnDir = '//s.autoimg.cn/2sc/2sc_new/sprites/'+folder.match(/src\/(\S*\/)sprite/)[1];
+    var folder = path.join(filePath, folder);
     gulp
       .src(folder + '/*.png')
       .pipe(
