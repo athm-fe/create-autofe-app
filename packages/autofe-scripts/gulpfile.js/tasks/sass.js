@@ -1,10 +1,9 @@
 'use strict';
 
-const Fiber = require('fibers');
 const gulp = require('gulp');
 const config = require('../config');
 const browserSync = require('../lib/browserSync');
-const sass = require('gulp-dart-sass');
+const sass = require('gulp-sass');
 const postcss = require('gulp-postcss');
 const assets = require('../lib/postcss-assets/index.js');
 const autoprefixer = require('autoprefixer');
@@ -18,7 +17,6 @@ const sassTask = function () {
   return gulp.src(config.sass.src)
     .pipe(gulpif(!isProd, sourcemaps.init()))
     .pipe(sass({
-      fiber: Fiber,
       outputStyle: isProd ? 'compressed' : 'expanded',
     }))
     .on('error', function (err) {
