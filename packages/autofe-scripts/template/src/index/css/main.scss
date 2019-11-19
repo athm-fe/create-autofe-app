@@ -6,3 +6,8 @@
 @import "test-autoprefixer";
 @import "test-iehack";
 @import "test-null";
+@import "attr";
+
+.test-ascii {
+  content: '\e091';
+}
