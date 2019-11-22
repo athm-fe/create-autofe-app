@@ -5,9 +5,12 @@ const glob = require('glob');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
-const CssUrlRelativePlugin = require('css-url-relative-plugin')
+const CssUrlRelativePlugin = require('css-url-relative-plugin');
+const autoprefixer = require('autoprefixer');
+const assets = require('../gulpfile.js/lib/postcss-assets/index');
 const paths = require('./paths');
 const config = require('./index');
+const gulpConfig = require('../gulpfile.js/config');
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -99,12 +102,30 @@ module.exports = () => ({
           {
             loader: MiniCssExtractPlugin.loader,
           },
-          require.resolve('css-loader'),
-          // require.resolve('resolve-url-loader'), // need sourcemap
+          {
+            loader: require.resolve('css-loader'),
+          },
+          {
+            loader: require.resolve('postcss-loader'),
+            options: {
+              ident: 'postcss',
+              plugins: [
+                autoprefixer(gulpConfig.autoprefixer.option),
+                assets(gulpConfig.postcssAssets.option),
+              ],
+            },
+          },
+          {
+            loader: require.resolve('resolve-url-loader'),
+            options: {
+              keepQuery: true,
+              // sourceMap: true, // 默认为 false
+            },
+          },
           {
             loader: require.resolve('sass-loader'),
             options: {
-              // sourceMap: true,
+              sourceMap: true, // Notice: resolve-url-loader need this!
             },
           },
         ]

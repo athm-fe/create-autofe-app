@@ -59,6 +59,7 @@
     "plugin-error": "^1.0.1",
     "postcss": "^7.0.1",
     "postcss-functions": "^3.0.0",
+    "postcss-loader": "^3.0.0",
     "pretty-hrtime": "^1.0.3",
     "require-dir": "^1.0.0",
     "resolve-url-loader": "^3.1.1",

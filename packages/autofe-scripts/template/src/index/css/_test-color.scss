@@ -1,0 +1,6 @@
+.test-color {
+  width: 200px;
+  height: 200px;
+  background-color: #ff6633 - #000001;
+  background-color: adjust-color(#ff6633, $blue: -1);
+}

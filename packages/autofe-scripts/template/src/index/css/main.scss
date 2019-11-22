@@ -6,13 +6,7 @@
 @import "test-autoprefixer";
 @import "test-iehack";
 @import "test-null";
+@import "sub/test-relative-url";
 @import "attr";
-
-.test-ascii {
-  content: '\e091';
-}
-
-.test-color {
-  background-color: #ff6633 - #000001;
-  background-color: adjust-color(#ff6633, $blue: -1);
-}
+@import "test-color";
+@import "test-ascii";
