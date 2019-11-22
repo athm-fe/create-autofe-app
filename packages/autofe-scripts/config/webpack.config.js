@@ -2,7 +2,10 @@
 
 const path = require('path');
 const glob = require('glob');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
+const CssUrlRelativePlugin = require('css-url-relative-plugin')
 const paths = require('./paths');
 const config = require('./index');
 
@@ -12,15 +15,27 @@ const context = paths.appDirectory;
 
 function getEntries() {
   const entries = {};
+
   const entryFiles = glob.sync('**/*.entry.js', {
     cwd: path.join(context, 'src'),
   });
-
   for (let i = 0; i < entryFiles.length; i += 1) {
     const filePath = entryFiles[i];
     const key = path.join(path.dirname(filePath), path.basename(filePath, '.entry.js'));
     entries[key] = `.${path.sep}${path.join('src', filePath)}`;
   }
+
+  const entryStyleFiles = glob.sync('**/!(_)*.scss', {
+    cwd: path.join(context, 'src'),
+  });
+  for (let i = 0; i < entryStyleFiles.length; i += 1) {
+    const filePath = entryStyleFiles[i];
+    const key = path.join(path.dirname(filePath), path.basename(filePath, '.scss'));
+    entries[key] = `.${path.sep}${path.join('src', filePath)}`;
+  }
+  // TODO: 可能存在 key 相同的情况
+
+  console.log(entries);
 
   return entries;
 }
@@ -77,6 +92,76 @@ module.exports = () => ({
           },
         },
       },
+      {
+        // TODO: 还没处理 css
+        test: /\.scss$/,
+        use: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+          },
+          require.resolve('css-loader'),
+          // require.resolve('resolve-url-loader'), // need sourcemap
+          {
+            loader: require.resolve('sass-loader'),
+            options: {
+              // sourceMap: true,
+            },
+          },
+        ]
+      },
+      // mp3,mp4,ogg,flv,swf,json,txt
+      {
+        test: /\.(png|jpg|gif|svg|ico|cur)$/,
+        use: [
+          {
+            loader: require.resolve('file-loader'),
+            options: {
+              name: '[path][name].[contenthash].[ext]',
+              // Type: String|Function Default: undefined
+              // Specify a filesystem path where the target file(s) will be placed.
+              outputPath(url, resourcePath, context) {
+                // `resourcePath` is original absolute path to asset
+                // `context` is directory where stored asset (`rootContext`) or `context` option
+
+                // To get relative path you can use
+                const relativePath = path.relative(context, resourcePath);
+
+                console.log('outputPath', url);
+                console.log('outputPath', relativePath);
+
+                // TODO: src 改为可配置
+                const output = path.relative('src', url);
+
+                return output;
+              },
+              // 最终路径不能是绝对路径, 否则 FixStyleOnlyEntriesPlugin 没办法处理成相对路径
+              publicPath(url, resourcePath, context) {
+                // `resourcePath` is original absolute path to asset
+                // `context` is directory where stored asset (`rootContext`) or `context` option
+
+                // To get relative path you can use
+                const relativePath = path.relative(context, resourcePath);
+
+                console.log('publicPath', url);
+                console.log('publicPath', relativePath);
+
+                // TODO: src 改为可配置
+                const output = path.relative('src', url);
+
+                return output;
+              },
+              // false 不写文件, 只返回 public URI
+              // emitFile: false,
+            },
+          },
+        ],
+      },
+      {
+        test: /\.(eot|ttf|otf|woff|woff2)$/,
+        use: [
+          require.resolve('file-loader'),
+        ],
+      },
     ],
   },
   optimization: {
@@ -90,4 +175,11 @@ module.exports = () => ({
       })
     ],
   },
+  plugins: [
+    new FixStyleOnlyEntriesPlugin(),
+    new CssUrlRelativePlugin(),
+    new MiniCssExtractPlugin({
+      filename: "[name].css",
+    }),
+  ]
 });

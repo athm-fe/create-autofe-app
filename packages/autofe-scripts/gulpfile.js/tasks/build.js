@@ -7,7 +7,7 @@ gulp.task('build', (cb) => {
   runSequence(
     ['clean'],
     ['copy', 'fonts', 'svg', 'images'],
-    ['sass', 'js', 'webpack', 'html', 'markdown'],
+    [/*'sass',*/ 'js', 'webpack', 'html', 'markdown'],
     ['html-bundle'],
     cb);
 });
