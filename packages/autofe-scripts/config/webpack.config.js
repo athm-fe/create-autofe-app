@@ -108,24 +108,28 @@ module.exports = () => ({
           {
             loader: require.resolve('postcss-loader'),
             options: {
-              ident: 'postcss',
               plugins: [
                 autoprefixer(gulpConfig.autoprefixer.option),
-                assets(gulpConfig.postcssAssets.option),
+                // assets(gulpConfig.postcssAssets.option),
               ],
+              // 传递 map 内容给上一级
+              sourceMap: true,
             },
           },
           {
             loader: require.resolve('resolve-url-loader'),
             options: {
               keepQuery: true,
-              // sourceMap: true, // 默认为 false
+              // 传递 map 给上一级 loader
+              sourceMap: true,
             },
           },
           {
             loader: require.resolve('sass-loader'),
             options: {
-              sourceMap: true, // Notice: resolve-url-loader need this!
+              // Notice: resolve-url-loader need this!
+              // 该配置不产生 map 文件, 只产生 map 内容
+              sourceMap: true,
             },
           },
         ]
@@ -145,13 +149,12 @@ module.exports = () => ({
                 // `context` is directory where stored asset (`rootContext`) or `context` option
 
                 // To get relative path you can use
-                const relativePath = path.relative(context, resourcePath);
-
-                console.log('outputPath', url);
-                console.log('outputPath', relativePath);
+                // const relativePath = path.relative(context, resourcePath);
 
                 // TODO: src 改为可配置
                 const output = path.relative('src', url);
+
+                console.log('outputPath', url);
 
                 return output;
               },
@@ -161,13 +164,12 @@ module.exports = () => ({
                 // `context` is directory where stored asset (`rootContext`) or `context` option
 
                 // To get relative path you can use
-                const relativePath = path.relative(context, resourcePath);
-
-                console.log('publicPath', url);
-                console.log('publicPath', relativePath);
+                // const relativePath = path.relative(context, resourcePath);
 
                 // TODO: src 改为可配置
                 const output = path.relative('src', url);
+
+                console.log('publicPath', url);
 
                 return output;
               },
