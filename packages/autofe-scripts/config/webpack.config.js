@@ -139,8 +139,11 @@ module.exports = () => ({
         test: /\.(png|jpg|gif|svg|ico|cur)$/,
         use: [
           {
-            loader: require.resolve('file-loader'),
+            loader: require.resolve('autofe-url-loader'),
             options: {
+              limit: false,
+              fallback: require.resolve('file-loader'),
+              // file-loader options
               name: '[path][name].[contenthash].[ext]',
               // Type: String|Function Default: undefined
               // Specify a filesystem path where the target file(s) will be placed.
@@ -173,8 +176,6 @@ module.exports = () => ({
 
                 return output;
               },
-              // false 不写文件, 只返回 public URI
-              // emitFile: false,
             },
           },
         ],
