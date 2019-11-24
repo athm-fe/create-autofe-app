@@ -98,6 +98,7 @@ module.exports = () => ({
   },
   module: {
     rules: [
+      // eslint
       {
         test: /\.js$/,
         enforce: 'pre',
@@ -115,6 +116,7 @@ module.exports = () => ({
         ],
         include: paths.appSrc,
       },
+      // js
       {
         test: /\.js$/,
         exclude: /(node_modules|bower_components)/,
@@ -263,25 +265,41 @@ module.exports = () => ({
           ];
         })(),
       },
-
       // fonts
       {
         test: /\.(eot|ttf|otf|woff2?)(\?.*)?$/,
         use: [
-          require.resolve('file-loader'),
-          // TODO: name, outputPath, publicPath
+          {
+            loader: require.resolve('url-loader'),
+            options: {
+              // url-loader options
+              limit: 1024, // limit 1kb
+              // file-loader options
+              name: '[path][name].[contenthash].[ext]',
+              outputPath: getOutputPath,
+              // 最终路径不能是绝对路径, 否则 FixStyleOnlyEntriesPlugin 没办法处理成相对路径
+              publicPath: getPublicPath,
+            },
+          },
         ],
       },
-
-      // video
-      // mp4|webm|ogv
-
-      // audio
-      // mp3|ogg|wav
-      // file-loader
-
+      // media
+      {
+        test: /\.(mp4|webm|ogv|flv|mp3|ogg|wav|flac|acc)$/,
+        use: [
+          {
+            loader: require.resolve('file-loader'),
+            options: {
+              name: '[path][name].[contenthash].[ext]',
+              outputPath: getOutputPath,
+              // 最终路径不能是绝对路径, 否则 FixStyleOnlyEntriesPlugin 没办法处理成相对路径
+              publicPath: getPublicPath,
+            },
+          },
+        ],
+      },
       // others
-      // flv,swf,json,txt
+      // TODO: swf,json,txt
     ],
   },
   optimization: {
