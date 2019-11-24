@@ -7,7 +7,6 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
 const CssUrlRelativePlugin = require('css-url-relative-plugin');
 const autoprefixer = require('autoprefixer');
-const assets = require('../gulpfile.js/lib/postcss-assets/index');
 const paths = require('./paths');
 const config = require('./index');
 const gulpConfig = require('../gulpfile.js/config');
@@ -217,10 +216,19 @@ module.exports = () => ({
         })(),
       },
       // svg
-      // TODO: svgo-loader 压缩 svg
       {
         test: /\.svg$/,
         oneOf: (() => {
+          const svgoLoaderConfig = {
+            loader: require.resolve('svgo-loader'),
+            options: {
+              plugins: [
+                { removeViewBox: false },
+                { cleanupIDs: false }
+              ]
+            },
+          };
+
           const svgInlineLoaderConfig = {
             loader: require.resolve('svg-inline-loader'),
             options: {
@@ -250,17 +258,22 @@ module.exports = () => ({
             },
           };
 
+          const baseLoaderConfig = [];
+          if (isProd) {
+            baseLoaderConfig.push(svgoLoaderConfig);
+          }
+
           return [
             {
               resourceQuery: /inline/,
-              use: [svgInlineLoaderConfig],
+              use: [svgInlineLoaderConfig].concat(baseLoaderConfig),
             },
             {
               resourceQuery: /datauri/,
-              use: [svgDataUriLoaderConfig],
+              use: [svgDataUriLoaderConfig].concat(baseLoaderConfig),
             },
             {
-              use: [svgUrlLoaderConfig],
+              use: [svgUrlLoaderConfig].concat(baseLoaderConfig),
             },
           ];
         })(),
@@ -299,7 +312,7 @@ module.exports = () => ({
         ],
       },
       // others
-      // TODO: swf,json,txt
+      // TODO: swf,json,txt, 考虑 copy-webpack-plugin
     ],
   },
   optimization: {
