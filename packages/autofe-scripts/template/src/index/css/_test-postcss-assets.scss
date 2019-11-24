@@ -1,12 +1,17 @@
 .assets-svg {
   width: 400px;
   height: 72px;
-  background: url("../img/postcss-assets.svg?__inline");
+  background: url("../img/postcss-assets.svg?datauri");
+}
+.assets-svg-normal {
+  width: 400px;
+  height: 72px;
+  background: url("../img/postcss-assets.svg");
 }
 .assets-png {
   width: 200px;
   height: 57px;
-  background: url("../img/postcss-assets.png?__inline");
+  background: url("../img/postcss-assets.png?datauri");
 }
 .assets-png-normal {
   width: 200px;
@@ -16,5 +21,10 @@
 .assets-jpg {
   width: 190px;
   height: 190px;
-  background: url("../img/postcss-assets.jpg?__inline");
+  background: url("../img/postcss-assets.jpg?datauri");
+}
+.assets-jpg-normal {
+  width: 190px;
+  height: 190px;
+  background: url("../img/postcss-assets.jpg");
 }

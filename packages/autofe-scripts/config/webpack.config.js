@@ -43,6 +43,36 @@ function getEntries() {
   return entries;
 }
 
+function getOutputPath(url, resourcePath, context) {
+  // `resourcePath` is original absolute path to asset
+  // `context` is directory where stored asset (`rootContext`) or `context` option
+
+  // To get relative path you can use
+  // const relativePath = path.relative(context, resourcePath);
+
+  // TODO: src 改为可配置
+  const output = path.relative('src', url);
+
+  console.log('outputPath', url);
+
+  return output;
+}
+
+function getPublicPath(url, resourcePath, context) {
+  // `resourcePath` is original absolute path to asset
+  // `context` is directory where stored asset (`rootContext`) or `context` option
+
+  // To get relative path you can use
+  // const relativePath = path.relative(context, resourcePath);
+
+  // TODO: src 改为可配置
+  const output = path.relative('src', url);
+
+  console.log('publicPath', url);
+
+  return output;
+}
+
 module.exports = () => ({
   mode: isProd ? 'production' : 'development',
   devtool: isProd ? 'false' : 'eval',
@@ -95,6 +125,10 @@ module.exports = () => ({
           },
         },
       },
+      // ts
+      // vue
+      // css
+      // scss
       {
         // TODO: 还没处理 css
         test: /\.scss$/,
@@ -104,6 +138,12 @@ module.exports = () => ({
           },
           {
             loader: require.resolve('css-loader'),
+            options: {
+              // sourceMap: false,
+              // importLoaders: 2,
+              // localIdentName: '[name]_[local]_[hash:base64:5]'
+              // modules: true,
+            }
           },
           {
             loader: require.resolve('postcss-loader'),
@@ -130,62 +170,118 @@ module.exports = () => ({
               // Notice: resolve-url-loader need this!
               // 该配置不产生 map 文件, 只产生 map 内容
               sourceMap: true,
+              // 参考 vue-cli
+              // data: '@import "@/assets/athm/tools.scss";'
             },
           },
         ]
       },
-      // mp3,mp4,ogg,flv,swf,json,txt
+      // images
+      // TODO: ico, cur 考虑是否分离
+      // TODO: cur 转化为 data-uri 时, 丢失 mimetype
+      // TODO: ico 转化为 data-uri 未验证
       {
-        test: /\.(png|jpg|gif|svg|ico|cur)$/,
-        use: [
-          {
-            loader: require.resolve('autofe-url-loader'),
+        test: /\.(png|jpe?g|gif|webp|ico|cur)(\?.*)?$/,
+        oneOf: (() => {
+          const imageDataUriLoaderConfig = {
+            loader: require.resolve('url-loader'),
             options: {
-              limit: false,
-              fallback: require.resolve('file-loader'),
+              limit: true, // no limit
+            },
+          };
+
+          const imageUrlLoaderConfig = {
+            loader: require.resolve('url-loader'),
+            options: {
+              // url-loader options
+              limit: 1024, // limit 1kb
               // file-loader options
               name: '[path][name].[contenthash].[ext]',
-              // Type: String|Function Default: undefined
-              // Specify a filesystem path where the target file(s) will be placed.
-              outputPath(url, resourcePath, context) {
-                // `resourcePath` is original absolute path to asset
-                // `context` is directory where stored asset (`rootContext`) or `context` option
-
-                // To get relative path you can use
-                // const relativePath = path.relative(context, resourcePath);
-
-                // TODO: src 改为可配置
-                const output = path.relative('src', url);
-
-                console.log('outputPath', url);
-
-                return output;
-              },
+              outputPath: getOutputPath,
               // 最终路径不能是绝对路径, 否则 FixStyleOnlyEntriesPlugin 没办法处理成相对路径
-              publicPath(url, resourcePath, context) {
-                // `resourcePath` is original absolute path to asset
-                // `context` is directory where stored asset (`rootContext`) or `context` option
-
-                // To get relative path you can use
-                // const relativePath = path.relative(context, resourcePath);
-
-                // TODO: src 改为可配置
-                const output = path.relative('src', url);
-
-                console.log('publicPath', url);
-
-                return output;
-              },
+              publicPath: getPublicPath,
             },
-          },
-        ],
+          };
+
+          return [
+            {
+              resourceQuery: /datauri/,
+              use: [imageDataUriLoaderConfig],
+            },
+            {
+              use: [imageUrlLoaderConfig],
+            },
+          ];
+        })(),
       },
+      // svg
+      // TODO: svgo-loader 压缩 svg
       {
-        test: /\.(eot|ttf|otf|woff|woff2)$/,
+        test: /\.svg$/,
+        oneOf: (() => {
+          const svgInlineLoaderConfig = {
+            loader: require.resolve('svg-inline-loader'),
+            options: {
+              removeSVGTagAttrs: false,
+            },
+          };
+
+          const svgDataUriLoaderConfig = {
+            loader: require.resolve('svg-url-loader'),
+            options: {
+              limit: 0, // no limit
+              stripdeclarations: true,
+            },
+          };
+
+          const svgUrlLoaderConfig = {
+            loader: require.resolve('svg-url-loader'),
+            options: {
+              // svg-url-loader options
+              limit: 1024, // limit 1kb
+              stripdeclarations: true,
+              // file-loader options
+              name: '[path][name].[contenthash].[ext]',
+              outputPath: getOutputPath,
+              // 最终路径不能是绝对路径, 否则 FixStyleOnlyEntriesPlugin 没办法处理成相对路径
+              publicPath: getPublicPath,
+            },
+          };
+
+          return [
+            {
+              resourceQuery: /inline/,
+              use: [svgInlineLoaderConfig],
+            },
+            {
+              resourceQuery: /datauri/,
+              use: [svgDataUriLoaderConfig],
+            },
+            {
+              use: [svgUrlLoaderConfig],
+            },
+          ];
+        })(),
+      },
+
+      // fonts
+      {
+        test: /\.(eot|ttf|otf|woff2?)(\?.*)?$/,
         use: [
           require.resolve('file-loader'),
+          // TODO: name, outputPath, publicPath
         ],
       },
+
+      // video
+      // mp4|webm|ogv
+
+      // audio
+      // mp3|ogg|wav
+      // file-loader
+
+      // others
+      // flv,swf,json,txt
     ],
   },
   optimization: {
