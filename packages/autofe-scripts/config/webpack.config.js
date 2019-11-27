@@ -3,6 +3,8 @@
 const path = require('path');
 const glob = require('glob');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+// const TerserPlugin = require('terser-webpack-plugin');
+// const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
 const CssUrlRelativePlugin = require('css-url-relative-plugin');
@@ -35,8 +37,6 @@ function getEntries() {
   }
   // TODO: 可能存在 key 相同的情况
 
-  console.log(entries);
-
   return entries;
 }
 
@@ -50,7 +50,7 @@ function getOutputPath(url, resourcePath, context) {
   // TODO: src 改为可配置
   const output = path.relative('src', url);
 
-  console.log('outputPath', url);
+  // console.log('outputPath', url);
 
   return output;
 }
@@ -65,7 +65,7 @@ function getPublicPath(url, resourcePath, context) {
   // TODO: src 改为可配置
   const output = path.relative('src', url);
 
-  console.log('publicPath', url);
+  // console.log('publicPath', url);
 
   return output;
 }
@@ -75,7 +75,11 @@ module.exports = () => {
 
   return {
     mode: isProd ? 'production' : 'development',
-    devtool: isProd ? 'false' : 'eval',
+    // dev:
+    //   推荐 cheap-module-eval-source-map: use style-loader, MiniCssExtractPlugin.loader don't support
+    //   inline-cheap-module-source-map: MiniCssExtractPlugin.loader support
+    // prod: source-map
+    devtool: isProd ? 'false' : 'inline-cheap-module-source-map',
     context,
     entry: entries,
     output: {
@@ -136,16 +140,36 @@ module.exports = () => {
           test: /\.scss$/,
           use: [
             {
+              // output based on entry
+              // https://github.com/webpack-contrib/file-loader/issues/114
+              // https://github.com/webpack-contrib/mini-css-extract-plugin#extracting-css-based-on-entry
+              // function findEntry(mod) {
+              //   if (mod.reasons.length > 0 && mod.reasons[0].module.resource) {
+              //       return findEntry(mod.reasons[0].module)
+              //   }
+              //   return mod.resource;
+              // }
               loader: MiniCssExtractPlugin.loader,
+              options: {
+                // Type: String|Function Default: the publicPath in webpackOptions.output
+                // Specifies a custom public path for the target file(s).
+                // publicPath: './',
+                // publicPath: (resourcePath, context) => {
+                //   // publicPath is the relative path of the resource to the context
+                //   // e.g. for ./css/admin/main.css the publicPath will be ../../
+                //   // while for ./css/main.css the publicPath will be ../
+                //   return path.relative(path.dirname(resourcePath), context) + '/';
+                // },
+                // hmr: process.env.NODE_ENV === 'development',
+                // if hmr does not work, this is a forceful method.
+                // reloadAll: true,
+              },
             },
             {
               loader: require.resolve('css-loader'),
               options: {
-                // sourceMap: false,
-                // importLoaders: 2,
-                // localIdentName: '[name]_[local]_[hash:base64:5]'
-                // modules: true,
-              }
+                sourceMap: true,
+              },
             },
             {
               loader: require.resolve('postcss-loader'),
@@ -196,7 +220,7 @@ module.exports = () => {
                 // file-loader options
                 name: '[path][name].[contenthash].[ext]',
                 outputPath: getOutputPath,
-                // 最终路径不能是绝对路径, 否则 FixStyleOnlyEntriesPlugin 没办法处理成相对路径
+                // 最终路径不能是绝对路径, 否则 CssUrlRelativePlugin 没办法处理成相对路径
                 publicPath: getPublicPath,
               },
             };
@@ -250,7 +274,7 @@ module.exports = () => {
                 // file-loader options
                 name: '[path][name].[contenthash].[ext]',
                 outputPath: getOutputPath,
-                // 最终路径不能是绝对路径, 否则 FixStyleOnlyEntriesPlugin 没办法处理成相对路径
+                // 最终路径不能是绝对路径, 否则 CssUrlRelativePlugin 没办法处理成相对路径
                 publicPath: getPublicPath,
               },
             };
@@ -287,7 +311,7 @@ module.exports = () => {
                 // file-loader options
                 name: '[path][name].[contenthash].[ext]',
                 outputPath: getOutputPath,
-                // 最终路径不能是绝对路径, 否则 FixStyleOnlyEntriesPlugin 没办法处理成相对路径
+                // 最终路径不能是绝对路径, 否则 CssUrlRelativePlugin 没办法处理成相对路径
                 publicPath: getPublicPath,
               },
             },
@@ -302,7 +326,7 @@ module.exports = () => {
               options: {
                 name: '[path][name].[contenthash].[ext]',
                 outputPath: getOutputPath,
-                // 最终路径不能是绝对路径, 否则 FixStyleOnlyEntriesPlugin 没办法处理成相对路径
+                // TODO: 最终路径不能是绝对路径, 否则 CssUrlRelativePlugin 没办法处理成相对路径
                 publicPath: getPublicPath,
               },
             },
@@ -314,20 +338,40 @@ module.exports = () => {
     },
     optimization: {
       minimizer: [
+        // new TerserPlugin({
+        //   parallel: true,
+        //   terserOptions: {
+        //     safari10: true,
+        //     compress: {
+        //       warnings: false,
+        //       drop_debugger: true,
+        //       drop_console: true,
+        //     },
+        //     output: {
+        //       ascii_only: true,
+        //       quote_style: 1,
+        //     },
+        //   },
+        // }),
         new UglifyJsPlugin({
           uglifyOptions: {
             output: {
               ascii_only: true,
             },
-          }
-        })
+          },
+        }),
+        // new OptimizeCSSAssetsPlugin({}),
       ],
     },
     plugins: [
       new FixStyleOnlyEntriesPlugin(),
-      new CssUrlRelativePlugin(),
+      new CssUrlRelativePlugin(), // TODO: 丢失了 sourcemap
       new MiniCssExtractPlugin({
+        // Options similar to the same options in webpackOptions.output
+        // both options are optional
         filename: "[name].css",
+        // filename: devMode ? '[name].css' : '[name].[hash].css',
+        // chunkFilename: devMode ? '[id].css' : '[id].[hash].css',
       }),
     ]
   };
