@@ -6,8 +6,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 // const TerserPlugin = require('terser-webpack-plugin');
 // const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const FixStyleOnlyEntriesPlugin = require("webpack-fix-style-only-entries");
-const CssUrlRelativePlugin = require('css-url-relative-plugin');
+const AutoFEWebpack = require("autofe-webpack");
 const paths = require('./paths');
 const config = require('./index');
 
@@ -364,8 +363,8 @@ module.exports = () => {
       ],
     },
     plugins: [
-      new FixStyleOnlyEntriesPlugin(),
-      new CssUrlRelativePlugin(), // TODO: 丢失了 sourcemap
+      new AutoFEWebpack.OmitJsForCssOnlyPlugin(),
+      new AutoFEWebpack.CssUrlRelativePlugin(), // TODO: 丢失了 sourcemap
       new MiniCssExtractPlugin({
         // Options similar to the same options in webpackOptions.output
         // both options are optional
