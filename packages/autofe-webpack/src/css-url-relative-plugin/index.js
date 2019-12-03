@@ -6,7 +6,7 @@
 
 // const chalk = require('chalk')
 const path = require('path')
-const { RawSource } = require('webpack-sources')
+const { RawSource, SourceMapSource } = require('webpack-sources')
 const loaderUtils = require('loader-utils')
 const cssReplace = require('./css-replace')
 
@@ -25,41 +25,35 @@ class CssUrlRelativePlugin {
     const publicPath = compilation.options.output.publicPath || ''
 
     chunks.map((chunk) => {
-      const input = chunk.files.filter(isCSS)
+      const files = chunk.files.filter(isCSS)
 
-      for (let name of input) {
+      for (let name of files) {
         const asset = assets[name]
         const dirname = path.dirname(name)
-        let source = asset.source()
 
 
-
-
-        // let input;
-        // let inputSourceMap;
+        let input;
+        let inputSourceMap;
         // const postcssOpts = { to: name, from: name, map: false };
-        // const isSourceMap = { inline: false }; // default false, true is { inline: false }
-        // if (isSourceMap) {
-        //   if (asset.sourceAndMap) {
-        //     const { source, map } = asset.sourceAndMap;
-        //     input = source;
-        //     inputSourceMap = map;
-        //   } else {
-        //     input = asset.source();
-        //     inputSourceMap = null;
-        //   }
-        //   postcssOpts.map = Object.assign(
-        //     { prev: inputSourceMap || false },
-        //     this.options.sourceMap
-        //   );
-        // } else {
-        //   input = asset.source();
-        //   inputSourceMap = null;
-        // }
+        const isSourceMap = { inline: false }; // default false, true is { inline: false }
+        if (isSourceMap) {
+          if (asset.sourceAndMap) {
+            const { source, map } = asset.sourceAndMap();
+            input = source;
+            inputSourceMap = map;
+          } else {
+            input = asset.source();
+            inputSourceMap = null;
+          }
+          // postcssOpts.map = Object.assign(
+          //   { prev: inputSourceMap || false },
+          //   this.options.sourceMap
+          // );
+        } else {
+          input = asset.source();
+          inputSourceMap = null;
+        }
 
-        // const SourceMapSource = {};
-        // const RawSource = {};
-        // const cssnano = {};
         // const cssnanoOptions = { preset: 'default' };
         // cssnano
         //   .process(input, postcssOpts, cssnanoOptions)
@@ -88,12 +82,8 @@ class CssUrlRelativePlugin {
         //   });
 
 
-
-
-
-
         // replace url to relative
-        source = cssReplace(source, refer => {
+        const content = cssReplace(input, refer => {
           // handle url(...)
           if (refer.type === 'url' && loaderUtils.isUrlRequest(refer.path, root)) {
             // remove publicPath parts
@@ -112,7 +102,23 @@ class CssUrlRelativePlugin {
           return refer.rule
         })
 
-        assets[name] = new RawSource(source)
+
+        let newSource;
+        if (inputSourceMap) {
+          newSource = new SourceMapSource(
+            content,
+            name,
+            inputSourceMap,
+            input,
+            inputSourceMap,
+            true,
+          )
+        } else {
+          newSource = new RawSource(content);
+        }
+
+
+        assets[name] = newSource;
       }
     })
 
