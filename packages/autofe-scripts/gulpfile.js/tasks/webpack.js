@@ -13,6 +13,10 @@ function isEmpty(obj) {
   return Object.keys(obj).length === 0 && obj.constructor === Object;
 }
 
+const isProd = process.env.NODE_ENV === 'production';
+
+let isFirst = true;
+
 const webpackTask = function (cb) {
   const config = webpackConfig();
 
@@ -22,18 +26,39 @@ const webpackTask = function (cb) {
     return;
   }
 
-  webpack(config).run((err, stats) => {
-    if (err) {
-      throw new PluginError('webpack', err);
-    }
+  const compiler = webpack(config);
+  if (isProd) {
+    compiler.run((err, stats) => {
+      if (err) {
+        throw new PluginError('webpack', err);
+      }
 
-    log('webpack:', stats.toString({
-      colors: true,
-    }));
+      log('webpack:', stats.toString({
+        colors: true,
+      }));
 
-    cb();
-    browserSync.reload();
-  });
+      cb();
+    });
+  } else {
+    compiler.watch({
+      ignored: /node_modules/,
+    }, (err, stats) => {
+      if (err) {
+        throw new PluginError('webpack', err);
+      }
+
+      log('webpack:', stats.toString({
+        colors: true,
+      }));
+
+      if (isFirst) {
+        cb();
+        isFirst = false;
+      } else {
+        browserSync.reload();
+      }
+    });
+  }
 };
 
 gulp.task('webpack', webpackTask);

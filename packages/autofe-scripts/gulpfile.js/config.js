@@ -96,6 +96,6 @@ module.exports = {
     ],
   },
   watch: {
-    tasks: ['copy', 'fonts', 'svg', 'images', /*'sass',*/ 'js', 'webpack', 'html', 'markdown'],
+    tasks: ['copy', 'fonts', 'svg', 'images', /*'sass',*/ 'js', /*'webpack',*/ 'html', 'markdown'],
   },
 };
