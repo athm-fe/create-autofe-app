@@ -1,0 +1,72 @@
+{
+  "id": "134286",
+  "name": "前端平台",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "77107",
+      "name": "功能建议",
+      "font_class": "gongnengjianyi",
+      "unicode": "e600",
+      "unicode_decimal": 58880
+    },
+    {
+      "icon_id": "77108",
+      "name": "换一批",
+      "font_class": "huanyipi",
+      "unicode": "e601",
+      "unicode_decimal": 58881
+    },
+    {
+      "icon_id": "77403",
+      "name": "链接",
+      "font_class": "lianjie",
+      "unicode": "e602",
+      "unicode_decimal": 58882
+    },
+    {
+      "icon_id": "200856",
+      "name": "3.1关闭",
+      "font_class": "31guanbi",
+      "unicode": "e603",
+      "unicode_decimal": 58883
+    },
+    {
+      "icon_id": "200857",
+      "name": "3.1选择",
+      "font_class": "31xuanze",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    },
+    {
+      "icon_id": "201650",
+      "name": "3.1 收起",
+      "font_class": "31shouqi",
+      "unicode": "e605",
+      "unicode_decimal": 58885
+    },
+    {
+      "icon_id": "201652",
+      "name": "3.1 下拉",
+      "font_class": "31xiala",
+      "unicode": "e606",
+      "unicode_decimal": 58886
+    },
+    {
+      "icon_id": "201666",
+      "name": "3.1 返回1",
+      "font_class": "31fanhui1",
+      "unicode": "e607",
+      "unicode_decimal": 58887
+    },
+    {
+      "icon_id": "201667",
+      "name": "3.1 返回2",
+      "font_class": "31fanhui2",
+      "unicode": "e608",
+      "unicode_decimal": 58888
+    }
+  ]
+}

@@ -26,12 +26,12 @@ function getEntries() {
     entries[key] = `.${path.sep}${path.join('src', filePath)}`;
   }
 
-  const entryStyleFiles = glob.sync('**/!(_)*.scss', {
+  const entryStyleFiles = glob.sync('**/!(_)*.{scss,css}', {
     cwd: path.join(context, 'src'),
   });
   for (let i = 0; i < entryStyleFiles.length; i += 1) {
     const filePath = entryStyleFiles[i];
-    const key = path.join(path.dirname(filePath), path.basename(filePath, '.scss'));
+    const key = path.join(path.dirname(filePath), path.parse(filePath).name);
     entries[key] = `.${path.sep}${path.join('src', filePath)}`;
   }
   // TODO: 可能存在 key 相同的情况
@@ -69,16 +69,28 @@ function getPublicPath(url, resourcePath, context) {
   return output;
 }
 
+function getDevtool() {
+  // dev
+  // 推荐 cheap-module-eval-source-map，vue-cli 也是用这个
+  // 但是配合 style-loader 使用比较好，MiniCssExtractPlugin.loader 不支持
+  // 因此使用 inline-cheap-module-source-map
+  // 因为 MiniCssExtractPlugin.loader 支持
+
+  // prod
+  // 推荐使用 source-map，不过目前我们用不到，所以禁止 SourceMap 了
+
+  if (isProd) {
+    return false;
+  }
+  return 'inline-cheap-module-source-map';
+}
+
 module.exports = () => {
   const entries = getEntries();
 
   return {
     mode: isProd ? 'production' : 'development',
-    // dev:
-    //   推荐 cheap-module-eval-source-map: use style-loader, MiniCssExtractPlugin.loader don't support
-    //   inline-cheap-module-source-map: MiniCssExtractPlugin.loader support
-    // prod: source-map
-    devtool: isProd ? 'false' : 'inline-cheap-module-source-map',
+    devtool: getDevtool(),
     context,
     entry: entries,
     output: {
@@ -130,13 +142,9 @@ module.exports = () => {
             },
           },
         },
-        // ts
-        // vue
         // css
-        // scss
         {
-          // TODO: 还没处理 css
-          test: /\.scss$/,
+          test: /\.css$/,
           use: [
             {
               // output based on entry
@@ -173,16 +181,59 @@ module.exports = () => {
             {
               loader: require.resolve('postcss-loader'),
               options: {
-                // 传递 map 内容给上一级
                 sourceMap: true,
+              },
+            },
+          ]
+        },
+        // scss
+        {
+          test: /\.scss$/,
+          use: [
+            {
+              // output based on entry
+              // https://github.com/webpack-contrib/file-loader/issues/114
+              // https://github.com/webpack-contrib/mini-css-extract-plugin#extracting-css-based-on-entry
+              // function findEntry(mod) {
+              //   if (mod.reasons.length > 0 && mod.reasons[0].module.resource) {
+              //       return findEntry(mod.reasons[0].module)
+              //   }
+              //   return mod.resource;
+              // }
+              loader: MiniCssExtractPlugin.loader,
+              options: {
+                // Type: String|Function Default: the publicPath in webpackOptions.output
+                // Specifies a custom public path for the target file(s).
+                // publicPath: './',
+                // publicPath: (resourcePath, context) => {
+                //   // publicPath is the relative path of the resource to the context
+                //   // e.g. for ./css/admin/main.css the publicPath will be ../../
+                //   // while for ./css/main.css the publicPath will be ../
+                //   return path.relative(path.dirname(resourcePath), context) + '/';
+                // },
+                // hmr: process.env.NODE_ENV === 'development',
+                // if hmr does not work, this is a forceful method.
+                // reloadAll: true,
+              },
+            },
+            {
+              loader: require.resolve('css-loader'),
+              options: {
+                sourceMap: !isProd,
+              },
+            },
+            {
+              loader: require.resolve('postcss-loader'),
+              options: {
+                // 传递 map 内容给上一级
+                sourceMap: !isProd,
               },
             },
             {
               loader: require.resolve('resolve-url-loader'),
               options: {
                 keepQuery: true,
-                // 传递 map 给上一级 loader
-                sourceMap: true,
+                sourceMap: !isProd,
               },
             },
             {
@@ -219,7 +270,6 @@ module.exports = () => {
                 // file-loader options
                 name: '[path][name].[contenthash].[ext]',
                 outputPath: getOutputPath,
-                // 最终路径不能是绝对路径, 否则 CssUrlRelativePlugin 没办法处理成相对路径
                 publicPath: getPublicPath,
               },
             };
@@ -273,7 +323,6 @@ module.exports = () => {
                 // file-loader options
                 name: '[path][name].[contenthash].[ext]',
                 outputPath: getOutputPath,
-                // 最终路径不能是绝对路径, 否则 CssUrlRelativePlugin 没办法处理成相对路径
                 publicPath: getPublicPath,
               },
             };
@@ -310,7 +359,6 @@ module.exports = () => {
                 // file-loader options
                 name: '[path][name].[contenthash].[ext]',
                 outputPath: getOutputPath,
-                // 最终路径不能是绝对路径, 否则 CssUrlRelativePlugin 没办法处理成相对路径
                 publicPath: getPublicPath,
               },
             },
@@ -325,7 +373,6 @@ module.exports = () => {
               options: {
                 name: '[path][name].[contenthash].[ext]',
                 outputPath: getOutputPath,
-                // TODO: 最终路径不能是绝对路径, 否则 CssUrlRelativePlugin 没办法处理成相对路径
                 publicPath: getPublicPath,
               },
             },
@@ -364,7 +411,8 @@ module.exports = () => {
     },
     plugins: [
       new AutoFEWebpack.OmitJsForCssOnlyPlugin(),
-      new AutoFEWebpack.CssUrlRelativePlugin(), // TODO: 丢失了 sourcemap
+      // url(...) 不能是绝对路径, 否则 CssUrlRelativePlugin 没办法处理成相对路径
+      new AutoFEWebpack.CssUrlRelativePlugin(),
       new MiniCssExtractPlugin({
         // Options similar to the same options in webpackOptions.output
         // both options are optional
