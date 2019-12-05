@@ -6,6 +6,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 // const TerserPlugin = require('terser-webpack-plugin');
 // const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CopyPlugin = require('copy-webpack-plugin');
 const AutoFEWebpack = require("autofe-webpack");
 const paths = require('./paths');
 const config = require('./index');
@@ -249,11 +250,8 @@ module.exports = () => {
           ]
         },
         // images
-        // TODO: ico, cur 考虑是否分离
-        // TODO: cur 转化为 data-uri 时, 丢失 mimetype
-        // TODO: ico 转化为 data-uri 未验证
         {
-          test: /\.(png|jpe?g|gif|webp|ico|cur)(\?.*)?$/,
+          test: /\.(png|jpe?g|gif|webp|cur)(\?.*)?$/,
           oneOf: (() => {
             const imageDataUriLoaderConfig = {
               loader: require.resolve('url-loader'),
@@ -268,7 +266,7 @@ module.exports = () => {
                 // url-loader options
                 limit: 1024, // limit 1kb
                 // file-loader options
-                name: '[path][name].[contenthash].[ext]',
+                name: '[path][name].[ext]',
                 outputPath: getOutputPath,
                 publicPath: getPublicPath,
               },
@@ -321,7 +319,7 @@ module.exports = () => {
                 limit: 1024, // limit 1kb
                 stripdeclarations: true,
                 // file-loader options
-                name: '[path][name].[contenthash].[ext]',
+                name: '[path][name].[ext]',
                 outputPath: getOutputPath,
                 publicPath: getPublicPath,
               },
@@ -357,7 +355,7 @@ module.exports = () => {
                 // url-loader options
                 limit: 1024, // limit 1kb
                 // file-loader options
-                name: '[path][name].[contenthash].[ext]',
+                name: '[path][name].[ext]',
                 outputPath: getOutputPath,
                 publicPath: getPublicPath,
               },
@@ -371,15 +369,13 @@ module.exports = () => {
             {
               loader: require.resolve('file-loader'),
               options: {
-                name: '[path][name].[contenthash].[ext]',
+                name: '[path][name].[ext]',
                 outputPath: getOutputPath,
                 publicPath: getPublicPath,
               },
             },
           ],
         },
-        // others
-        // TODO: swf,json,txt, 考虑 copy-webpack-plugin
       ],
     },
     optimization: {
@@ -410,6 +406,45 @@ module.exports = () => {
       ],
     },
     plugins: [
+      new CopyPlugin(
+        [
+          {
+            from: 'src/**/*.{eot,ttf,otf,woff,woff2}',
+            to: '[path][name].[ext]',
+            toType: 'template',
+            transformPath(targetPath) {
+              return path.relative('src', targetPath);
+            },
+          },
+          {
+            from: 'src/**/*.{png,jpg,jpeg,gif,webp,cur}',
+            to: '[path][name].[ext]',
+            toType: 'template',
+            transformPath(targetPath) {
+              return path.relative('src', targetPath);
+            },
+          },
+          {
+            from: 'src/**/*.{mp4,webm,ogv,flv,mp3,ogg,wav,flac,acc}',
+            to: '[path][name].[ext]',
+            toType: 'template',
+            transformPath(targetPath) {
+              return path.relative('src', targetPath);
+            },
+          },
+          {
+            from: 'src/**/*.{ico,json,txt,swf}',
+            to: '[path][name].[ext]',
+            toType: 'template',
+            transformPath(targetPath) {
+              return path.relative('src', targetPath);
+            },
+          },
+        ],
+        {
+          logLevel: 'info'
+        },
+      ),
       new AutoFEWebpack.OmitJsForCssOnlyPlugin(),
       // url(...) 不能是绝对路径, 否则 CssUrlRelativePlugin 没办法处理成相对路径
       new AutoFEWebpack.CssUrlRelativePlugin(),
@@ -420,6 +455,6 @@ module.exports = () => {
         // filename: devMode ? '[name].css' : '[name].[hash].css',
         // chunkFilename: devMode ? '[id].css' : '[id].[hash].css',
       }),
-    ]
+    ],
   };
 };
