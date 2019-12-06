@@ -4,21 +4,17 @@
 */
 'use strict'
 
-// const chalk = require('chalk')
 const path = require('path')
 const { RawSource, SourceMapSource } = require('webpack-sources')
 const loaderUtils = require('loader-utils')
 const cssReplace = require('./css-replace')
 
 const isCSS = (name) => /\.css$/.test(name)
-// const strip = (str) => str.replace(/\/$/, '')
 
 class CssUrlRelativePlugin {
-
   constructor (options) {
     this.options = options || {}
   }
-
   fixCssUrl (compilation, chunks, done) {
     const root = this.options.root
     const assets = compilation.assets
@@ -31,10 +27,9 @@ class CssUrlRelativePlugin {
         const asset = assets[name]
         const dirname = path.dirname(name)
 
-
         let input;
         let inputSourceMap;
-        // const postcssOpts = { to: name, from: name, map: false };
+        const postcssOpts = { to: name, from: name, map: false };
         const isSourceMap = { inline: false }; // default false, true is { inline: false }
         if (isSourceMap) {
           if (asset.sourceAndMap) {
@@ -45,10 +40,10 @@ class CssUrlRelativePlugin {
             input = asset.source();
             inputSourceMap = null;
           }
-          // postcssOpts.map = Object.assign(
-          //   { prev: inputSourceMap || false },
-          //   this.options.sourceMap
-          // );
+          postcssOpts.map = Object.assign(
+            { prev: inputSourceMap || false },
+            this.options.sourceMap
+          );
         } else {
           input = asset.source();
           inputSourceMap = null;
@@ -81,7 +76,6 @@ class CssUrlRelativePlugin {
         //     );
         //   });
 
-
         // replace url to relative
         const content = cssReplace(input, refer => {
           // handle url(...)
@@ -102,7 +96,6 @@ class CssUrlRelativePlugin {
           return refer.rule
         })
 
-
         let newSource;
         if (inputSourceMap) {
           newSource = new SourceMapSource(
@@ -117,20 +110,17 @@ class CssUrlRelativePlugin {
           newSource = new RawSource(content);
         }
 
-
         assets[name] = newSource;
       }
     })
 
     done()
   }
-
   apply (compiler) {
     const plugin = {
       name: 'CssUrlRelativePlugin'
     }
 
-    // use compilation instead of this-compilation, just like other plugins do
     compiler.hooks.compilation.tap(plugin, compilation => {
       compilation.hooks.optimizeChunkAssets.tapAsync(plugin, (chunks, done) => {
         this.fixCssUrl(compilation, chunks, done)

@@ -15,6 +15,9 @@ const isProd = process.env.NODE_ENV === 'production';
 
 const context = paths.appDirectory;
 
+/**
+ * 获取入口文件
+ */
 function getEntries() {
   const entries = {};
 
@@ -40,32 +43,24 @@ function getEntries() {
   return entries;
 }
 
-function getOutputPath(url, resourcePath, context) {
-  // `resourcePath` is original absolute path to asset
-  // `context` is directory where stored asset (`rootContext`) or `context` option
-
+/**
+ * 获取 file-loader 资源输出路径，与 src 下目录保持一致
+ * @param {String} url file-loader 的 name 配置，`[path][name].[ext]`
+ * @param {String} resourcePath 资源的绝对路径
+ * @param {String} context 上下文，参考 webpack 的 context 配置
+ */
+function getOutputPathForFileLoader(url) {
   // To get relative path you can use
   // const relativePath = path.relative(context, resourcePath);
 
-  // TODO: src 改为可配置
-  const output = path.relative('src', url);
-
-  // console.log('outputPath', url);
-
-  return output;
-}
-
-function getPublicPath(url, resourcePath, context) {
-  // `resourcePath` is original absolute path to asset
-  // `context` is directory where stored asset (`rootContext`) or `context` option
-
-  // To get relative path you can use
-  // const relativePath = path.relative(context, resourcePath);
-
-  // TODO: src 改为可配置
-  const output = path.relative('src', url);
-
-  // console.log('publicPath', url);
+  let output;
+  if (url.indexOf('src') === 0) {
+    output = path.relative('src', url);
+  } else if (url.indexOf('node_modules') === 0) {
+    output = path.relative('node_modules', url);
+  } else {
+    output = url;
+  }
 
   return output;
 }
@@ -78,7 +73,8 @@ function getDevtool() {
   // 因为 MiniCssExtractPlugin.loader 支持
 
   // prod
-  // 推荐使用 source-map，不过目前我们用不到，所以禁止 SourceMap 了
+  // 推荐 false
+  // 可以使用 source-map
 
   if (isProd) {
     return false;
@@ -267,8 +263,7 @@ module.exports = () => {
                 limit: 1024, // limit 1kb
                 // file-loader options
                 name: '[path][name].[ext]',
-                outputPath: getOutputPath,
-                publicPath: getPublicPath,
+                outputPath: getOutputPathForFileLoader,
               },
             };
 
@@ -320,8 +315,7 @@ module.exports = () => {
                 stripdeclarations: true,
                 // file-loader options
                 name: '[path][name].[ext]',
-                outputPath: getOutputPath,
-                publicPath: getPublicPath,
+                outputPath: getOutputPathForFileLoader,
               },
             };
 
@@ -356,8 +350,7 @@ module.exports = () => {
                 limit: 1024, // limit 1kb
                 // file-loader options
                 name: '[path][name].[ext]',
-                outputPath: getOutputPath,
-                publicPath: getPublicPath,
+                outputPath: getOutputPathForFileLoader,
               },
             },
           ],
@@ -370,8 +363,7 @@ module.exports = () => {
               loader: require.resolve('file-loader'),
               options: {
                 name: '[path][name].[ext]',
-                outputPath: getOutputPath,
-                publicPath: getPublicPath,
+                outputPath: getOutputPathForFileLoader,
               },
             },
           ],
@@ -441,13 +433,12 @@ module.exports = () => {
             },
           },
         ],
-        {
-          logLevel: 'info'
-        },
       ),
       new AutoFEWebpack.OmitJsForCssOnlyPlugin(),
       // url(...) 不能是绝对路径, 否则 CssUrlRelativePlugin 没办法处理成相对路径
-      new AutoFEWebpack.CssUrlRelativePlugin(),
+      new AutoFEWebpack.CssUrlRelativePlugin({
+        root: '/',
+      }),
       new MiniCssExtractPlugin({
         // Options similar to the same options in webpackOptions.output
         // both options are optional
