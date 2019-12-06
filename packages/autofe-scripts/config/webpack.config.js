@@ -172,13 +172,13 @@ module.exports = () => {
             {
               loader: require.resolve('css-loader'),
               options: {
-                sourceMap: true,
+                sourceMap: !isProd,
               },
             },
             {
               loader: require.resolve('postcss-loader'),
               options: {
-                sourceMap: true,
+                sourceMap: !isProd,
               },
             },
           ]
@@ -222,14 +222,13 @@ module.exports = () => {
             {
               loader: require.resolve('postcss-loader'),
               options: {
-                // 传递 map 内容给上一级
                 sourceMap: !isProd,
               },
             },
             {
               loader: require.resolve('resolve-url-loader'),
               options: {
-                keepQuery: true,
+                keepQuery: true, // for loader resourceQuery
                 sourceMap: !isProd,
               },
             },
