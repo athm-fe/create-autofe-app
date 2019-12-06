@@ -360,8 +360,11 @@ module.exports = () => {
           test: /\.(mp4|webm|ogv|flv|mp3|ogg|wav|flac|acc)$/,
           use: [
             {
-              loader: require.resolve('file-loader'),
+              loader: require.resolve('url-loader'),
               options: {
+                // url-loader options
+                limit: 1024, // limit 1kb
+                // file-loader options
                 name: '[path][name].[ext]',
                 outputPath: getOutputPathForFileLoader,
               },
