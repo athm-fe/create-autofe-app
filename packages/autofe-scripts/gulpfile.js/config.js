@@ -82,6 +82,7 @@ module.exports = {
   },
   browserSync: {
     option: {
+      open: "external",
       browser: chromeName,
       server: {
         baseDir: root.dest,
