@@ -236,11 +236,16 @@ module.exports = () => {
             {
               loader: require.resolve('sass-loader'),
               options: {
-                // Notice: resolve-url-loader need this!
+                // Notice: resolve-url-loader need this! so set sourceMap true always
                 // 该配置不产生 map 文件, 只产生 map 内容
                 sourceMap: true,
                 // 参考 vue-cli
                 // prependData: '@import "@/assets/athm/tools.scss";'
+                // Prefer `dart-sass`, you need to install sass and fibers
+                // implementation: require('sass'),
+                sassOptions: {
+                  outputStyle: isProd ? 'compressed' : 'expanded',
+                },
               },
             },
           ]
