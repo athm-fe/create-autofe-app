@@ -87,8 +87,8 @@ module.exports = () => {
 
   return {
     mode: isProd ? 'production' : 'development',
-    devtool: getDevtool(),
     context,
+    devtool: getDevtool(),
     entry: entries,
     output: {
       filename: '[name].js',
@@ -99,6 +99,7 @@ module.exports = () => {
     externals: config.externals,
     resolve: {
       alias: {
+        '@': path.join(context, 'src'),
         // Resolve Babel runtime relative to autofe-scripts.
         // It usually still works on npm 3 without this but it would be
         // unfortunate to rely on, as autofe-scripts could be symlinked,
@@ -450,8 +451,7 @@ module.exports = () => {
         // Options similar to the same options in webpackOptions.output
         // both options are optional
         filename: "[name].css",
-        // filename: devMode ? '[name].css' : '[name].[hash].css',
-        // chunkFilename: devMode ? '[id].css' : '[id].[hash].css',
+        chunkFilename: '[name].css',
       }),
     ],
   };
