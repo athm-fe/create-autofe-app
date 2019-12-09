@@ -426,6 +426,7 @@ module.exports = () => {
       ),
       new AutoFEWebpack.OmitJsForCssOnlyPlugin(),
       // url(...) 不能是绝对路径, 否则 CssUrlRelativePlugin 没办法处理成相对路径
+      // TODO 处理 image-set( "cat.png" 1x, "cat-2x.png" 2x);
       new AutoFEWebpack.CssUrlRelativePlugin({
         root: '/',
       }),
