@@ -23,45 +23,9 @@ module.exports = {
   clean: {
     dest: root.dest,
   },
-  copy: {
-    src: path.join(root.src, '/**/*.{mp3,mp4,ogg,flv,swf,ico,cur,json,txt}'),
-    dest: path.join(root.dest),
-  },
-  fonts: {
-    src: path.join(root.src, '/**/*.{eot,ttf,woff,woff2}'), // svg 单独处理
-    dest: path.join(root.dest),
-  },
   svg: {
     src: path.join(root.src, '/**/*.svg'),
     dest: path.join(root.dest),
-  },
-  images: {
-    src: path.join(root.src, '/**/*.{png,jpg,gif}'),
-    dest: path.join(root.dest),
-  },
-  sass: {
-    src: path.join(root.src, '/**/*.{scss,css}'),
-    dest: root.dest,
-  },
-  postcssAssets: {
-    option: {
-      basePath: root.src,
-      baseUrl: '/', // TODO config http://x.autoimg.cn/www/
-      relative: true,
-      cachebuster: false,
-    },
-  },
-  autoprefixer: {
-    option: {
-      overrideBrowserslist: [
-        // defaults
-        // '> 0.5%', 'last 2 versions', 'Firefox ESR', 'not dead',
-        '> 0.2%', 'last 2 versions', 'Firefox ESR', 'not dead',
-        'iOS >= 8',
-        'Android >= 4.0',
-        'Explorer >= 9'
-      ],
-    },
   },
   js: {
     src: path.join(root.src, '/**/*.old.js'),
@@ -91,6 +55,6 @@ module.exports = {
     },
   },
   watch: {
-    tasks: [/*'copy',*/ /*'fonts',*/ 'svg', /*'images',*/ /*'sass',*/ 'js', 'html', 'markdown'],
+    tasks: ['svg', 'js', 'html', 'markdown'],
   },
 };
