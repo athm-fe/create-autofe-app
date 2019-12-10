@@ -396,6 +396,14 @@ module.exports = () => {
       new CopyPlugin(
         [
           {
+            from: path.join(paths.appDirectory, 'public'),
+            to: path.join(context, 'build'),
+            toType: 'dir',
+            ignore: [
+              '.DS_Store'
+            ],
+          },
+          {
             from: 'src/**/*.{eot,ttf,otf,woff,woff2}',
             to: '[path][name].[ext]',
             toType: 'template',
