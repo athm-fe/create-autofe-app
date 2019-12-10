@@ -4,7 +4,7 @@ const path = require('path');
 const glob = require('glob');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 // const TerserPlugin = require('terser-webpack-plugin');
-// const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require('copy-webpack-plugin');
 const AutoFEWebpack = require("autofe-webpack");
@@ -225,9 +225,6 @@ module.exports = () => {
                 // prependData: '@import "@/assets/athm/tools.scss";'
                 // Prefer `dart-sass`, you need to install sass and fibers
                 // implementation: require('sass'),
-                sassOptions: {
-                  outputStyle: isProd ? 'compressed' : 'expanded',
-                },
               },
             },
           ]
@@ -384,7 +381,15 @@ module.exports = () => {
             },
           },
         }),
-        // new OptimizeCSSAssetsPlugin({}),
+        new OptimizeCSSAssetsPlugin({
+          cssProcessorPluginOptions: {
+            preset: ['default', {
+              cssDeclarationSorter: false,
+              discardComments: { removeAll: true },
+              mergeLonghand: false,
+            }],
+          },
+        }),
       ],
     },
     plugins: [
