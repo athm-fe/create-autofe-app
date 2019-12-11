@@ -1,6 +1,6 @@
 {
   "name": "autofe-scripts",
-  "version": "0.16.0",
+  "version": "1.0.0",
   "description": "Configuration and scripts for Create AutoFE App.",
   "repository": "athm-fe/create-autofe-app",
   "author": "jpuncle",
@@ -17,7 +17,7 @@
     "autofe-scripts": "./bin/autofe-scripts.js"
   },
   "dependencies": {
-    "autofe-webpack": "^0.1.0",
+    "autofe-webpack": "^0.1.1",
     "autoprefixer": "^9.7.1",
     "babel-core": "^6.26.3",
     "babel-loader": "^7.1.5",
