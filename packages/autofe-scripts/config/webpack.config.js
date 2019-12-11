@@ -208,6 +208,7 @@ module.exports = () => {
                 sourceMap: !isProd,
               },
             },
+            // TODO 处理 image-set( "cat.png" 1x, "cat-2x.png" 2x);
             {
               loader: require.resolve('resolve-url-loader'),
               options: {
