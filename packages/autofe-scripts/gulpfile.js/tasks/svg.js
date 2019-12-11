@@ -17,7 +17,7 @@ const svgTask = function () {
         ]
       })
     ))
-    .pipe(gulp.dest(config.svg.dest))
+    .pipe(gulp.dest(config.svg.dest, { overwrite: false }))
     .on('end', browserSync.reload);
 };
 

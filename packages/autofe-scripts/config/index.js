@@ -3,9 +3,6 @@ const paths = require('./paths');
 
 const config = {
   externals: {},
-  image: {
-    compress: false,
-  },
 };
 
 const configExists = fs.pathExistsSync(paths.appConfig);

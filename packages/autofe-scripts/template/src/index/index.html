@@ -2,23 +2,54 @@
 <html>
   <head>
     <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="format-detection" content="email=no">
     <title>Index Page</title>
     <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/pure.css">
   </head>
   <body>
-    <h1>Hello World</h1>
-    <div>
-      <img class="cursor-hand" src="pic/01.jpg" alt="" />
-    </div>
-    <h2>css background image inline, svg</h2>
+    <h1>Hello World, 标题有样式</h1>
+
+    <h2>css background image 页面有背景图</h2>
+
+    <h2>html img src</h2>
+    <img src="pic/01.jpg" alt="" />
+
+    <h2>css background image, svg, inline</h2>
     <div class="assets-svg"></div>
-    <h2>css background image inline, png</h2>
+    <h2>css background image, svg, normal</h2>
+    <div class="assets-svg-normal"></div>
+    <h2>css background image, png, inline</h2>
     <div class="assets-png"></div>
-    <h2>css background image inline, jpg</h2>
+    <h2>css background image, png, normal</h2>
+    <div class="assets-png-normal"></div>
+    <h2>css background image, jpg, inline</h2>
     <div class="assets-jpg"></div>
-    <h2>Nunjucks, includePretty</h2>
+    <h2>css background image, jpg, normal</h2>
+    <div class="assets-jpg-normal"></div>
+    <h2>css cursor image, &lt;1kb</h2>
+    <div class="cursor-hand"></div>
+
+    <h2>scss subdir background image relative url</h2>
+    <div class="test-relative-url1"></div>
+    <br>
+    <div class="test-relative-url2"></div>
+    <br>
+    <div class="test-relative-url3"></div>
+    <br>
+    <div class="test-relative-url4"></div>
+
+    <h2>scss color background-color #ff6632</h2>
+    <div class="test-color"></div>
+
+    <h2>Nunjucks, includePretty, 对齐没毛病</h2>
     {% includePretty "index/_part1.html" %}
     {% includePretty "index/_part2.html" %}
+
+    <h2>Nunjucks, includePretty, assets</h2>
     {% includePretty "component/footer/_index.html" %}
 
     <h2>属性选择器</h2>
