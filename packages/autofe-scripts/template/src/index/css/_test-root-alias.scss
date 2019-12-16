@@ -1,0 +1,8 @@
+.test-root-alias {
+  width: 320px;
+  height: 240px;
+  // working
+  background: url("~@/index/img/car.jpg") no-repeat;
+  // not working
+  // background: url("@/index/img/car.jpg") no-repeat;
+}
