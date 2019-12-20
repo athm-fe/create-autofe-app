@@ -17,6 +17,7 @@
     "autofe-scripts": "./bin/autofe-scripts.js"
   },
   "dependencies": {
+    "@vue/cli-shared-utils": "^4.1.1",
     "autofe-webpack": "^0.1.1",
     "autoprefixer": "^9.7.1",
     "babel-core": "^6.26.3",
@@ -29,10 +30,7 @@
     "cross-spawn": "^6.0.5",
     "css-loader": "^3.2.0",
     "del": "^3.0.0",
-    "eslint": "^5.2.0",
-    "eslint-config-autofe-app": "^1.0.0",
     "eslint-loader": "^2.1.0",
-    "eslint-plugin-import": "^2.13.0",
     "fancy-log": "^1.3.2",
     "file-loader": "^4.2.0",
     "fs-extra": "^7.0.0",
@@ -64,5 +62,13 @@
     "uglifyjs-webpack-plugin": "^1.2.7",
     "url-loader": "^2.3.0",
     "webpack": "^4.16.2"
+  },
+  "devDependencies": {
+    "eslint": "^5.2.0",
+    "eslint-config-autofe-app": "^1.0.0",
+    "eslint-plugin-import": "^2.13.0"
+  },
+  "peerDependencies": {
+    "eslint": "^5.2.0"
   }
 }

@@ -8,6 +8,10 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require('copy-webpack-plugin');
 const AutoFEWebpack = require("autofe-webpack");
+const {
+  resolveModule,
+  loadModule,
+} = require('@vue/cli-shared-utils')
 const paths = require('./paths');
 const config = require('./index');
 
@@ -108,26 +112,53 @@ module.exports = () => {
           require.resolve('babel-runtime/package.json')
         ),
       },
+      modules: [
+        'node_modules',
+        path.join(context, 'node_modules'),
+        path.join(context, 'node_modules/autofe-scripts/node_modules'),
+      ],
+    },
+    resolveLoader: {
+      modules: [
+        path.join(context, 'node_modules/babel-preset-autofe-app/node_modules'),
+        path.join(context, 'node_modules/eslint-config-autofe-app/node_modules'),
+        'node_modules',
+        path.join(context, 'node_modules'),
+        path.join(context, 'node_modules/autofe-scripts/node_modules'),
+      ],
     },
     module: {
       rules: [
         // eslint
         {
-          test: /\.js$/,
           enforce: 'pre',
+          test: /\.js$/,
+          include: paths.appSrc,
           use: [
             {
-              options: {
-                emitWarning: true,
-                eslintPath: require.resolve('eslint'),
-                baseConfig: {
-                  extends: [require.resolve('eslint-config-autofe-app')],
-                },
-              },
               loader: require.resolve('eslint-loader'),
+              options: {
+                cache: true,
+                emitWarning: true, // TODO: what
+                emitError: false, // TODO: what, only emit errors in production mode.
+
+                // TODO: eslint 路径是是项目下的
+                // npm install --save-dev
+                // eslint
+                // eslint-config-autofe-app
+                // babel-eslint: parserOptions: { parser: 'babel-eslint' },
+                eslintPath: path.dirname(
+                  resolveModule('eslint/package.json', context) ||
+                  resolveModule('eslint/package.json', __dirname)
+                ),
+                formatter: loadModule('eslint/lib/formatters/', context, true),
+
+                // eslint-plugin-vue: plugin:vue/essential
+                // @vue/eslint-config-airbnb @vue/airbnb
+                // @vue/cli-plugin-eslint 添加 lint 命令、生成配置文件等
+              },
             },
           ],
-          include: paths.appSrc,
         },
         // js
         {

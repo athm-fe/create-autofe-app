@@ -10,9 +10,18 @@ module.exports = (appPath, appName, verbose, originalDirectory) => {
   const ownPath = path.join(appPath, 'node_modules', ownPackageName);
   const appPackage = require(path.join(appPath, 'package.json'));
 
+  const pkg = {
+    devDependencies: {
+      'eslint': '^5.2.0',
+      'eslint-config-autofe-app': '^1.0.0',
+      "eslint-plugin-import": "^2.13.0",
+      // 'babel-eslint': '^10.0.3',
+    },
+  };
+
   // Copy over some of the devDependencies
   appPackage.dependencies = appPackage.dependencies || {};
-  appPackage.devDependencies = appPackage.devDependencies || {};
+  appPackage.devDependencies = Object.assign(pkg.devDependencies, appPackage.devDependencies);
 
   // Setup the script rules
   appPackage.scripts = {
