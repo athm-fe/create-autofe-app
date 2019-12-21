@@ -10,14 +10,13 @@ const CopyPlugin = require('copy-webpack-plugin');
 const AutoFEWebpack = require("autofe-webpack");
 const {
   resolveModule,
-  loadModule,
+  // loadModule,
 } = require('@vue/cli-shared-utils')
-const paths = require('./paths');
 const config = require('./index');
 
 const isProd = process.env.NODE_ENV === 'production';
 
-const context = paths.appDirectory;
+const context = config.appDirectory;
 
 /**
  * 获取入口文件
@@ -26,7 +25,7 @@ function getEntries() {
   const entries = {};
 
   const entryFiles = glob.sync('**/*.entry.js', {
-    cwd: path.join(context, 'src'),
+    cwd: config.appSrc,
   });
   for (let i = 0; i < entryFiles.length; i += 1) {
     const filePath = entryFiles[i];
@@ -35,7 +34,7 @@ function getEntries() {
   }
 
   const entryStyleFiles = glob.sync('**/!(_)*.{scss,css}', {
-    cwd: path.join(context, 'src'),
+    cwd: config.appSrc,
   });
   for (let i = 0; i < entryStyleFiles.length; i += 1) {
     const filePath = entryStyleFiles[i];
@@ -97,13 +96,13 @@ module.exports = () => {
     output: {
       filename: '[name].js',
       chunkFilename: '[name].js',
-      path: path.join(context, 'build'),
+      path: config.appBuild,
       publicPath: '/',
     },
     externals: config.externals,
     resolve: {
       alias: {
-        '@': path.join(context, 'src'),
+        '@': config.appSrc,
         // Resolve Babel runtime relative to autofe-scripts.
         // It usually still works on npm 3 without this but it would be
         // unfortunate to rely on, as autofe-scripts could be symlinked,
@@ -133,7 +132,7 @@ module.exports = () => {
         {
           enforce: 'pre',
           test: /\.js$/,
-          include: paths.appSrc,
+          include: config.appSrc,
           use: [
             {
               loader: require.resolve('eslint-loader'),
@@ -417,8 +416,8 @@ module.exports = () => {
       new CopyPlugin(
         [
           {
-            from: path.join(paths.appDirectory, 'public'),
-            to: path.join(context, 'build'),
+            from: path.join(context, 'public'),
+            to: config.appBuild,
             toType: 'dir',
             ignore: [
               '.DS_Store'

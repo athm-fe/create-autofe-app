@@ -1,13 +1,25 @@
 const fs = require('fs-extra');
-const paths = require('./paths');
+const {
+  appDirectory,
+  appSrc,
+  appBuild,
+  appConfig,
+} = require('./paths');
 
-const config = {
+const appDefaultConfig = {
   externals: {},
 };
 
-const configExists = fs.pathExistsSync(paths.appConfig);
+const config = {
+  appDirectory,
+  appSrc,
+  appBuild,
+  ...appDefaultConfig,
+}
+
+const configExists = fs.pathExistsSync(appConfig);
 if (configExists) {
-  Object.assign(config, require(paths.appConfig));
+  Object.assign(config, require(appConfig));
 }
 
 module.exports = config;
