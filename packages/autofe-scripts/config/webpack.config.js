@@ -139,23 +139,12 @@ module.exports = () => {
               loader: require.resolve('eslint-loader'),
               options: {
                 cache: true,
-                emitWarning: true, // TODO: what
-                emitError: false, // TODO: what, only emit errors in production mode.
-
-                // TODO: eslint 路径是是项目下的
-                // npm install --save-dev
-                // eslint
-                // eslint-config-autofe-app
-                // babel-eslint: parserOptions: { parser: 'babel-eslint' },
+                emitWarning: true,
+                emitError: true,
                 eslintPath: path.dirname(
                   resolveModule('eslint/package.json', context) ||
                   resolveModule('eslint/package.json', __dirname)
                 ),
-                formatter: loadModule('eslint/lib/formatters/', context, true),
-
-                // eslint-plugin-vue: plugin:vue/essential
-                // @vue/eslint-config-airbnb @vue/airbnb
-                // @vue/cli-plugin-eslint 添加 lint 命令、生成配置文件等
               },
             },
           ],
