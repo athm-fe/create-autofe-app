@@ -8,12 +8,15 @@ const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require('copy-webpack-plugin');
 const AutoFEWebpack = require("autofe-webpack");
-const paths = require('./paths');
+const {
+  resolveModule,
+  // loadModule,
+} = require('@vue/cli-shared-utils')
 const config = require('./index');
 
 const isProd = process.env.NODE_ENV === 'production';
 
-const context = paths.appDirectory;
+const context = config.appDirectory;
 
 /**
  * 获取入口文件
@@ -22,7 +25,7 @@ function getEntries() {
   const entries = {};
 
   const entryFiles = glob.sync('**/*.entry.js', {
-    cwd: path.join(context, 'src'),
+    cwd: config.appSrc,
   });
   for (let i = 0; i < entryFiles.length; i += 1) {
     const filePath = entryFiles[i];
@@ -31,7 +34,7 @@ function getEntries() {
   }
 
   const entryStyleFiles = glob.sync('**/!(_)*.{scss,css}', {
-    cwd: path.join(context, 'src'),
+    cwd: config.appSrc,
   });
   for (let i = 0; i < entryStyleFiles.length; i += 1) {
     const filePath = entryStyleFiles[i];
@@ -93,13 +96,13 @@ module.exports = () => {
     output: {
       filename: '[name].js',
       chunkFilename: '[name].js',
-      path: path.join(context, 'build'),
+      path: config.appBuild,
       publicPath: '/',
     },
     externals: config.externals,
     resolve: {
       alias: {
-        '@': path.join(context, 'src'),
+        '@': config.appSrc,
         // Resolve Babel runtime relative to autofe-scripts.
         // It usually still works on npm 3 without this but it would be
         // unfortunate to rely on, as autofe-scripts could be symlinked,
@@ -108,26 +111,43 @@ module.exports = () => {
           require.resolve('babel-runtime/package.json')
         ),
       },
+      modules: [
+        'node_modules',
+        path.join(context, 'node_modules'),
+        path.join(context, 'node_modules/autofe-scripts/node_modules'),
+      ],
+    },
+    resolveLoader: {
+      modules: [
+        path.join(context, 'node_modules/babel-preset-autofe-app/node_modules'),
+        path.join(context, 'node_modules/eslint-config-autofe-app/node_modules'),
+        'node_modules',
+        path.join(context, 'node_modules'),
+        path.join(context, 'node_modules/autofe-scripts/node_modules'),
+      ],
     },
     module: {
       rules: [
         // eslint
         {
-          test: /\.js$/,
           enforce: 'pre',
+          test: /\.js$/,
+          include: config.appSrc,
           use: [
             {
-              options: {
-                emitWarning: true,
-                eslintPath: require.resolve('eslint'),
-                baseConfig: {
-                  extends: [require.resolve('eslint-config-autofe-app')],
-                },
-              },
               loader: require.resolve('eslint-loader'),
+              options: {
+                // TODO: cache 需要 cacheIdentifier，参考 vue-cli
+                // cache: true,
+                emitWarning: true,
+                emitError: true,
+                eslintPath: path.dirname(
+                  resolveModule('eslint/package.json', context) ||
+                  resolveModule('eslint/package.json', __dirname)
+                ),
+              },
             },
           ],
-          include: paths.appSrc,
         },
         // js
         {
@@ -397,8 +417,8 @@ module.exports = () => {
       new CopyPlugin(
         [
           {
-            from: path.join(paths.appDirectory, 'public'),
-            to: path.join(context, 'build'),
+            from: path.join(context, 'public'),
+            to: config.appBuild,
             toType: 'dir',
             ignore: [
               '.DS_Store'

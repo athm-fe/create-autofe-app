@@ -2,7 +2,8 @@
 
 const fs = require('fs-extra');
 const path = require('path');
-// const spawn = require('cross-spawn');
+const execSync = require('child_process').execSync;
+const spawn = require('cross-spawn');
 const chalk = require('chalk');
 
 module.exports = (appPath, appName, verbose, originalDirectory) => {
@@ -10,9 +11,19 @@ module.exports = (appPath, appName, verbose, originalDirectory) => {
   const ownPath = path.join(appPath, 'node_modules', ownPackageName);
   const appPackage = require(path.join(appPath, 'package.json'));
 
+  const pkg = {
+    dependencies: {},
+    devDependencies: {
+      'eslint': '^5.2.0',
+      'eslint-config-autofe-app': '^1.0.0',
+      "eslint-plugin-import": "^2.13.0",
+      // 'babel-eslint': '^10.0.3',
+    },
+  };
+
   // Copy over some of the devDependencies
-  appPackage.dependencies = appPackage.dependencies || {};
-  appPackage.devDependencies = appPackage.devDependencies || {};
+  appPackage.dependencies = Object.assign(pkg.dependencies, appPackage.dependencies);
+  appPackage.devDependencies = Object.assign(pkg.devDependencies, appPackage.devDependencies);
 
   // Setup the script rules
   appPackage.scripts = {
@@ -47,28 +58,30 @@ module.exports = (appPath, appName, verbose, originalDirectory) => {
     }
   });
 
-  usage();
+  fs.move(path.join(appPath, 'eslintignore'), path.join(appPath, '.eslintignore'), [], (err) => {
+    if (err) {
+      // Append if there's already a `.eslintignore` file there
+      if (err.code === 'EEXIST') {
+        const data = fs.readFileSync(path.join(appPath, 'eslintignore'));
+        fs.appendFileSync(path.join(appPath, '.eslintignore'), data);
+        fs.unlinkSync(path.join(appPath, 'eslintignore'));
+      } else {
+        throw err;
+      }
+    }
+  });
 
-  // // Run another npm install for react and react-dom
-  // console.log('Installing react and react-dom from npm...');
-  // console.log();
-  // // TODO: having to do two npm installs is bad, can we avoid it?
-  // var args = [
-  //   'install',
-  //   'react',
-  //   'react-dom',
-  //   '--save',
-  //   verbose && '--verbose'
-  // ].filter(function(e) { return e; });
-  // var proc = spawn('npm', args, {stdio: 'inherit'});
-  // proc.on('close', function (code) {
-  //   if (code !== 0) {
-  //     console.error('`npm ' + args.join(' ') + '` failed');
-  //     return;
-  //   }
-  //
-  //   usage();
-  // });
+  // Run another npm install for react and react-dom
+  console.log('Installing some packages...');
+  console.log();
+  install(function (code, command, args) {
+    if (code !== 0) {
+      console.error(`${command} ${args.join(' ')} failed`);
+      return;
+    }
+
+    usage();
+  });
 
   function usage() {
     // Display the most elegant way to cd.
@@ -109,5 +122,39 @@ module.exports = (appPath, appName, verbose, originalDirectory) => {
     }
     console.log();
     console.log('Happy hacking!');
+  }
+
+  function shouldUseYarn() {
+    try {
+      execSync('yarn --version', { stdio: 'ignore' });
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function install(callback) {
+    const useYarn = shouldUseYarn();
+    let command;
+    let args;
+    if (useYarn) {
+      command = 'yarn';
+      args = [
+        '--sass-binary-site=https://npm.taobao.org/mirrors/node-sass/',
+      ];
+    } else {
+      command = 'npm';
+      args = [
+        'install',
+        '--sass-binary-site=https://npm.taobao.org/mirrors/node-sass/',
+        '--loglevel',
+        'error',
+      ];
+    }
+
+    const child = spawn(command, args, { stdio: 'inherit' });
+    child.on('close', (code) => {
+      callback(code, command, args);
+    });
   }
 };

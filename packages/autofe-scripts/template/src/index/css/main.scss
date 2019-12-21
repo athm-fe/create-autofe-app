@@ -10,3 +10,16 @@
 @import "attr";
 @import "test-color";
 @import "test-ascii";
+
+// working
+@import "@/index/css/_test-root-alias.scss";
+// working, the same
+@import "~@/index/css/_test-root-alias.scss";
+
+// @import "~xxxxx";
+// .xxxxx2 {
+//   width: 60px;
+//   height: 60px;
+//   background: url("~xxxxx/autohome2.png") no-repeat;
+//   background-size: contain;
+// }

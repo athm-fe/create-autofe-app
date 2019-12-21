@@ -15,6 +15,11 @@ module.exports = {
       node: {
         extensions: ['.mjs', '.js', '.json']
       }
+      // TODO: eslint import 使用 webpack 的规则
+      // eslint-import-resolver-webpack
+      // webpack: {
+      //   config: require.resolve('@vue/cli-service/webpack.config.js')
+      // }
     },
     'import/extensions': [
       '.js',
