@@ -137,7 +137,8 @@ module.exports = () => {
             {
               loader: require.resolve('eslint-loader'),
               options: {
-                cache: true,
+                // TODO: cache 需要 cacheIdentifier，参考 vue-cli
+                // cache: true,
                 emitWarning: true,
                 emitError: true,
                 eslintPath: path.dirname(
