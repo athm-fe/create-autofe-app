@@ -58,6 +58,19 @@ module.exports = (appPath, appName, verbose, originalDirectory) => {
     }
   });
 
+  fs.move(path.join(appPath, 'eslintignore'), path.join(appPath, '.eslintignore'), [], (err) => {
+    if (err) {
+      // Append if there's already a `.eslintignore` file there
+      if (err.code === 'EEXIST') {
+        const data = fs.readFileSync(path.join(appPath, 'eslintignore'));
+        fs.appendFileSync(path.join(appPath, '.eslintignore'), data);
+        fs.unlinkSync(path.join(appPath, 'eslintignore'));
+      } else {
+        throw err;
+      }
+    }
+  });
+
   // Run another npm install for react and react-dom
   console.log('Installing some packages...');
   console.log();
