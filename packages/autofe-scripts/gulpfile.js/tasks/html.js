@@ -2,7 +2,6 @@
 
 const gulp = require('gulp');
 const config = require('../config');
-const browserSync = require('../lib/browserSync');
 const render = require('gulp-nunjucks-render');
 const data = require('gulp-data');
 const path = require('path');
@@ -114,7 +113,6 @@ const htmlTask = function () {
       }
     })
     .pipe(gulp.dest(config.html.dest))
-    .on('end', browserSync.reload);
 };
 
 gulp.task('html', htmlTask);
