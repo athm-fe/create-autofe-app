@@ -47,6 +47,15 @@ function getEntries() {
 }
 
 /**
+ * 配置 file-loader 资源文件名
+ */
+function getNameForFileLoader() {
+  return isProd
+    ? '[path][name].[ext]?[contenthash:8]'
+    : '[path][name].[ext]';
+}
+
+/**
  * 获取 file-loader 资源输出路径，与 src 下目录保持一致
  * @param {String} url file-loader 的 name 配置，`[path][name].[ext]`
  * @param {String} resourcePath 资源的绝对路径
@@ -267,7 +276,7 @@ module.exports = () => {
                 // url-loader options
                 limit: 1024, // limit 1kb
                 // file-loader options
-                name: '[path][name].[ext]',
+                name: getNameForFileLoader,
                 outputPath: getOutputPathForFileLoader,
               },
             };
@@ -319,7 +328,7 @@ module.exports = () => {
                 limit: 1024, // limit 1kb
                 stripdeclarations: true,
                 // file-loader options
-                name: '[path][name].[ext]',
+                name: getNameForFileLoader,
                 outputPath: getOutputPathForFileLoader,
               },
             };
@@ -354,7 +363,7 @@ module.exports = () => {
                 // url-loader options
                 limit: 1024, // limit 1kb
                 // file-loader options
-                name: '[path][name].[ext]',
+                name: getNameForFileLoader,
                 outputPath: getOutputPathForFileLoader,
               },
             },
@@ -370,7 +379,7 @@ module.exports = () => {
                 // url-loader options
                 limit: 1024, // limit 1kb
                 // file-loader options
-                name: '[path][name].[ext]',
+                name: getNameForFileLoader,
                 outputPath: getOutputPathForFileLoader,
               },
             },
@@ -426,7 +435,7 @@ module.exports = () => {
           },
           {
             from: 'src/**/*.{eot,ttf,otf,woff,woff2}',
-            to: '[path][name].[ext]',
+            to: getNameForFileLoader(),
             toType: 'template',
             transformPath(targetPath) {
               return path.relative('src', targetPath);
@@ -434,7 +443,7 @@ module.exports = () => {
           },
           {
             from: 'src/**/*.{png,jpg,jpeg,gif,webp,cur}',
-            to: '[path][name].[ext]',
+            to: getNameForFileLoader(),
             toType: 'template',
             transformPath(targetPath) {
               return path.relative('src', targetPath);
@@ -442,7 +451,7 @@ module.exports = () => {
           },
           {
             from: 'src/**/*.{mp4,webm,ogv,flv,mp3,ogg,wav,flac,acc}',
-            to: '[path][name].[ext]',
+            to: getNameForFileLoader(),
             toType: 'template',
             transformPath(targetPath) {
               return path.relative('src', targetPath);
@@ -450,7 +459,7 @@ module.exports = () => {
           },
           {
             from: 'src/**/*.{ico,json,txt,swf}',
-            to: '[path][name].[ext]',
+            to: getNameForFileLoader(),
             toType: 'template',
             transformPath(targetPath) {
               return path.relative('src', targetPath);
