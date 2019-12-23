@@ -149,7 +149,7 @@ module.exports = () => {
                 // TODO: cache 需要 cacheIdentifier，参考 vue-cli
                 // cache: true,
                 emitWarning: true,
-                emitError: true,
+                emitError: false,
                 eslintPath: path.dirname(
                   resolveModule('eslint/package.json', context) ||
                   resolveModule('eslint/package.json', __dirname)
