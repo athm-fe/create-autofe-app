@@ -9,6 +9,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require('copy-webpack-plugin');
 const AutoFEWebpack = require("autofe-webpack");
 const {
+  isWindows,
   resolveModule,
   // loadModule,
 } = require('@vue/cli-shared-utils')
@@ -94,8 +95,23 @@ function getDevtool() {
   return 'inline-cheap-module-source-map';
 }
 
+function genTranspileDepRegex(transpileDependencies) {
+  const deps = transpileDependencies.map(dep => {
+    if (typeof dep === 'string') {
+      const depPath = path.join('node_modules', dep, '/');
+      return isWindows
+        ? depPath.replace(/\\/g, '\\\\') // double escape for windows style path
+        : depPath;
+    } else if (dep instanceof RegExp) {
+      return dep.source;
+    }
+  });
+  return deps.length ? new RegExp(deps.join('|')) : null;
+}
+
 module.exports = () => {
   const entries = getEntries();
+  const transpileDepRegex = genTranspileDepRegex(config.transpileDependencies);
 
   return {
     mode: isProd ? 'production' : 'development',
@@ -161,7 +177,22 @@ module.exports = () => {
         // js
         {
           test: /\.js$/,
-          exclude: /(node_modules|bower_components)/,
+          exclude: (filepath) => {
+            // only include @babel/runtime when the babel-preset-autofe-app preset is used
+            if (
+              process.env.CREATOR_TRANSPILE_BABEL_RUNTIME &&
+              filepath.includes(path.join('@babel', 'runtime'))
+            ) {
+              return false;
+            }
+
+            // check if this is something the user explicitly wants to transpile
+            if (transpileDepRegex && transpileDepRegex.test(filepath)) {
+              return false;
+            }
+            // Don't transpile node_modules
+            return /node_modules/.test(filepath);
+          },
           use: {
             loader: require.resolve('babel-loader'),
             options: {

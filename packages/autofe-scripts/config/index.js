@@ -8,6 +8,7 @@ const {
 
 const appDefaultConfig = {
   externals: {},
+  transpileDependencies: [],
 };
 
 const config = {

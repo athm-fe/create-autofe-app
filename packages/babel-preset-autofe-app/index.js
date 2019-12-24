@@ -111,3 +111,7 @@ module.exports = function buildPreset(context, options = {}) {
     ],
   };
 };
+
+// a special flag to tell Creator to include @babel/runtime for transpilation
+// otherwise the above `include` option won't take effect
+process.env.CREATOR_TRANSPILE_BABEL_RUNTIME = true;
