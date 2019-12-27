@@ -7,6 +7,7 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require('copy-webpack-plugin');
+const babel = require('@babel/core');
 const AutoFEWebpack = require("autofe-webpack");
 const {
   isWindows,
@@ -113,6 +114,11 @@ module.exports = () => {
   const entries = getEntries();
   const transpileDepRegex = genTranspileDepRegex(config.transpileDependencies);
 
+  // try to load the project babel config;
+  // if the default preset is used,
+  // there will be a CREATOR_TRANSPILE_BABEL_RUNTIME env var set.
+  babel.loadPartialConfig();
+
   return {
     mode: isProd ? 'production' : 'development',
     context,
@@ -128,27 +134,19 @@ module.exports = () => {
     resolve: {
       alias: {
         '@': config.appSrc,
-        // Resolve Babel runtime relative to autofe-scripts.
-        // It usually still works on npm 3 without this but it would be
-        // unfortunate to rely on, as autofe-scripts could be symlinked,
-        // and thus babel-runtime might not be resolvable from the source.
-        'babel-runtime': path.dirname(
-          require.resolve('babel-runtime/package.json')
-        ),
       },
       modules: [
         'node_modules',
         path.join(context, 'node_modules'),
-        path.join(context, 'node_modules/autofe-scripts/node_modules'),
+        path.join(__dirname, '../node_modules'),
+        path.join(path.dirname(require.resolve('babel-preset-autofe-app/package.json')), 'node_modules'),
       ],
     },
     resolveLoader: {
       modules: [
-        path.join(context, 'node_modules/babel-preset-autofe-app/node_modules'),
-        path.join(context, 'node_modules/eslint-config-autofe-app/node_modules'),
         'node_modules',
         path.join(context, 'node_modules'),
-        path.join(context, 'node_modules/autofe-scripts/node_modules'),
+        path.join(__dirname, '../node_modules'),
       ],
     },
     module: {
@@ -190,15 +188,15 @@ module.exports = () => {
             if (transpileDepRegex && transpileDepRegex.test(filepath)) {
               return false;
             }
+
             // Don't transpile node_modules
             return /node_modules/.test(filepath);
           },
-          use: {
-            loader: require.resolve('babel-loader'),
-            options: {
-              presets: [require.resolve('babel-preset-autofe-app')],
+          use: [
+            {
+              loader: require.resolve('babel-loader'),
             },
-          },
+          ],
         },
         // css
         {
