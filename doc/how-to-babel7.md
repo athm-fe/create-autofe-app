@@ -6,11 +6,7 @@
 
 
 
-## Polyfill
-
-这是个大问题
-
-### `@babel/polyfill`
+## `@babel/polyfill`
 
 `@babel/polyfill` 不再推荐使用，建议改为如下方式：
 
@@ -30,7 +26,7 @@ import "regenerator-runtime/runtime";
 缺点
 1. 引入的 Polyfill 太多，文件太大
 
-### `core-js`
+## `core-js`
 
 如果你仅仅需要某几个新特性，可以直接使用 `core-js` 明确引用
 
@@ -41,13 +37,33 @@ import 'core-js/features/set';        // <- at the top of your entry point
 import 'core-js/features/promise';    // <- at the top of your entry point
 ```
 
-### `@babel/preset-env`
+## `@babel/preset-env`
 
-automatically determines plugins and polyfills you need based on your supported environments
+preset-env 会根据你需要支持的环境，自动决定哪些 Babel 插件来转换代码，另外还会根据你的 `useBuiltIns` 配置来决定如何添加 Polyfills。
 
-`useBuiltIns` 可以配置为 `entry` 和 `usage`。
+`useBuiltIns` 可以配置为 `false`，`'entry'` 和 `'usage'`。
 
-设置为 `usage`
+### 设置为 `false`
+
+preset-env 不会添加任何 Polyfills，需要你自行处理。
+
+```
+npm i --save core-js@3
+```
+
+```javascript
+import 'core-js/features/promise';
+```
+
+### 设置为 `'usage'`
+
+preset-env 会自动分析代码，并添加需要的 Polyfills。
+
+**注意：不会添加你没有使用到的 Polyfills。**
+
+```
+npm i --save core-js@3
+```
 
 ```javascript
 Promise.resolve().finally();
@@ -61,9 +77,23 @@ require("core-js/modules/es.promise.finally");
 Promise.resolve().finally();
 ```
 
-### `@babel/plugin-transform-runtime`
+### 设置为 `'entry'`
 
-`@babel/runtime` is similar to the polyfill except that it doesn't modify the global scope.
+preset-env 如果发现有手动使用 core-js，会自动转化为需要的 Polyfills。
+
+**注意：不考虑该 Polyfills 是否被真正使用，只是根据 targets 或者 browserlist 引用**
+
+```
+npm i --save core-js@3
+```
+
+```javascript
+import "core-js/stable";
+```
+
+**另外，需要注意，在 Webpack 配置文件的 entry 中配置的 `@babel/polyfill` 不会被 preset-env 自动识别，也就是说无论你的 `useBuiltIns` 配置成什么都不会做任何转换处理。**
+
+## `@babel/plugin-transform-runtime`
 
 it is to be used with `@babel/plugin-transform-runtime`
 
@@ -71,10 +101,10 @@ it is to be used with `@babel/plugin-transform-runtime`
 and if you need `core-js` you can use `@babel/runtime-corejs2` and the option provided in the transform.
 For both you still need the `@babel/plugin-transform-runtime`
 
-Only Helpers
+### Only Helpers
 
 ```
-npm install @babel/runtime
+npm install @babel/runtime --save
 npm install @babel/plugin-transform-runtime --save-dev
 ```
 
@@ -84,10 +114,10 @@ npm install @babel/plugin-transform-runtime --save-dev
 }
 ```
 
-Helpers + Polyfilling from `core-js`
+### Helpers + Polyfilling from `core-js`
 
 ```
-npm install @babel/runtime-corejs2
+npm install @babel/runtime-corejs3
 npm install @babel/plugin-transform-runtime --save-dev
 ```
 
@@ -95,96 +125,54 @@ npm install @babel/plugin-transform-runtime --save-dev
 {
   "plugins": [
     ["@babel/plugin-transform-runtime", {
-      "corejs": 2,
+      "corejs": 3,
     }],
   ]
 }
 ```
 
-### API
+## Babel 转换后代码依赖的 API
 
-自己总结
-* string spread: Array.isArray() + Symbol.iterator + Array.from
-* tagged template strings: Object.freeze + Object.defineProperties
-* string destructuring: Array.isArray() + Symbol.iterator + Iterator (or Array.from)
-* for-of: Symbol.iterator + Iterator, 开启 loose 后，使用 Array.isArray() 判断数组并才用数组访问方式
-* class: loose 模式依赖 Object.create(), 非 loose 模式以及继承 Native Class 需要 IE11，因为依赖 `Object.setPrototypeOf` or `__proto__`
-* Object.defineProperty
+首先，Babel 原意是把 ES6+ 代码转换为 ES5 代码，因此肯定用到了很多的 ES5 的 API，从 `@babel/helpers` 就可以看到。
 
-
-https://babeljs.io/docs/en/caveats
+webpack
+* import() 依赖 Promise
 
 Polyfills
 * Async functions, Generators ----- regenerator runtime
 * Array destructuring, For Of ----- Symbol, prototype[Symbol.iterator], Iterator
+* for of ----- 开启 loose 后，使用 Array.isArray() 判断数组并才用数组访问方式
 * Spread ----- Array.from
-
-Classes
-* 继承 Native Class 有问题
-* 非 loose 模式依赖 `Object.setPrototypeOf`，兼容到 IE11
-
-ES5
-* 除此之外，Babel 还用到许多 ES5 方法
-
-更新的 API
-* Object.assign()
-* Array.from()
-
-Array#concat，indexOf
-String#concat，indexOf
-
-webpack
-* Object.defineProperty
-* 弱依赖 Symbol.toStringTag
-* Object.create
-* import() 依赖 Promise
+* string spread: Symbol.iterator + Array.from()
+* string destructuring: Symbol.iterator + Iterator or Array.from()
 
 regenerator runtime
 * 弱依赖 Symbol，Symbol.iterator，Symbol.asyncIterator，Symbol.toStringTag
 * 弱依赖 Generator
 * 弱依赖 setPrototypeOf 和 __proto__
-* Object.create()
 * Promise
-* forEach
+
+Classes
+* 继承原生类不被 `IE<=10` 支持，因为需要包裹一下原生类，内部需要用到 `Object.setPrototypeOf` 或 `__proto__`。
+* 继承类的静态属性不被 `IE<=10` 支持，因为其静态属性是通过 `__proto__` 实现的。
+
+当使用 `@babel/plugin-transform-runtime` 优化 helpers 时，要注意将 `@babel/runtime` 加入 babel 处理，否则不会自动分析其需要的 Polyfills。
+
+@babel/runtime/regenerator/index.js ---> regenerator-runtime/runtime.js
 
 helpers
 * typeof ----- 兼容处理 typeof Symbol()
+
 * asyncIterator ----- Symbol.asyncIterator 或 Symbol.iterator
 * AsyncGenerator ----- Promise，弱依赖 Symbol.asyncIterator
-* wrapAsyncGenerator ----- 见上面的 AsyncGenerator
 * asyncGeneratorDelegate ----- Promise，弱依赖 Symbol.iterator
 * asyncToGenerator ----- Promise
-* createClass ----- Object.defineProperty，descriptor.enumerable configurable writable key value，弱依赖 Object.getOwnPropertySymbols
-* defaults ----- Object.getOwnPropertyNames，Object.getOwnPropertyDescriptor，Object.defineProperty
-* defineProperty ----- Object.defineProperty
-* extends ----- 弱依赖 Object.assign
-* objectSpread ----- Object.defineProperty，Object.keys(), Object.getOwnPropertySymbols, Array.prototype.filter(), Array.prototype.forEach()， Array.prototype.concat(), Object.getOwnPropertyDescriptor(source, sym).enumerable, Object.defineProperties
-* inheritsLoose ----- Object.create
-* inherits ----- 参见下面的 setPrototypeOf，Object.create
-* getPrototypeOf ----- Object.getPrototypeOf 或 __proto__
-* setPrototypeOf ----- Object.setPrototypeOf 或 __proto__
-* construct ----- 参见上面的 setPrototypeOf，Function.bind.apply，弱依赖 Reflect.construct
-* wrapNativeSuper ----- 参见上面的 construct、getPrototypeOf 和 setPrototypeOf，Object.create，弱依赖 Map
-* instanceof ----- 弱依赖 Symbol.hasInstance
-* interopRequireWildcard ----- 弱依赖 WeakMap，Object.defineProperty，Object.getOwnPropertyDescriptor
-* objectWithoutPropertiesLoose ----- Object.keys，indexOf
-* objectWithoutProperties ----- 弱依赖 Object.getOwnPropertySymbols，excluded.indexOf，Object.prototype.propertyIsEnumerable
-* superPropBase ----- 参见上面的 getPrototypeOf
-* get ----- 参见上面的 superPropBase，Object.getOwnPropertyDescriptor，弱依赖 Reflect.get
-* set ----- 参加 superPropBase 和 defineProperty，Object.getOwnPropertyDescriptor，弱依赖 Reflect.set
-* taggedTemplateLiteral ----- Object.freeze、Object.defineProperties
-* slicedToArray ----- 参见 arrayWithHoles、iterableToArrayLimit
-* slicedToArrayLoose ---- 参见 arrayWithHoles、iterableToArrayLimitLoose
-* toArray ----- 参见 arrayWithHoles、iterableToArray
-* toConsumableArray ----- 参见 arrayWithoutHoles、iterableToArray
-* arrayWithoutHoles ----- Array.isArray()
-* arrayWithHoles ----- Array.isArray()
+
+for...of 等
 * iterableToArray ----- Array.from，若 [Symbol.iterator] 或 is [object Arguments]
 * iterableToArrayLimit ----- Symbol.iterator、Iterator
 * iterableToArrayLimitLoose ----- Symbol.iterator、Iterator
-* TypeError、ReferenceError
+
+decorator 使用（未知）
 * toPrimitive ----- Symbol.toPrimitive
 * toPropertyKey ----- 参见 toPrimitive
-* applyDecoratedDescriptor ----- Object.keys、forEach、decorators.slice().reverse().reduce
-* decorate ----- 还没仔细看
-* wrapRegExp ----- 参见 wrapNativeSuper、getPrototypeOf、possibleConstructorReturn、inherits、Symbol.replace、WeakMap
