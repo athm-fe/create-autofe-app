@@ -140,11 +140,9 @@ webpack
 
 Polyfills
 * Async functions, Generators ----- regenerator runtime
-* Array destructuring, For Of ----- Symbol, prototype[Symbol.iterator], Iterator
-* for of ----- 开启 loose 后，使用 Array.isArray() 判断数组并才用数组访问方式
-* Spread ----- Array.from
+* For Of ----- Symbol.iterator，开启 loose 后，优先使用 Array.isArray() 判断数组并用数组访问方式，否则用 Symbol.iterator
 * string spread: Symbol.iterator + Array.from()
-* string destructuring: Symbol.iterator + Iterator or Array.from()
+* string destructuring: Symbol.iterator
 
 regenerator runtime
 * 弱依赖 Symbol，Symbol.iterator，Symbol.asyncIterator，Symbol.toStringTag
@@ -152,27 +150,18 @@ regenerator runtime
 * 弱依赖 setPrototypeOf 和 __proto__
 * Promise
 
-Classes
+classes
 * 继承原生类不被 `IE<=10` 支持，因为需要包裹一下原生类，内部需要用到 `Object.setPrototypeOf` 或 `__proto__`。
 * 继承类的静态属性不被 `IE<=10` 支持，因为其静态属性是通过 `__proto__` 实现的。
 
 当使用 `@babel/plugin-transform-runtime` 优化 helpers 时，要注意将 `@babel/runtime` 加入 babel 处理，否则不会自动分析其需要的 Polyfills。
 
-@babel/runtime/regenerator/index.js ---> regenerator-runtime/runtime.js
-
-helpers
-* typeof ----- 兼容处理 typeof Symbol()
-
+async + generator
 * asyncIterator ----- Symbol.asyncIterator 或 Symbol.iterator
 * AsyncGenerator ----- Promise，弱依赖 Symbol.asyncIterator
 * asyncGeneratorDelegate ----- Promise，弱依赖 Symbol.iterator
 * asyncToGenerator ----- Promise
 
-for...of 等
-* iterableToArray ----- Array.from，若 [Symbol.iterator] 或 is [object Arguments]
-* iterableToArrayLimit ----- Symbol.iterator、Iterator
-* iterableToArrayLimitLoose ----- Symbol.iterator、Iterator
-
-decorator 使用（未知）
+decorator（未知）
 * toPrimitive ----- Symbol.toPrimitive
 * toPropertyKey ----- 参见 toPrimitive

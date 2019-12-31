@@ -1,17 +1,5 @@
 const path = require('path');
 
-const validateBoolOption = (name, value, defaultValue) => {
-  if (typeof value === 'undefined') {
-    value = defaultValue;
-  }
-
-  if (typeof value !== 'boolean') {
-    throw new Error(`Preset autofe-app: '${name}' option must be a boolean.`);
-  }
-
-  return value;
-};
-
 /**
  * @param options.debug 开启 babel-preset-env 的调试模式
  * @param options.exclude 去掉 babel-preset-env 的部分插件
@@ -59,7 +47,7 @@ module.exports = function buildPreset(api, options = {}) {
       // 默认不开启 Polyfills
       useBuiltIns,
       // 指定 corejs 版本
-      corejs: 3,
+      corejs: useBuiltIns ? 3 : undefined,
       forceAllTransforms,
       configPath,
       ignoreBrowserslistConfig,
@@ -118,41 +106,13 @@ module.exports = function buildPreset(api, options = {}) {
 
   // 覆盖一些 preset-env 的插件
   const normalPlugins = [
-    // @babel/plugin-transform-classes // 简单赋值方式，可枚举，推荐
-    // @babel/plugin-transform-computed-properties // 简单赋值方式，推荐
-    // @babel/plugin-transform-destructuring
-    // 假设解构的是数组，不使用 Array.from，还未考虑好
-    // 这个还有 useBuiltIns: false, 开启后就会使用 Object.assign 而不是 Babel 的 extends
-    // @babel/plugin-transform-for-of
-    // 先假定是数组，否则再考虑 Symbol.iterator
-    // 这个还有 assumeArray: false, 假定只处理数组，不考虑其他 iterables
-    // @babel/plugin-transform-parameters
-    // function bar1(arg1 = 1) {} bar1.length === 1 有值的参数被算作 length 里
-    // Destructuring parameters
-    // Default parameters
-    // Rest parameters
-    // function test(x = "hello", { a, b }, ...args) {
-    //   console.log(x, a, b, args);
-    // }
-    // @babel/plugin-transform-spread
-    // all iterables are assumed to be arrays.
-    // var a = ['a', 'b', 'c'];
-    // var b = [...a, 'foo'];
-    // var c = foo(...a);
-    // @babel/plugin-transform-template-literals
-    // tagged template literal objects aren't frozen
-    // 使用 + 替代 String.prototype.concat
-    // @babel/plugin-proposal-object-rest-spread // 默认使用 objectSpread helper
-    // 开启后使用 extends helper
-    // 还有 useBuiltIns: false，开启后，将使用 Object.assign 代替 extends helper
-
     // TODO: preset-env 针对 modules 不为 false 或 targets node 时使用
     // TODO: 与 babel-plugin-dynamic-import-node 有点类似
     // "@babel/plugin-proposal-dynamic-import"
 
     // object rest and spread
     // use Babel's extends helper, and don't use Object.assign.
-    // TODO: objectSpread 兼容性？看起来没问题
+    // TODO: objectSpread 兼容性？看起来没问题，弱依赖 Object.getOwnPropertySymbols
     [require('@babel/plugin-proposal-object-rest-spread'), {
       loose: true,
       useBuiltIns: false,

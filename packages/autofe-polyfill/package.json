@@ -11,11 +11,9 @@
     "url": "https://github.com/athm-fe/create-autofe-app/issues"
   },
   "files": [
-    "index.js",
-    "array-from.js"
+    "index.js"
   ],
   "dependencies": {
-    "es5-shim": "^4.5.10",
     "es6-promise": "^4.2.4",
     "object-assign": "^4.1.1"
   }

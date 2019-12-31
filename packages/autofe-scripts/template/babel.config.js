@@ -1,8 +1,9 @@
 module.exports = {
   presets: [
     ['autofe-app', {
-      debug: true,
+      // debug: true,
       // useBuiltIns: 'usage',
+      // helpers: false,
     }],
   ],
 };
