@@ -41,7 +41,7 @@ const webpackTask = function (cb) {
     });
   } else {
     compiler.watch({
-      ignored: /node_modules/,
+      ignored: [/node_modules/, /\.(html|old\.js|md)$/],
     }, (err, stats) => {
       if (err) {
         throw new PluginError('webpack', err);
@@ -51,11 +51,10 @@ const webpackTask = function (cb) {
         colors: true,
       }));
 
+      // Notice: only call cb() once, otherwise error will happen.
       if (isFirst) {
         cb();
         isFirst = false;
-      } else {
-        browserSync.reload();
       }
     });
   }

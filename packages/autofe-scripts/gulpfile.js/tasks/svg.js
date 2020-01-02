@@ -2,7 +2,6 @@
 
 const gulp = require('gulp');
 const config = require('../config');
-const browserSync = require('../lib/browserSync');
 const svgmin = require('../lib/svgmin');
 const gulpif = require('gulp-if');
 
@@ -18,7 +17,6 @@ const svgTask = function () {
       })
     ))
     .pipe(gulp.dest(config.svg.dest, { overwrite: false }))
-    .on('end', browserSync.reload);
 };
 
 gulp.task('svg', svgTask);

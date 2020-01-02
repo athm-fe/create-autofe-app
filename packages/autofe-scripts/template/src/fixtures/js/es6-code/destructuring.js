@@ -25,6 +25,9 @@ const { name: c, age: d } = { name: 'Tom', age: 30, weight: 70 };
 console.log('c === "Tom"', c === 'Tom');
 console.log('d === 30', d === 30);
 
+const { ...x } = { name: 'Tom', age: 30, weight: 70 };
+console.log('x', x);
+
 // object matching shorthand
 const { name, age } = { name: 'Tom', age: 30, weight: 70 };
 console.log('name === "Tom"', name === 'Tom');

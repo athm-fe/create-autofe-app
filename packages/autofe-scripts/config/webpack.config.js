@@ -7,8 +7,10 @@ const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require('copy-webpack-plugin');
+const babel = require('@babel/core');
 const AutoFEWebpack = require("autofe-webpack");
 const {
+  isWindows,
   resolveModule,
   // loadModule,
 } = require('@vue/cli-shared-utils')
@@ -44,6 +46,15 @@ function getEntries() {
   // TODO: 可能存在 key 相同的情况
 
   return entries;
+}
+
+/**
+ * 配置 file-loader 资源文件名
+ */
+function getNameForFileLoader() {
+  return isProd
+    ? '[path][name].[ext]?[contenthash:8]'
+    : '[path][name].[ext]';
 }
 
 /**
@@ -85,8 +96,28 @@ function getDevtool() {
   return 'inline-cheap-module-source-map';
 }
 
+function genTranspileDepRegex(transpileDependencies) {
+  const deps = transpileDependencies.map(dep => {
+    if (typeof dep === 'string') {
+      const depPath = path.join('node_modules', dep, '/');
+      return isWindows
+        ? depPath.replace(/\\/g, '\\\\') // double escape for windows style path
+        : depPath;
+    } else if (dep instanceof RegExp) {
+      return dep.source;
+    }
+  });
+  return deps.length ? new RegExp(deps.join('|')) : null;
+}
+
 module.exports = () => {
   const entries = getEntries();
+  const transpileDepRegex = genTranspileDepRegex(config.transpileDependencies);
+
+  // try to load the project babel config;
+  // if the default preset is used,
+  // there will be a CREATOR_TRANSPILE_BABEL_RUNTIME env var set.
+  babel.loadPartialConfig();
 
   return {
     mode: isProd ? 'production' : 'development',
@@ -103,27 +134,19 @@ module.exports = () => {
     resolve: {
       alias: {
         '@': config.appSrc,
-        // Resolve Babel runtime relative to autofe-scripts.
-        // It usually still works on npm 3 without this but it would be
-        // unfortunate to rely on, as autofe-scripts could be symlinked,
-        // and thus babel-runtime might not be resolvable from the source.
-        'babel-runtime': path.dirname(
-          require.resolve('babel-runtime/package.json')
-        ),
       },
       modules: [
         'node_modules',
         path.join(context, 'node_modules'),
-        path.join(context, 'node_modules/autofe-scripts/node_modules'),
+        path.join(__dirname, '../node_modules'),
+        path.join(path.dirname(require.resolve('babel-preset-autofe-app/package.json')), 'node_modules'),
       ],
     },
     resolveLoader: {
       modules: [
-        path.join(context, 'node_modules/babel-preset-autofe-app/node_modules'),
-        path.join(context, 'node_modules/eslint-config-autofe-app/node_modules'),
         'node_modules',
         path.join(context, 'node_modules'),
-        path.join(context, 'node_modules/autofe-scripts/node_modules'),
+        path.join(__dirname, '../node_modules'),
       ],
     },
     module: {
@@ -140,7 +163,7 @@ module.exports = () => {
                 // TODO: cache 需要 cacheIdentifier，参考 vue-cli
                 // cache: true,
                 emitWarning: true,
-                emitError: true,
+                emitError: false,
                 eslintPath: path.dirname(
                   resolveModule('eslint/package.json', context) ||
                   resolveModule('eslint/package.json', __dirname)
@@ -152,13 +175,28 @@ module.exports = () => {
         // js
         {
           test: /\.js$/,
-          exclude: /(node_modules|bower_components)/,
-          use: {
-            loader: require.resolve('babel-loader'),
-            options: {
-              presets: [require.resolve('babel-preset-autofe-app')],
-            },
+          exclude: (filepath) => {
+            // only include @babel/runtime when the babel-preset-autofe-app preset is used
+            if (
+              process.env.CREATOR_TRANSPILE_BABEL_RUNTIME &&
+              filepath.includes(path.join('@babel', 'runtime'))
+            ) {
+              return false;
+            }
+
+            // check if this is something the user explicitly wants to transpile
+            if (transpileDepRegex && transpileDepRegex.test(filepath)) {
+              return false;
+            }
+
+            // Don't transpile node_modules
+            return /node_modules/.test(filepath);
           },
+          use: [
+            {
+              loader: require.resolve('babel-loader'),
+            },
+          ],
         },
         // css
         {
@@ -267,7 +305,7 @@ module.exports = () => {
                 // url-loader options
                 limit: 1024, // limit 1kb
                 // file-loader options
-                name: '[path][name].[ext]',
+                name: getNameForFileLoader,
                 outputPath: getOutputPathForFileLoader,
               },
             };
@@ -319,7 +357,7 @@ module.exports = () => {
                 limit: 1024, // limit 1kb
                 stripdeclarations: true,
                 // file-loader options
-                name: '[path][name].[ext]',
+                name: getNameForFileLoader,
                 outputPath: getOutputPathForFileLoader,
               },
             };
@@ -354,7 +392,7 @@ module.exports = () => {
                 // url-loader options
                 limit: 1024, // limit 1kb
                 // file-loader options
-                name: '[path][name].[ext]',
+                name: getNameForFileLoader,
                 outputPath: getOutputPathForFileLoader,
               },
             },
@@ -370,7 +408,7 @@ module.exports = () => {
                 // url-loader options
                 limit: 1024, // limit 1kb
                 // file-loader options
-                name: '[path][name].[ext]',
+                name: getNameForFileLoader,
                 outputPath: getOutputPathForFileLoader,
               },
             },
@@ -426,7 +464,7 @@ module.exports = () => {
           },
           {
             from: 'src/**/*.{eot,ttf,otf,woff,woff2}',
-            to: '[path][name].[ext]',
+            to: getNameForFileLoader(),
             toType: 'template',
             transformPath(targetPath) {
               return path.relative('src', targetPath);
@@ -434,7 +472,7 @@ module.exports = () => {
           },
           {
             from: 'src/**/*.{png,jpg,jpeg,gif,webp,cur}',
-            to: '[path][name].[ext]',
+            to: getNameForFileLoader(),
             toType: 'template',
             transformPath(targetPath) {
               return path.relative('src', targetPath);
@@ -442,7 +480,7 @@ module.exports = () => {
           },
           {
             from: 'src/**/*.{mp4,webm,ogv,flv,mp3,ogg,wav,flac,acc}',
-            to: '[path][name].[ext]',
+            to: getNameForFileLoader(),
             toType: 'template',
             transformPath(targetPath) {
               return path.relative('src', targetPath);
@@ -450,7 +488,7 @@ module.exports = () => {
           },
           {
             from: 'src/**/*.{ico,json,txt,swf}',
-            to: '[path][name].[ext]',
+            to: getNameForFileLoader(),
             toType: 'template',
             transformPath(targetPath) {
               return path.relative('src', targetPath);

@@ -48,6 +48,7 @@ module.exports = {
     option: {
       open: "external",
       browser: chromeName,
+      watch: true,
       server: {
         baseDir: root.dest,
         directory: true,
