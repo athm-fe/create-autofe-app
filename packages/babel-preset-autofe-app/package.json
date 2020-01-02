@@ -25,11 +25,11 @@
     "@babel/plugin-transform-member-expression-literals": "^7.7.4",
     "@babel/plugin-transform-property-literals": "^7.7.4",
     "@babel/plugin-transform-property-mutators": "^7.7.4",
-    "@babel/plugin-transform-regenerator": "^7.7.5",
     "@babel/plugin-transform-runtime": "^7.7.6",
     "@babel/preset-env": "^7.7.7",
     "@babel/runtime": "^7.7.7",
-    "core-js": "^3.6.1"
+    "core-js": "^3.6.1",
+    "regenerator-runtime": "^0.13.3"
   },
   "peerDependencies": {
     "@babel/runtime": "^7.7.7"

@@ -176,13 +176,14 @@ module.exports = () => {
         {
           test: /\.js$/,
           exclude: (filepath) => {
+            // Notice: 处理 @babel/runtime 会导致很多没必要的 Polyfills，暂时去掉
             // only include @babel/runtime when the babel-preset-autofe-app preset is used
-            if (
-              process.env.CREATOR_TRANSPILE_BABEL_RUNTIME &&
-              filepath.includes(path.join('@babel', 'runtime'))
-            ) {
-              return false;
-            }
+            // if (
+            //   process.env.CREATOR_TRANSPILE_BABEL_RUNTIME &&
+            //   filepath.includes(path.join('@babel', 'runtime'))
+            // ) {
+            //   return false;
+            // }
 
             // check if this is something the user explicitly wants to transpile
             if (transpileDepRegex && transpileDepRegex.test(filepath)) {
