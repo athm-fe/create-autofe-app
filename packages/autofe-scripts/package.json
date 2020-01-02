@@ -63,6 +63,7 @@
     "webpack": "^4.16.2"
   },
   "devDependencies": {
+    "autofe-polyfill": "^1.0.4",
     "eslint": "^5.2.0",
     "eslint-config-autofe-app": "^1.0.1",
     "eslint-plugin-import": "^2.13.0"
