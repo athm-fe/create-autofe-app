@@ -5,7 +5,7 @@ const PluginError = require('plugin-error');
 const log = require('fancy-log');
 const chalk = require('chalk');
 // const config = require('../config');
-const browserSync = require('../lib/browserSync');
+// const browserSync = require('../lib/browserSync');
 const webpack = require('webpack');
 const webpackConfig = require('../../config/webpack.config');
 

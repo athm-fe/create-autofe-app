@@ -1,8 +1,5 @@
 This project was bootstrapped with [Create AutoFE App](https://github.com/athm-fe/create-autofe-app).
 
-Below you will find some information on how to perform common tasks.
-You can find the most recent version of this guide [here](https://github.com/athm-fe/create-autofe-app/blob/master/packages/autofe-scripts/template/README.md).
-
 ## Table of Contents
 
 - [更新到新版本](#更新到新版本)
@@ -45,10 +42,16 @@ Create AutoFE App 分成两个包：
 
 ```
 my-app/
+  node_modules/
   README.md
-  node_modules
   package.json
+  .browserslistrc
+  .eslintignore
+  .eslintrc.js
   .gitignore
+  babel.config.js
+  postcss.config.js
+  creator.config.js
   src/
     index/
       css/
@@ -61,15 +64,9 @@ my-app/
         bg.png
       js/
         vendor/
-          json3.min.old.js
           es6-promise.auto.min.old.js
-        es6-code
-          index.entry.js
-          class.js
-          arrow-function.js
-          ...
+        index.entry.js
         main.old.js
-        polyfills.entry.js
       pic/
         01.jpg
       _part1.html
@@ -111,12 +108,16 @@ NODE_ENV=development npm run build
 * 使用 [Browsersync](http://browsersync.io/) 开启本地服务器
   * 支持文件修改时自动刷新浏览器
   * 支持目录浏览
+  * 自动打开浏览器
 * 使用 [Nunjucks](https://mozilla.github.io/nunjucks/) 模版引擎来写 HTML
 * 使用 Sass 写 CSS
-* 使用 clean-css 压缩 CSS
-* 使用 UglifyJS2 压缩 JS，中文 to ASCII
-* 使用 imagemin 压缩图片
+* 使用 PostCSS 支持 Autoprefixer
+* 使用 Babel 处理 ES6+
+* 使用 ESLint 检查 ES6+ 代码
 * 使用 Markdown 写文档，并生成 HTML 方便查看
+* 开发环境支持 SourceMap
+* 压缩 CSS 和 JS
+* 压缩 SVG
 
 ## 开发约定
 
@@ -127,17 +128,17 @@ NODE_ENV=development npm run build
 
 ## 编写样式
 
-用 SASS 来写样式，没什么好说的。比如下面的例子：
+先来一个最简单的：
 
 `_btn.scss`
-```css
+```scss
 .btn {
   display: inline-block;
 }
 ```
 
 `main.scss`
-```css
+```scss
 @import "btn";
 
 .some {
@@ -147,6 +148,94 @@ NODE_ENV=development npm run build
 
 编译后，只会产生 `main.css` 。
 
+`main.css`
+```css
+.btn {
+  display: inline-block;
+}
+.some {
+  color: red;
+}
+```
+
+### 使用来自 npm 的 CSS
+
+我们可以使用开源的 [Normalize.css](https://necolas.github.io/normalize.css/)，还可以开发自己的 CSS 包，发布到官方 NPM 或者公司的私有 NPM。
+
+以 `normalize.css` 为例，在你的项目中安装你想要的包：
+
+```
+npm install normalize.css
+```
+
+然后，在你的样式文件中引用该样式
+
+```css
+@import "~normalize.css";
+
+body {
+  color: #333;
+}
+```
+
+### Sass 中的图片相对路径问题
+
+假设你的目录结构是这样的：
+
+```
++ main.scss
++ sub/
+  + _sub.scss
+  + sub.png
+```
+
+代码内容是这样的：
+
+`main.scss`
+```scss
+@import "sub/sub";
+```
+
+`sub/_sub.scss`
+```scss
+.sub {
+  background: url("./sub.png") no-repeat;
+}
+```
+
+输出结果是：
+
+```css
+.sub {
+  background: url("./sub/sub.png") no-repeat;
+}
+```
+
+### 路径别名 @
+
+你可能遇到过如下的代码，眼睛估计也很累。
+
+```scss
+@import "../../../../../common/reset.css";
+```
+
+而我们支持如下方式：
+
+```scss
+@import "@/common/reset.css";
+// or
+@import "~@/common/reset.css";
+
+.test-root-alias {
+  width: 320px;
+  height: 240px;
+  // working
+  background: url("~@/index/img/car.jpg") no-repeat;
+  // not working
+  // background: url("@/index/img/car.jpg") no-repeat;
+}
+```
+
 ### Autoprefixer
 
 有了 Autoprefixer，你不再需要手动写 `-webkit-` ，`-ms-` ，`-moz-` 等浏览器厂商前缀，也就不再需要使用 Sass 之类的语言来编写一堆 mixins。
@@ -155,17 +244,15 @@ NODE_ENV=development npm run build
 ```
 browsers: [
   '> 0.2%', 'last 2 versions', 'Firefox ESR', 'not dead',
-  'iOS >= 8',
-  'Android >= 4.0',
+  'iOS >= 9',
+  'Android >= 4.4',
   'Explorer >= 9'
 ]
 ```
 
-解释一下，`> 0.2%` 表示流行使用的浏览器版本，但是由于新发布的版本可能暂时未达到使用率，所以加上 `last 2 versions` 以及 `Firefox ESR`，另外前面的条件可能包含已经 `dead` 的浏览器版本，我们不打算考虑这些浏览器，所以使用 `not dead` 去掉这些浏览器版本。最后明确指定我们会进行测试的浏览器最低要求，即 `iOS >= 8, Android >= 4.0, Explorer >= 9` 。
+解释一下，`> 0.2%` 表示流行使用的浏览器版本，但是由于新发布的版本可能暂时未达到使用率，所以加上 `last 2 versions` 以及 `Firefox ESR`，另外前面的条件可能包含已经 `dead` 的浏览器版本，我们不打算考虑这些浏览器，所以使用 `not dead` 去掉这些浏览器版本。最后明确指定我们会进行测试的浏览器最低要求，即 `iOS >= 9, Android >= 4.4, Explorer >= 9` 。
 
-你可以使用 [browser.list](http://browserl.ist/?q=%3E+0.2%25%2C+last+2+versions%2C+Firefox+ESR%2C+not+dead%2C+iOS+%3E%3D+8%2C+Android+%3E%3D+4.0%2C+Explorer+%3E%3D+9) 来查看我们的规则包含了哪些浏览器版本。
-
-Autoprefixer 根据你所支持的浏览器配置，从 [Can I Use](http://caniuse.com/) 获取数据，然后只添加必要的厂商前缀。
+你可以使用 [browser.list](https://browserl.ist/?q=%3E+0.2%25%2C+last+2+versions%2C+Firefox+ESR%2C+not+dead%2C+iOS+%3E%3D+9%2C+Android+%3E%3D+4.4%2C+Explorer+%3E%3D+9) 来查看我们的规则包含了哪些浏览器版本。
 
 #### 简单的例子
 
@@ -267,27 +354,33 @@ Autoprefixer 还会去掉老旧的前缀，比如 `border-radius` ：
 
 上面我们介绍了几种 Autoprefixer 的处理规则，更多的用法请参见[官网](https://github.com/postcss/autoprefixer)
 
+**⚠️ 注意：你可以配置 `.browserslistrc` 来自定义你需要支持的浏览器。**
+**⚠️ 注意：Autoprefixer 是通过 PostCSS 来实现的，如果需要，你可以自定义 `postcss.config.js` 来添加更多的功能。**
+
 ### 图片内嵌
 
-有时候希望将样式里引用的背景图内嵌到样式里，可以使用 `inline` 代替 `url`。
+有时候希望将样式里引用的背景图内嵌到样式里，支持如下两种方式：
+* 小于 1kb 自动内嵌怎么样？
+* 通过自定义参数 `datauri` 直接表示内嵌
 
-```css
-.assets-svg {
-  width: 400px;
-  height: 72px;
-  background: inline("../img/postcss-assets.svg");
-}
-.assets-png {
-  width: 200px;
-  height: 57px;
-  background: inline("../img/postcss-assets.png");
-}
-.assets-jpg {
-  width: 190px;
-  height: 190px;
-  background: inline("../img/postcss-assets.jpg");
+```scss
+.test-inline {
+  background: url("../img/car.jpg?datauri") no-repeat;
+  background: url("../img/car.svg?datauri") no-repeat;
 }
 ```
+
+### 生产环境自动添加版本号
+
+为了解决 CDN 缓存的问题，当执行生产环境构建的时候，我们会自动给 CSS 中的图片路径添加版本号：
+
+```css
+.test-md5 {
+  background: url(../img/bg.png?6350fa96) no-repeat;
+}
+```
+
+该版本号是根据图片文件生成的 MD5，当文件变化时，该版本号才会发生变化。
 
 ## 编写 HTML
 
@@ -297,7 +390,7 @@ Autoprefixer 还会去掉老旧的前缀，比如 `border-radius` ：
 
 ### `includePretty`
 
-Nunjucks 自带的 `include` 无法保证输出 HTML 的对齐问题，所以自己开了这个。
+Nunjucks 自带的 `include` 无法保证输出 HTML 的对齐问题，所以自己开发了这个。
 
 `_part1.html`
 ```html
@@ -467,11 +560,47 @@ for html
 
 原有的非 ES6 的代码怎么办？简单啊，把原有的 `xxx.js` 重命名为 `xxx.old.js` 即可。
 
-## sourcemaps
+### ES6+ 兼容性报告
 
-目前仅支持开发模式下的样式的 source map 。
+首先，Babel 原意是把 ES6+ 代码转换为 ES5 代码，因此肯定用到了很多的 ES5 的 API，从 `@babel/helpers` 就可以看到。
 
-![sourcemap](http://x.autoimg.cn/fe/create-autofe-app/sourcemap.png)
+**所以，我们的最低兼容是 IE9。**
+
+另外做出如下建议：
+1. 不使用 `for...of`
+2. 不使用 string spread
+3. 不使用 string destructuring
+4. 动态 `import()` 依赖 Promise
+5. Generator 和 Async/Await 会转化为 regenerator runtime，而 regenerator runtime 依赖 Promise。
+6. Class 的继承父类的静态属性以及继承原生类不被 IE10 支持
+
+详细信息请参考 [Babel 转换后代码依赖的 API](https://github.com/athm-fe/create-autofe-app/blob/master/doc/how-to-babel7.md#babel-%E8%BD%AC%E6%8D%A2%E5%90%8E%E4%BB%A3%E7%A0%81%E4%BE%9D%E8%B5%96%E7%9A%84-api)
+
+### Babel 自定义配置
+
+* `babel.config.js`
+* `babel-preset-autofe-app`
+
+### Polyfills 处理
+
+* useBuiltIns：false，usage，entry
+* @babel/polyfill
+* core-js
+* autofe-polyfill
+
+### Webpack externals 配置
+
+`creator.config.js`
+
+### transpileDependencies 配置
+
+`creator.config.js`
+
+## 修改 ESLint 配置
+
+可修改 `.eslintignore` 和 `.eslintrc.js`。
+
+详细的用法请参考[玩转 ESLint](https://github.com/athm-fe/create-autofe-app/blob/master/doc/eslint-guide.md)。
 
 ## 还缺啥?
 

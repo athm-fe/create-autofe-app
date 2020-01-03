@@ -7,7 +7,7 @@ gulp.task('default', (cb) => {
   runSequence(
     ['clean'],
     ['js', 'webpack', 'html', 'markdown'],
-    ['svg',],
+    ['svg'],
     ['watch'],
     ['browserSync'],
     cb);
