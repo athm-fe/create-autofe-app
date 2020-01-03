@@ -1,6 +1,6 @@
 # 如何迁移到 autofe-scripts v1 版本
 
-该版本功能主要改动
+该版本功能主要改动：
 * 增强了 CSS 能力，依托于 Webpack 打包
 * PostCSS 可通过 `postcss.config.js` 自定义配置，比如 Autoprefixer
 * 自动打开浏览器时，使用 `external ip` 地址，替代原来的 `localhost` 地址
@@ -19,6 +19,10 @@ create-autofe-app --scripts-version=autofe-scripts@next my-app
 ## 老项目迁移
 
 这次升级比较大，虽然我尽可能的做了向后兼容，但是还是有一些迁移成本。
+
+**⚠️ 注意：目前 `autofe-scripts` 还未打上标签 `latest`。**
+
+**⚠️ 注意：`autofe-scripts` 暂不支持全局使用。**
 
 ### 安装必要的包
 
