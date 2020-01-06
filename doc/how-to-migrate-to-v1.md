@@ -27,8 +27,8 @@ create-autofe-app --scripts-version=autofe-scripts@next my-app
 ### 安装必要的包
 
 ```
-npm uninstall --save-dev autofe-script
-npm install --save-dev autofe-script@next
+npm uninstall --save-dev autofe-scripts
+npm install --save-dev autofe-scripts@next
 npm install --save-dev eslint@5 eslint-config-autofe-app eslint-plugin-import@2
 ```
 
