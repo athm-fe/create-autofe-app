@@ -10,13 +10,18 @@ This project was bootstrapped with [Create AutoFE App](https://github.com/athm-f
 - [功能支持](#功能支持)
 - [开发约定](#开发约定)
 - [编写样式](#编写样式)
+  - [路径能力](#路径能力)
   - [autoprefixer](#autoprefixer)
   - [图片内嵌](#图片内嵌)
+  - [自动添加版本号](#自动添加版本号)
 - [编写 HTML](#编写-html)
   - [includePretty](#includepretty)
   - [assets](#assets)
   - [html-bundle](#html-bundle)
 - [编写 JavaScript](#编写-javascript)
+  - [externals 配置](#externals-配置)
+  - [浏览器兼容性](#浏览器兼容性)
+- [ESLint](#eslint)
 - [sourcemaps](#sourcemaps)
 - [还缺啥?](#还缺啥)
 
@@ -158,7 +163,11 @@ NODE_ENV=development npm run build
 }
 ```
 
-### 使用来自 npm 的 CSS
+### 路径能力
+
+Creator 可以给大家带来更加强大、灵活的路径能力。
+
+#### 使用来自 npm 的包
 
 我们可以使用开源的 [Normalize.css](https://necolas.github.io/normalize.css/)，还可以开发自己的 CSS 包，发布到官方 NPM 或者公司的私有 NPM。
 
@@ -178,7 +187,7 @@ body {
 }
 ```
 
-### Sass 中的图片相对路径问题
+#### Sass 图片相对路径问题
 
 假设你的目录结构是这样的：
 
@@ -211,9 +220,9 @@ body {
 }
 ```
 
-### 路径别名 @
+#### 别名 @
 
-你可能遇到过如下的代码，眼睛估计也很累。
+你可能遇到过如下的代码，眼睛累，脑壳还疼。
 
 ```scss
 @import "../../../../../common/reset.css";
@@ -235,6 +244,8 @@ body {
   // background: url("@/index/img/car.jpg") no-repeat;
 }
 ```
+
+**⚠️ 注意：CSS 中图片路径使用 `@` 别名时，要添加 `~` 前缀。**
 
 ### Autoprefixer
 
@@ -352,15 +363,16 @@ Autoprefixer 还会去掉老旧的前缀，比如 `border-radius` ：
 }
 ```
 
-上面我们介绍了几种 Autoprefixer 的处理规则，更多的用法请参见[官网](https://github.com/postcss/autoprefixer)
+上面我们介绍了几种 Autoprefixer 的处理规则，更多的用法请参见[官网](https://github.com/postcss/autoprefixer)。
 
 **⚠️ 注意：你可以配置 `.browserslistrc` 来自定义你需要支持的浏览器。**
+
 **⚠️ 注意：Autoprefixer 是通过 PostCSS 来实现的，如果需要，你可以自定义 `postcss.config.js` 来添加更多的功能。**
 
 ### 图片内嵌
 
 有时候希望将样式里引用的背景图内嵌到样式里，支持如下两种方式：
-* 小于 1kb 自动内嵌怎么样？
+* 小于 1kb 自动内嵌
 * 通过自定义参数 `datauri` 直接表示内嵌
 
 ```scss
@@ -370,9 +382,9 @@ Autoprefixer 还会去掉老旧的前缀，比如 `border-radius` ：
 }
 ```
 
-### 生产环境自动添加版本号
+### 自动添加版本号
 
-为了解决 CDN 缓存的问题，当执行生产环境构建的时候，我们会自动给 CSS 中的图片路径添加版本号：
+为了解决 CDN 缓存的问题，当执行生产环境构建的时候，会自动给 CSS 中的图片路径添加版本号：
 
 ```css
 .test-md5 {
@@ -560,43 +572,118 @@ for html
 
 原有的非 ES6 的代码怎么办？简单啊，把原有的 `xxx.js` 重命名为 `xxx.old.js` 即可。
 
-### ES6+ 兼容性报告
+### externals 配置
+
+有时候，我们不想将某些 `import` 的包打包到 bundle 中，而是在运行时再去从外部获取这些扩展依赖。
+
+例如，从 CDN 引入 jQuery，而不是把它打包：
+
+`index.html`
+```html
+<script src="https://s.autoimg.cn/as/jquery/1.12.4/jquery.js"></script>
+```
+
+`creator.config.js`
+```javascript
+module.exports = {
+  // ...
+  externals: {
+    jquery: 'jQuery',
+  },
+  // ...
+};
+```
+
+详细用法可以参考 [Webpack externals](https://webpack.js.org/configuration/externals/)。
+
+### 浏览器兼容性
+
+#### ES6+ 兼容性报告
 
 首先，Babel 原意是把 ES6+ 代码转换为 ES5 代码，因此肯定用到了很多的 ES5 的 API，从 `@babel/helpers` 就可以看到。
 
 **所以，我们的最低兼容是 IE9。**
 
-另外做出如下建议：
+另外有如下注意事项：
 1. 不使用 `for...of`
-2. 不使用 string spread
-3. 不使用 string destructuring
-4. 动态 `import()` 依赖 Promise
-5. Generator 和 Async/Await 会转化为 regenerator runtime，而 regenerator runtime 依赖 Promise。
-6. Class 的继承父类的静态属性以及继承原生类不被 IE10 支持
+2. 不使用 String spread
+3. 不使用 String destructuring
+4. 动态 `import()` 依赖 `Promise`
+5. Generator 和 Async/Await 会转化为 regenerator runtime，而 regenerator runtime 依赖 `Promise。`
+6. Class 继承父类的静态属性以及继承原生类不被 IE10 支持
 
-详细信息请参考 [Babel 转换后代码依赖的 API](https://github.com/athm-fe/create-autofe-app/blob/master/doc/how-to-babel7.md#babel-%E8%BD%AC%E6%8D%A2%E5%90%8E%E4%BB%A3%E7%A0%81%E4%BE%9D%E8%B5%96%E7%9A%84-api)
+详细信息请参考 [Babel 转换后代码依赖的 API](https://github.com/athm-fe/create-autofe-app/blob/master/doc/how-to-babel7.md#babel-%E8%BD%AC%E6%8D%A2%E5%90%8E%E4%BB%A3%E7%A0%81%E4%BE%9D%E8%B5%96%E7%9A%84-api) 以及 [Babel Caveats](https://babeljs.io/docs/en/caveats)。
 
-### Babel 自定义配置
+#### browserslist
 
-* `babel.config.js`
-* `babel-preset-autofe-app`
+你会发现有一个单独的 `.browserslistrc` 文件，指定了项目的目标浏览器的范围。这个值会被 [@babel/preset-env](https://babeljs.io/docs/en/next/babel-preset-env.html) 和 [Autoprefixer](https://github.com/postcss/autoprefixer) 用来确定需要转译的 JavaScript 特性和需要添加的 CSS 浏览器前缀。
 
-### Polyfills 处理
+[查阅](https://github.com/ai/browserslist)这里了解如何指定浏览器范围。
 
-* useBuiltIns：false，usage，entry
-* @babel/polyfill
-* core-js
-* autofe-polyfill
+#### Polyfill
 
-### Webpack externals 配置
+刚创建的项目默认会使用 `babel-preset-autofe-app`，它通过 `@babel/preset-env` 和 `browserslist` 配置来决定项目需要的 polyfill。
+
+默认情况下，它会把 `useBuiltIns: false` 传递给 `@babel/preset-env`，这意味着关闭 polyfill 功能，你需要在自己的源码中手用引入自己需要的 polyfill。
+
+如果想要开启自动 polyfill，你可以通过 `babel.config.js`，设置 `useBuiltIns: 'usage'`。
+
+`babel.config.js`
+```javascript
+module.exports = {
+  presets: [
+    ['autofe-app', {
+      useBuiltIns: 'usage',
+    }],
+  ],
+};
+```
+
+这样它会根据源代码中出现的语言特性自动检测需要的 polyfill，这确保了最终包里 polyfill 数量的最小化。
+
+特殊情况下，某个依赖提供了 ES5 代码，但是它可能明确的列出需要的 polyfill，这种情况，需要你自己手动添加到源代码中。
+
+```javascript
+import 'core-js/features/promise';
+
+// import 'a-package-using-es5-but-need-promise-support';
+
+Promise.resolve(32).then(x => console.log(x)); // => 32
+```
+
+另外，你还可以配置 `useBuiltIns: 'entry'`，然后手动在入口文件头部添加 `import "core-js/stable";`。
+这会根据 `browserslist` 目标导入所有需要的 polyfill，这样你就不用再担心 polyfill 问题了。
+但是因为是根据 `browserslist` 而不是实际代码进行解析，所以可能包含了一些没有用到的 polyfill，从而导致最终的包大小增加。
+
+> ⚠️ 提示
+>
+> `@babel/polyfill` 官方已经不推荐使用了，建议直接使用 `core-js` 和 `regenerator-runtime`。
+> ```javascript
+> import "core-js/stable";
+> import "regenerator-runtime/runtime";
+> ```
+> 另外，由于 `babel-preset-autofe-app` 内置了 `regenerator-runtime`，所以只考虑 `core-js` 即可。
+
+#### 处理 node_modules 中的 ES6+ 代码
+
+默认情况下 `babel-loader` 会忽略所有 `node_modules` 中的文件。如果你想要通过 Babel 显示转译一个依赖包，可以通过配置 `creator.config.js` 实现。
 
 `creator.config.js`
+```javascript
+module.exports = {
+  // ...
+  transpileDependencies: [
+    '@auto/img-crop',
+  ],
+  // ...
+};
+```
 
-### transpileDependencies 配置
+通过上面的配置，`babel-loader` 会处理 `@auto/img-crop` 里的 ES6+ 语法。如果你配置了 `useBuiltIns: 'usage'` 的话，`@babel/preset-env` 还会分析 `@auto/img-crop` 的代码，并自动检测出需要的 polyfills。
 
-`creator.config.js`
+`transpileDependencies` 接受一个数组，里面的元素可以是字符串，也可以是正则表达式。
 
-## 修改 ESLint 配置
+## ESLint
 
 可修改 `.eslintignore` 和 `.eslintrc.js`。
 
