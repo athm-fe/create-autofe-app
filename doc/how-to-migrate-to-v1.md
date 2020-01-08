@@ -52,6 +52,7 @@ Explorer >= 9
 `.eslintignore`
 ```
 build
+**/*.old.js
 ```
 
 `.eslintrc.js`
