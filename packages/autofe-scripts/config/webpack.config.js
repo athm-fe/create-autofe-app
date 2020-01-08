@@ -2,8 +2,7 @@
 
 const path = require('path');
 const glob = require('glob');
-const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-// const TerserPlugin = require('terser-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require('copy-webpack-plugin');
@@ -419,25 +418,18 @@ module.exports = () => {
     },
     optimization: {
       minimizer: [
-        // new TerserPlugin({
-        //   parallel: true,
-        //   terserOptions: {
-        //     safari10: true,
-        //     compress: {
-        //       warnings: false,
-        //       drop_debugger: true,
-        //       drop_console: true,
-        //     },
-        //     output: {
-        //       ascii_only: true,
-        //       quote_style: 1,
-        //     },
-        //   },
-        // }),
-        new UglifyJsPlugin({
-          uglifyOptions: {
+        new TerserPlugin({
+          parallel: true,
+          terserOptions: {
+            safari10: true,
+            compress: {
+              warnings: false,
+              drop_debugger: true,
+              // drop_console: true,
+            },
             output: {
               ascii_only: true,
+              quote_style: 1,
             },
           },
         }),
