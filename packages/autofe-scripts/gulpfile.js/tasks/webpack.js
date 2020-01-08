@@ -4,16 +4,29 @@ const gulp = require('gulp');
 const PluginError = require('plugin-error');
 const log = require('fancy-log');
 const chalk = require('chalk');
-// const config = require('../config');
-// const browserSync = require('../lib/browserSync');
 const webpack = require('webpack');
 const webpackConfig = require('../../config/webpack.config');
+const {
+  isCreatorDev,
+} = require('../../config/index');
 
 function isEmpty(obj) {
   return Object.keys(obj).length === 0 && obj.constructor === Object;
 }
 
 const isProd = process.env.NODE_ENV === 'production';
+
+const statsOptions = isCreatorDev ? { colors: true } : {
+  colors: true,
+  assets: false,
+  entrypoints: false,
+  modules: false,
+  children: false,
+  cached: false,
+  cachedAssets: false,
+  chunks: false,
+  chunkGroups: false,
+};
 
 let isFirst = true;
 
@@ -33,9 +46,7 @@ const webpackTask = function (cb) {
         throw new PluginError('webpack', err);
       }
 
-      log('webpack:', stats.toString({
-        colors: true,
-      }));
+      log('webpack:', stats.toString(statsOptions));
 
       cb();
     });
@@ -47,9 +58,7 @@ const webpackTask = function (cb) {
         throw new PluginError('webpack', err);
       }
 
-      log('webpack:', stats.toString({
-        colors: true,
-      }));
+      log('webpack:', stats.toString(statsOptions));
 
       // Notice: only call cb() once, otherwise error will happen.
       if (isFirst) {

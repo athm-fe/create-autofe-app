@@ -4,6 +4,7 @@ const {
   appSrc,
   appBuild,
   appConfig,
+  isCreatorDev,
 } = require('./paths');
 
 const appDefaultConfig = {
@@ -15,6 +16,7 @@ const config = {
   appDirectory,
   appSrc,
   appBuild,
+  isCreatorDev,
   ...appDefaultConfig,
 }
 
