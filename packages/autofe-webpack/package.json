@@ -1,0 +1,27 @@
+{
+  "name": "autofe-webpack",
+  "version": "0.1.1",
+  "description": "The webpack tools for autofe",
+  "license": "MIT",
+  "repository": "athm-fe/create-autofe-app",
+  "author": "jpuncle",
+  "main": "src/index.js",
+  "engines": {
+    "node": ">=8"
+  },
+  "bugs": {
+    "url": "https://github.com/athm-fe/create-autofe-app/issues"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "loader-utils": "^1.2.3",
+    "parse-import": "^2.0.0",
+    "webpack-sources": "^1.4.3"
+  },
+  "keywords": [
+    "webpack",
+    "autofe"
+  ]
+}

@@ -53,5 +53,14 @@ try {
   console.warn('for-of iterator does not support');
 }
 
+try {
+  const obj = { a: 1, b: 2 };
+  for (const item of obj) {
+    console.log(item);
+  }
+} catch (e) {
+  console.warn('for-of iterator does not support');
+}
+
 
 console.log('-------- for...of --------');

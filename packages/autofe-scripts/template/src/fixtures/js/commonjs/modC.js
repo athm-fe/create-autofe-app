@@ -1,6 +1,6 @@
-const name = 'modC';
+const title = 'modC';
 const say = () => 'modC say...';
 module.exports = {
-  name,
+  title,
   say,
 };

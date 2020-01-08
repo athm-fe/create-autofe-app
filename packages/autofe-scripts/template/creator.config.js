@@ -1,5 +1,8 @@
 module.exports = {
   externals: {
-    jquery: 'jQuery'
-  }
-}
+    jquery: 'jQuery',
+  },
+  transpileDependencies: [
+    '@auto/img-crop',
+  ],
+};

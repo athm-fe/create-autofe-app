@@ -2,7 +2,6 @@
 
 const gulp = require('gulp');
 const config = require('../config');
-const browserSync = require('../lib/browserSync');
 const uglify = require('gulp-uglify');
 const gulpif = require('gulp-if');
 const rename = require('gulp-rename');
@@ -24,7 +23,6 @@ const jsTask = function () {
       path.basename = path.basename.replace(/\.old$/, '');
     }))
     .pipe(gulp.dest(config.js.dest))
-    .on('end', browserSync.reload);
 };
 
 gulp.task('js', jsTask);

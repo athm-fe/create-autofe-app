@@ -22,7 +22,9 @@ if (process.platform === 'darwin') {
 }
 
 const browserSyncOption = {
+  open: "external",
   browser: chromeName,
+  watch: true,
   server: {
     baseDir: root.dest,
     directory: true,
@@ -45,41 +47,9 @@ module.exports = {
   clean: {
     dest: root.dest,
   },
-  copy: {
-    src: path.join(root.src, '/**/*.{mp3,mp4,ogg,flv,swf,ico,cur,json,txt}'),
+  svg: {
+    src: path.join(root.src, '/**/*.svg'),
     dest: path.join(root.dest),
-  },
-  fonts: {
-    src: path.join(root.src, '/**/*.{eot,ttf,woff,woff2}'), // svg 交由 images 压缩
-    dest: path.join(root.dest),
-  },
-  images: {
-    src: path.join(root.src, '/**/*.{png,jpg,gif,svg}'),
-    dest: path.join(root.dest),
-  },
-  sass: {
-    src: path.join(root.src, '/**/*.{scss,css}'),
-    dest: root.dest,
-  },
-  postcssAssets: {
-    option: {
-      basePath: root.src,
-      baseUrl: '/', // TODO config http://x.autoimg.cn/www/
-      relative: true,
-      cachebuster: false,
-    },
-  },
-  autoprefixer: {
-    option: {
-      browsers: [
-        // defaults
-        // '> 0.5%', 'last 2 versions', 'Firefox ESR', 'not dead',
-        '> 0.2%', 'last 2 versions', 'Firefox ESR', 'not dead',
-        'iOS >= 8',
-        'Android >= 4.0',
-        'Explorer >= 9'
-      ],
-    },
   },
   js: {
     src: path.join(root.src, '/**/*.old.js'),
@@ -101,10 +71,7 @@ module.exports = {
   browserSync: {
     option: browserSyncOption,
   },
-  webpack: {
-    src: [path.join(root.src, '/**/*.js'), `!${path.join(root.src, '/**/*.old.js')}`],
-  },
   watch: {
-    tasks: ['copy', 'fonts', 'images', 'sass', 'js', 'webpack', 'html', 'markdown'],
+    tasks: ['svg', 'js', 'html', 'markdown'],
   },
 };

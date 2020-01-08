@@ -11,6 +11,7 @@ require('./generators');
 require('./unicode');
 // require('./regexp');
 require('./binary-octal');
+require('./parameters');
 
 
 // Symbols

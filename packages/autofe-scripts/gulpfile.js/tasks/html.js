@@ -2,7 +2,6 @@
 
 const gulp = require('gulp');
 const config = require('../config');
-const browserSync = require('../lib/browserSync');
 const render = require('gulp-nunjucks-render');
 const data = require('gulp-data');
 const path = require('path');
@@ -21,6 +20,25 @@ const manageEnvironment = function (env) {
         parse.fail(`parseTemplateRef: expected ${tagName}`);
       }
 
+      let indent = 0;
+      const colno = tag.colno;
+      // 回到行首
+      parse.tokens.backN(colno + tagName.length);
+      // 找到该行第一个字符的索引
+      try {
+        let str = parse.tokens.currentStr();
+        for (; indent < colno; indent++) {
+          if (str.charAt(indent) !== ' ') {
+            break;
+          }
+        }
+      } catch (e) {
+        // 假定开头内容为 {% includePretty
+        indent = colno - 3;
+      }
+      // 回到原位置
+      parse.tokens.forwardN(colno + tagName.length);
+
       const args = parse.parseSignature(null, true);
 
       // var node = new nodes.Include(tag.lineno, tag.colno);
@@ -28,7 +46,7 @@ const manageEnvironment = function (env) {
 
       parse.advanceAfterBlockEnd(tag.value);
 
-      const indentValue = new nodes.Output(0, 0, [new nodes.TemplateData(0, 0, tag.colno)]);
+      const indentValue = new nodes.Output(0, 0, [new nodes.TemplateData(0, 0, indent)]);
 
       const node = new nodes.CallExtension(this, 'run', args, [indentValue]);
 
@@ -36,7 +54,7 @@ const manageEnvironment = function (env) {
     };
     this.run = function (context, url, indentValue) {
       let output = '';
-      const indentWidth = indentValue() - 1;
+      const indentWidth = indentValue();
       const indentFilter = env.getFilter('indent');
       const trimFilter = env.getFilter('trim');
       const safeFilter = env.getFilter('safe');
@@ -95,7 +113,6 @@ const htmlTask = function () {
       }
     })
     .pipe(gulp.dest(config.html.dest))
-    .on('end', browserSync.reload);
 };
 
 gulp.task('html', htmlTask);

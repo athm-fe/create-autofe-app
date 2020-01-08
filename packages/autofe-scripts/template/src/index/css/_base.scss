@@ -1,11 +1,15 @@
 html {
   background: url("../img/bg.png");
 }
-h2 {
+
+h1, h2 {
   padding: 0.5em 0;
   border-bottom: 2px solid #f60;
 }
 
 .cursor-hand {
+  width: 200px;
+  height: 200px;
+  background-color: #333;
   cursor: url("../img/cursor-hand.cur"), auto;
 }

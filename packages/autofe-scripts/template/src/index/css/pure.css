@@ -1,0 +1,9 @@
+@import "sub/_test-relative-url-pure.css";
+
+/* @import "~xxxxx";
+.xxxxx2 {
+  width: 60px;
+  height: 60px;
+  background: url("~xxxxx/autohome2.png") no-repeat;
+  background-size: contain;
+} */

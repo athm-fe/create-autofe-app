@@ -6,8 +6,8 @@ const runSequence = require('run-sequence');
 gulp.task('default', (cb) => {
   runSequence(
     ['clean'],
-    ['copy', 'fonts', 'images'],
-    ['sass', 'js', 'webpack', 'html', 'markdown'],
+    ['js', 'webpack', 'html', 'markdown'],
+    ['svg'],
     ['watch'],
     ['browserSync'],
     cb);

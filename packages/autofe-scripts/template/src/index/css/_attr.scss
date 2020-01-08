@@ -1,0 +1,31 @@
+a {
+  color: blue;
+}
+
+/* Internal links, beginning with "#" */
+a[href^="#"] {
+  background-color: gold;
+}
+
+/* Links with "example" anywhere in the URL */
+a[href*="example"] {
+  background-color: silver;
+}
+
+/* Links with "insensitive" anywhere in the URL,
+   regardless of capitalization */
+a[href*="insensitive" i] {
+  color: cyan;
+}
+
+/* Links with "cAsE" anywhere in the URL, 
+with matching capitalization */
+// node-sass 暂时不支持如下方式
+// a[href*="cAsE" s] {
+//   color: pink;
+// }
+
+/* Links that end in ".org" */
+a[href$=".org"] {
+  color: red;
+}

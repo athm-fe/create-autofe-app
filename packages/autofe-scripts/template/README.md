@@ -1,8 +1,5 @@
 This project was bootstrapped with [Create AutoFE App](https://github.com/athm-fe/create-autofe-app).
 
-Below you will find some information on how to perform common tasks.
-You can find the most recent version of this guide [here](https://github.com/athm-fe/create-autofe-app/blob/master/packages/autofe-scripts/template/README.md).
-
 ## Table of Contents
 
 - [更新到新版本](#更新到新版本)
@@ -13,13 +10,18 @@ You can find the most recent version of this guide [here](https://github.com/ath
 - [功能支持](#功能支持)
 - [开发约定](#开发约定)
 - [编写样式](#编写样式)
+  - [路径能力](#路径能力)
   - [autoprefixer](#autoprefixer)
   - [图片内嵌](#图片内嵌)
+  - [自动添加版本号](#自动添加版本号)
 - [编写 HTML](#编写-html)
   - [includePretty](#includepretty)
   - [assets](#assets)
   - [html-bundle](#html-bundle)
 - [编写 JavaScript](#编写-javascript)
+  - [externals 配置](#externals-配置)
+  - [浏览器兼容性](#浏览器兼容性)
+- [ESLint](#eslint)
 - [sourcemaps](#sourcemaps)
 - [还缺啥?](#还缺啥)
 
@@ -45,10 +47,16 @@ Create AutoFE App 分成两个包：
 
 ```
 my-app/
+  node_modules/
   README.md
-  node_modules
   package.json
+  .browserslistrc
+  .eslintignore
+  .eslintrc.js
   .gitignore
+  babel.config.js
+  postcss.config.js
+  creator.config.js
   src/
     index/
       css/
@@ -61,15 +69,9 @@ my-app/
         bg.png
       js/
         vendor/
-          json3.min.old.js
           es6-promise.auto.min.old.js
-        es6-code
-          index.entry.js
-          class.js
-          arrow-function.js
-          ...
+        index.entry.js
         main.old.js
-        polyfills.entry.js
       pic/
         01.jpg
       _part1.html
@@ -111,12 +113,16 @@ NODE_ENV=development npm run build
 * 使用 [Browsersync](http://browsersync.io/) 开启本地服务器
   * 支持文件修改时自动刷新浏览器
   * 支持目录浏览
+  * 自动打开浏览器
 * 使用 [Nunjucks](https://mozilla.github.io/nunjucks/) 模版引擎来写 HTML
 * 使用 Sass 写 CSS
-* 使用 clean-css 压缩 CSS
-* 使用 UglifyJS2 压缩 JS，中文 to ASCII
-* 使用 imagemin 压缩图片
+* 使用 PostCSS 支持 Autoprefixer
+* 使用 Babel 处理 ES6+
+* 使用 ESLint 检查 ES6+ 代码
 * 使用 Markdown 写文档，并生成 HTML 方便查看
+* 开发环境支持 SourceMap
+* 压缩 CSS 和 JS
+* 压缩 SVG
 
 ## 开发约定
 
@@ -127,17 +133,17 @@ NODE_ENV=development npm run build
 
 ## 编写样式
 
-用 SASS 来写样式，没什么好说的。比如下面的例子：
+先来一个最简单的：
 
 `_btn.scss`
-```css
+```scss
 .btn {
   display: inline-block;
 }
 ```
 
 `main.scss`
-```css
+```scss
 @import "btn";
 
 .some {
@@ -147,6 +153,100 @@ NODE_ENV=development npm run build
 
 编译后，只会产生 `main.css` 。
 
+`main.css`
+```css
+.btn {
+  display: inline-block;
+}
+.some {
+  color: red;
+}
+```
+
+### 路径能力
+
+Creator 可以给大家带来更加强大、灵活的路径能力。
+
+#### 使用来自 npm 的包
+
+我们可以使用开源的 [Normalize.css](https://necolas.github.io/normalize.css/)，还可以开发自己的 CSS 包，发布到官方 NPM 或者公司的私有 NPM。
+
+以 `normalize.css` 为例，在你的项目中安装你想要的包：
+
+```
+npm install normalize.css
+```
+
+然后，在你的样式文件中引用该样式
+
+```css
+@import "~normalize.css";
+
+body {
+  color: #333;
+}
+```
+
+#### Sass 图片相对路径问题
+
+假设你的目录结构是这样的：
+
+```
++ main.scss
++ sub/
+  + _sub.scss
+  + sub.png
+```
+
+代码内容是这样的：
+
+`main.scss`
+```scss
+@import "sub/sub";
+```
+
+`sub/_sub.scss`
+```scss
+.sub {
+  background: url("./sub.png") no-repeat;
+}
+```
+
+输出结果是：
+
+```css
+.sub {
+  background: url("./sub/sub.png") no-repeat;
+}
+```
+
+#### 别名 @
+
+你可能遇到过如下的代码，眼睛累，脑壳还疼。
+
+```scss
+@import "../../../../../common/reset.css";
+```
+
+而我们支持如下方式：
+
+```scss
+@import "@/common/reset.css";
+// or
+@import "~@/common/reset.css";
+
+.test-root-alias {
+  width: 320px;
+  height: 240px;
+  // working
+  background: url("~@/index/img/car.jpg") no-repeat;
+  // not working
+  // background: url("@/index/img/car.jpg") no-repeat;
+}
+```
+
+**⚠️ 注意：CSS 中图片路径使用 `@` 别名时，要添加 `~` 前缀。**
+
 ### Autoprefixer
 
 有了 Autoprefixer，你不再需要手动写 `-webkit-` ，`-ms-` ，`-moz-` 等浏览器厂商前缀，也就不再需要使用 Sass 之类的语言来编写一堆 mixins。
@@ -155,17 +255,15 @@ NODE_ENV=development npm run build
 ```
 browsers: [
   '> 0.2%', 'last 2 versions', 'Firefox ESR', 'not dead',
-  'iOS >= 8',
-  'Android >= 4.0',
+  'iOS >= 9',
+  'Android >= 4.4',
   'Explorer >= 9'
 ]
 ```
 
-解释一下，`> 0.2%` 表示流行使用的浏览器版本，但是由于新发布的版本可能暂时未达到使用率，所以加上 `last 2 versions` 以及 `Firefox ESR`，另外前面的条件可能包含已经 `dead` 的浏览器版本，我们不打算考虑这些浏览器，所以使用 `not dead` 去掉这些浏览器版本。最后明确指定我们会进行测试的浏览器最低要求，即 `iOS >= 8, Android >= 4.0, Explorer >= 9` 。
+解释一下，`> 0.2%` 表示流行使用的浏览器版本，但是由于新发布的版本可能暂时未达到使用率，所以加上 `last 2 versions` 以及 `Firefox ESR`，另外前面的条件可能包含已经 `dead` 的浏览器版本，我们不打算考虑这些浏览器，所以使用 `not dead` 去掉这些浏览器版本。最后明确指定我们会进行测试的浏览器最低要求，即 `iOS >= 9, Android >= 4.4, Explorer >= 9` 。
 
-你可以使用 [browser.list](http://browserl.ist/?q=%3E+0.2%25%2C+last+2+versions%2C+Firefox+ESR%2C+not+dead%2C+iOS+%3E%3D+8%2C+Android+%3E%3D+4.0%2C+Explorer+%3E%3D+9) 来查看我们的规则包含了哪些浏览器版本。
-
-Autoprefixer 根据你所支持的浏览器配置，从 [Can I Use](http://caniuse.com/) 获取数据，然后只添加必要的厂商前缀。
+你可以使用 [browser.list](https://browserl.ist/?q=%3E+0.2%25%2C+last+2+versions%2C+Firefox+ESR%2C+not+dead%2C+iOS+%3E%3D+9%2C+Android+%3E%3D+4.4%2C+Explorer+%3E%3D+9) 来查看我们的规则包含了哪些浏览器版本。
 
 #### 简单的例子
 
@@ -265,29 +363,36 @@ Autoprefixer 还会去掉老旧的前缀，比如 `border-radius` ：
 }
 ```
 
-上面我们介绍了几种 Autoprefixer 的处理规则，更多的用法请参见[官网](https://github.com/postcss/autoprefixer)
+上面我们介绍了几种 Autoprefixer 的处理规则，更多的用法请参见[官网](https://github.com/postcss/autoprefixer)。
+
+**⚠️ 注意：你可以配置 `.browserslistrc` 来自定义你需要支持的浏览器。**
+
+**⚠️ 注意：Autoprefixer 是通过 PostCSS 来实现的，如果需要，你可以自定义 `postcss.config.js` 来添加更多的功能。**
 
 ### 图片内嵌
 
-有时候希望将样式里引用的背景图内嵌到样式里，可以使用 `inline` 代替 `url`。
+有时候希望将样式里引用的背景图内嵌到样式里，支持如下两种方式：
+* 小于 1kb 自动内嵌
+* 通过自定义参数 `datauri` 直接表示内嵌
 
-```css
-.assets-svg {
-  width: 400px;
-  height: 72px;
-  background: inline("../img/postcss-assets.svg");
-}
-.assets-png {
-  width: 200px;
-  height: 57px;
-  background: inline("../img/postcss-assets.png");
-}
-.assets-jpg {
-  width: 190px;
-  height: 190px;
-  background: inline("../img/postcss-assets.jpg");
+```scss
+.test-inline {
+  background: url("../img/car.jpg?datauri") no-repeat;
+  background: url("../img/car.svg?datauri") no-repeat;
 }
 ```
+
+### 自动添加版本号
+
+为了解决 CDN 缓存的问题，当执行生产环境构建的时候，会自动给 CSS 中的图片路径添加版本号：
+
+```css
+.test-md5 {
+  background: url(../img/bg.png?6350fa96) no-repeat;
+}
+```
+
+该版本号是根据图片文件生成的 MD5，当文件变化时，该版本号才会发生变化。
 
 ## 编写 HTML
 
@@ -297,7 +402,7 @@ Autoprefixer 还会去掉老旧的前缀，比如 `border-radius` ：
 
 ### `includePretty`
 
-Nunjucks 自带的 `include` 无法保证输出 HTML 的对齐问题，所以自己开了这个。
+Nunjucks 自带的 `include` 无法保证输出 HTML 的对齐问题，所以自己开发了这个。
 
 `_part1.html`
 ```html
@@ -467,11 +572,122 @@ for html
 
 原有的非 ES6 的代码怎么办？简单啊，把原有的 `xxx.js` 重命名为 `xxx.old.js` 即可。
 
-## sourcemaps
+### externals 配置
 
-目前仅支持开发模式下的样式的 source map 。
+有时候，我们不想将某些 `import` 的包打包到 bundle 中，而是在运行时再去从外部获取这些扩展依赖。
 
-![sourcemap](http://x.autoimg.cn/fe/create-autofe-app/sourcemap.png)
+例如，从 CDN 引入 jQuery，而不是把它打包：
+
+`index.html`
+```html
+<script src="https://s.autoimg.cn/as/jquery/1.12.4/jquery.js"></script>
+```
+
+`creator.config.js`
+```javascript
+module.exports = {
+  // ...
+  externals: {
+    jquery: 'jQuery',
+  },
+  // ...
+};
+```
+
+详细用法可以参考 [Webpack externals](https://webpack.js.org/configuration/externals/)。
+
+### 浏览器兼容性
+
+#### ES6+ 兼容性报告
+
+首先，Babel 原意是把 ES6+ 代码转换为 ES5 代码，因此肯定用到了很多的 ES5 的 API，从 `@babel/helpers` 就可以看到。
+
+**所以，我们的最低兼容是 IE9。**
+
+另外有如下注意事项：
+1. 不使用 `for...of`
+2. 不使用 String spread
+3. 不使用 String destructuring
+4. 动态 `import()` 依赖 `Promise`
+5. Generator 和 Async/Await 会转化为 regenerator runtime，而 regenerator runtime 依赖 `Promise。`
+6. Class 继承父类的静态属性以及继承原生类不被 IE10 支持
+
+详细信息请参考 [Babel 转换后代码依赖的 API](https://github.com/athm-fe/create-autofe-app/blob/master/doc/how-to-babel7.md#babel-%E8%BD%AC%E6%8D%A2%E5%90%8E%E4%BB%A3%E7%A0%81%E4%BE%9D%E8%B5%96%E7%9A%84-api) 以及 [Babel Caveats](https://babeljs.io/docs/en/caveats)。
+
+#### browserslist
+
+你会发现有一个单独的 `.browserslistrc` 文件，指定了项目的目标浏览器的范围。这个值会被 [@babel/preset-env](https://babeljs.io/docs/en/next/babel-preset-env.html) 和 [Autoprefixer](https://github.com/postcss/autoprefixer) 用来确定需要转译的 JavaScript 特性和需要添加的 CSS 浏览器前缀。
+
+[查阅](https://github.com/ai/browserslist)这里了解如何指定浏览器范围。
+
+#### Polyfill
+
+刚创建的项目默认会使用 `babel-preset-autofe-app`，它通过 `@babel/preset-env` 和 `browserslist` 配置来决定项目需要的 polyfill。
+
+默认情况下，它会把 `useBuiltIns: false` 传递给 `@babel/preset-env`，这意味着关闭 polyfill 功能，你需要在自己的源码中手用引入自己需要的 polyfill。
+
+如果想要开启自动 polyfill，你可以通过 `babel.config.js`，设置 `useBuiltIns: 'usage'`。
+
+`babel.config.js`
+```javascript
+module.exports = {
+  presets: [
+    ['autofe-app', {
+      useBuiltIns: 'usage',
+    }],
+  ],
+};
+```
+
+这样它会根据源代码中出现的语言特性自动检测需要的 polyfill，这确保了最终包里 polyfill 数量的最小化。
+
+特殊情况下，某个依赖提供了 ES5 代码，但是它可能明确的列出需要的 polyfill，这种情况，需要你自己手动添加到源代码中。
+
+```javascript
+import 'core-js/features/promise';
+
+// import 'a-package-using-es5-but-need-promise-support';
+
+Promise.resolve(32).then(x => console.log(x)); // => 32
+```
+
+另外，你还可以配置 `useBuiltIns: 'entry'`，然后手动在入口文件头部添加 `import "core-js/stable";`。
+这会根据 `browserslist` 目标导入所有需要的 polyfill，这样你就不用再担心 polyfill 问题了。
+但是因为是根据 `browserslist` 而不是实际代码进行解析，所以可能包含了一些没有用到的 polyfill，从而导致最终的包大小增加。
+
+> ⚠️ 提示
+>
+> `@babel/polyfill` 官方已经不推荐使用了，建议直接使用 `core-js` 和 `regenerator-runtime`。
+> ```javascript
+> import "core-js/stable";
+> import "regenerator-runtime/runtime";
+> ```
+> 另外，由于 `babel-preset-autofe-app` 内置了 `regenerator-runtime`，所以只考虑 `core-js` 即可。
+
+#### 处理 node_modules 中的 ES6+ 代码
+
+默认情况下 `babel-loader` 会忽略所有 `node_modules` 中的文件。如果你想要通过 Babel 显示转译一个依赖包，可以通过配置 `creator.config.js` 实现。
+
+`creator.config.js`
+```javascript
+module.exports = {
+  // ...
+  transpileDependencies: [
+    '@auto/img-crop',
+  ],
+  // ...
+};
+```
+
+通过上面的配置，`babel-loader` 会处理 `@auto/img-crop` 里的 ES6+ 语法。如果你配置了 `useBuiltIns: 'usage'` 的话，`@babel/preset-env` 还会分析 `@auto/img-crop` 的代码，并自动检测出需要的 polyfills。
+
+`transpileDependencies` 接受一个数组，里面的元素可以是字符串，也可以是正则表达式。
+
+## ESLint
+
+可修改 `.eslintignore` 和 `.eslintrc.js`。
+
+详细的用法请参考[玩转 ESLint](https://github.com/athm-fe/create-autofe-app/blob/master/doc/eslint-guide.md)。
 
 ## 还缺啥?
 

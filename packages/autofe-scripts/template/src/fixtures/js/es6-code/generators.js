@@ -29,4 +29,9 @@ async function asyncPrint(value, ms) {
 }
 asyncPrint('hello world', 50);
 
+async function* agf() {
+  await 1;
+  yield 2;
+}
+
 console.log('-------- generators --------');

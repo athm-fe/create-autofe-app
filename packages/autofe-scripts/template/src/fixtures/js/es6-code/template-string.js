@@ -12,13 +12,13 @@ console.log('templateStr === "In ES5 this is\n  not legal."',
   templateStr === 'In ES5 this is\n  not legal.');
 
 // Don't use tagged template strings
-// function echo(str) {
-//   return str;
-// }
-// console.log(
-//   'echo`name`[0] === "name"',
-//   echo`name`[0] === 'name',
-// );
+function echo(str) {
+  return str;
+}
+console.log(
+  'echo`name`[0] === "name"',
+  echo`name ${1}`[0] === 'name',
+);
 
 // Unescaped template strings
 // String.raw`In ES5 "\n" is a line-feed.`;

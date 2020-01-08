@@ -1,6 +1,6 @@
 # Create AutoFE App
 
-> Thanks to [create-react-app](https://github.com/facebookincubator/create-react-app)
+> Thanks to [Create React App](https://create-react-app.dev/) and [Vue CLI](https://cli.vuejs.org/)
 
 Create AutoFE apps with no build configuration.
 
@@ -13,43 +13,27 @@ If something doesn’t work please [file an issue](https://github.com/athm-fe/cr
 ## Quick Overview
 
 ```sh
-npm install -g create-autofe-app
+npx create-autofe-app my-app
 
-create-autofe-app my-app
 cd my-app/
 npm start
 ```
 
+If you've previously installed `create-autofe-app` globally via `npm install -g create-autofe-app`, we recommend you uninstall the package using `npm uninstall -g create-autofe-app` to ensure that npx always uses the latest version.
+
 Then open [http://localhost:3000/](http://localhost:3000/) to see your app.<br>
 When you’re ready to deploy to production, create a minified bundle with `npm run build`.
 
-### Get Started Immediately
-
-You **don’t** need to install or configure tools like Gulp, Webpack or Babel.<br>
-They are preconfigured and hidden so that you can focus on the code.
-
-Just create a project, and you’re good to go.
-
-## Getting Started
-
-### Installation
-
-Install it once globally:
-
-```sh
-npm install -g create-autofe-app
-```
+## Creating an App
 
 **You’ll need to have Node >= 8 on your machine**. You can use [nvm](https://github.com/creationix/nvm#installation) to easily switch Node versions between different projects.
 
 **This tool doesn’t assume a Node backend**. The Node installation is only required for Create AutoFE App itself.
 
-### Creating an App
-
 To create a new app, run:
 
 ```sh
-create-autofe-app my-app
+npx create-autofe-app my-app
 cd my-app
 ```
 
@@ -58,10 +42,16 @@ Inside that directory, it will generate the initial project structure and instal
 
 ```
 my-app/
+  node_modules/
   README.md
-  node_modules
   package.json
+  .browserslistrc
+  .eslintignore
+  .eslintrc.js
   .gitignore
+  babel.config.js
+  postcss.config.js
+  creator.config.js
   src/
     index/
       css/
@@ -74,15 +64,9 @@ my-app/
         bg.png
       js/
         vendor/
-          json3.min.old.js
           es6-promise.auto.min.old.js
-        es6-code
-          index.entry.js
-          class.js
-          arrow-function.js
-          ...
+        index.entry.js
         main.old.js
-        polyfills.entry.js
       pic/
         01.jpg
       _part1.html
@@ -126,33 +110,19 @@ Please refer to the [User Guide](https://github.com/athm-fe/create-autofe-app/bl
 - **No Configuration Required:** You don't need to configure anything. Reasonably good configuration of both development and production builds is handled for you so you can focus on writing code.
 - <del>**No Lock-In:** You can “eject” to a custom setup at any time. Run a single command, and all the configuration and build dependencies will be moved directly into your project, so you can pick up right where you left off.</del>
 
-## Why Use This?
-
-TODO
 
 ## What’s Inside?
 
-* [Browsersync](https://browsersync.io/)
-* [gulp](http://gulpjs.com/)
-* [gulp-sass](https://github.com/dlmanning/gulp-sass)
-* [gulp-clean-css](https://github.com/scniro/gulp-clean-css)
-* [gulp-uglify](https://github.com/terinjokes/gulp-uglify)
-* [imagemin](https://github.com/imagemin/imagemin)
-* [Nunjucks](https://mozilla.github.io/nunjucks/)
-* and others.
+* ES6 support
+* Language extras beyond ES6 like the object spread operator.
+* Autoprefixed CSS, so you don’t need -webkit- or other prefixes.
+* Sass support.
+* A live development server.
+* A build script to bundle JS, CSS, and images for production.
+* Nunjucks for HTML.
 
 All of them are transitive dependencies of the provided npm package.
 
 ## Contributing
 
 We'd love to have your helping hand on `create-autofe-app`! See [CONTRIBUTING.md](CONTRIBUTING.md) for more information on what we're looking for and how to get started.
-
-## TODO
-
-* `rev` 相关功能需要重新考虑
-* 文件上传 FastDFS
-* 反向代理到后端 API
-* 模块的开发、下载、引用、预览和发布，形成模块云服务，js+css+img+tpl
-* 自动雪碧图
-* 资源加 CND 前缀
-* 打包时，警告 console, alert, debugger ？

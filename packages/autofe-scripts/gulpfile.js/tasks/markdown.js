@@ -6,7 +6,6 @@ const wrap = require('gulp-wrap');
 const highlight = require('highlight.js');
 const join = require('path').join;
 const config = require('../config');
-const browserSync = require('../lib/browserSync');
 
 const markdownTask = function () {
   return gulp.src(config.markdown.src)
@@ -18,7 +17,6 @@ const markdownTask = function () {
     }))
     .pipe(wrap({ src: join(__dirname, 'markdown.html') }))
     .pipe(gulp.dest(config.markdown.dest))
-    .on('end', browserSync.reload);
 };
 
 gulp.task('markdown', markdownTask);
