@@ -31,7 +31,8 @@ function getEntries() {
   for (let i = 0; i < entryFiles.length; i += 1) {
     const filePath = entryFiles[i];
     const key = path.join(path.dirname(filePath), path.basename(filePath, '.entry.js'));
-    entries[key] = `.${path.sep}${path.join('src', filePath)}`;
+    const value = `.${path.sep}${path.join('src', filePath)}`;
+    entries[key] = value;
   }
 
   const entryStyleFiles = glob.sync('**/!(_)*.{scss,css}', {
@@ -40,9 +41,19 @@ function getEntries() {
   for (let i = 0; i < entryStyleFiles.length; i += 1) {
     const filePath = entryStyleFiles[i];
     const key = path.join(path.dirname(filePath), path.parse(filePath).name);
-    entries[key] = `.${path.sep}${path.join('src', filePath)}`;
+    const value = `.${path.sep}${path.join('src', filePath)}`;
+
+    // 这里考虑了同名的情况，比如 main.entry.js 和 main.scss，处理办法办法就是把他们合并到一个数组
+    if (entries[key]) {
+      if (Array.isArray(entries[key])) {
+        entries[key].push(value);
+      } else {
+        entries[key] = [entries[key], value];
+      }
+    } else {
+      entries[key] = value;
+    }
   }
-  // TODO: 可能存在 key 相同的情况
 
   return entries;
 }
