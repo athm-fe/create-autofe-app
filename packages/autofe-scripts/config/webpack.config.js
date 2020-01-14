@@ -110,7 +110,6 @@ function genTranspileDepRegex(transpileDependencies) {
 }
 
 module.exports = () => {
-  const entries = getEntries();
   const transpileDepRegex = genTranspileDepRegex(config.transpileDependencies);
 
   // try to load the project babel config;
@@ -122,7 +121,8 @@ module.exports = () => {
     mode: isProd ? 'production' : 'development',
     context,
     devtool: getDevtool(),
-    entry: entries,
+    // Notice: use Function for watching entry files
+    entry: getEntries,
     output: {
       filename: '[name].js',
       chunkFilename: '[name].js',
