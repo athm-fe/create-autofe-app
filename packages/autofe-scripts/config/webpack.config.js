@@ -6,6 +6,7 @@ const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require('copy-webpack-plugin');
+const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const babel = require('@babel/core');
 const AutoFEWebpack = require("autofe-webpack");
 const {
@@ -25,6 +26,7 @@ const context = config.appDirectory;
 function getEntries() {
   const entries = {};
 
+  // for js
   const entryFiles = glob.sync('**/*.entry.js', {
     cwd: config.appSrc,
   });
@@ -35,6 +37,28 @@ function getEntries() {
     entries[key] = value;
   }
 
+  // for ts
+  const entryFiles = glob.sync('**/*.entry.ts', {
+    cwd: config.appSrc,
+  });
+  for (let i = 0; i < entryFiles.length; i += 1) {
+    const filePath = entryFiles[i];
+    const key = path.join(path.dirname(filePath), path.basename(filePath, '.entry.ts'));
+    const value = `.${path.sep}${path.join('src', filePath)}`;
+
+    // 这里考虑了同名的情况，比如 main.entry.js 和 main.scss，处理办法办法就是把他们合并到一个数组
+    if (entries[key]) {
+      if (Array.isArray(entries[key])) {
+        entries[key].push(value);
+      } else {
+        entries[key] = [entries[key], value];
+      }
+    } else {
+      entries[key] = value;
+    }
+  }
+
+  // for style
   const entryStyleFiles = glob.sync('**/!(_)*.{scss,css}', {
     cwd: config.appSrc,
   });
@@ -132,6 +156,19 @@ module.exports = () => {
     mode: isProd ? 'production' : 'development',
     context,
     devtool: getDevtool(),
+    // Some libraries import Node modules but don't use them in the browser.
+    // Tell Webpack to provide empty mocks for them so importing them works.
+    node: {
+      setImmediate: false,
+      process: 'mock',
+      dgram: 'empty',
+      dns: 'mock',
+      fs: 'empty',
+      http2: 'empty',
+      net: 'empty',
+      tls: 'empty',
+      child_process: 'empty',
+    },
     // Notice: use Function for watching entry files
     entry: getEntries,
     output: {
@@ -145,6 +182,16 @@ module.exports = () => {
       alias: {
         '@': config.appSrc,
       },
+      extensions: [
+        '.tsx',
+        '.ts',
+        '.mjs',
+        '.js',
+        '.jsx',
+        '.vue',
+        '.json',
+        '.wasm',
+      ],
       modules: [
         'node_modules',
         path.join(context, 'node_modules'),
@@ -164,27 +211,43 @@ module.exports = () => {
         // eslint
         {
           enforce: 'pre',
-          test: /\.js$/,
+          // TODO: eslint 支持 vue
+          // TODO: eslint 支持 jsx
+          // TODO: eslint 支持 ts + tsx
+          test: /\.(vue|mjs|js|jsx|ts|tsx)$/,
           include: config.appSrc,
           use: [
             {
               loader: require.resolve('eslint-loader'),
               options: {
-                // TODO: cache 需要 cacheIdentifier，参考 vue-cli
+                // TODO: cache，参考 vue-cli
                 // cache: true,
+                // cacheIdentifier: '0443c91d',
+                // TODO: 不确定是否需要配置这个
+                // extensions: [
+                //   '.vue',
+                //   '.mjs',
+                //   '.js',
+                //   '.jsx',
+                //   '.ts',
+                //   '.tsx',
+                // ],
                 emitWarning: true,
                 emitError: false,
                 eslintPath: path.dirname(
                   resolveModule('eslint/package.json', context) ||
                   resolveModule('eslint/package.json', __dirname)
                 ),
+                // TODO: 修改 eslint plugin 查找路径，应该不需要这个
+                // resolvePluginsRelativeTo: __dirname
               },
             },
           ],
         },
         // js
         {
-          test: /\.js$/,
+          // TODO: babel 支持 jsx
+          test: /\.(mjs|js|jsx)$/,
           exclude: (filepath) => {
             // Notice: 处理 @babel/runtime 会导致很多没必要的 Polyfills，暂时去掉
             // only include @babel/runtime when the babel-preset-autofe-app preset is used
@@ -204,9 +267,53 @@ module.exports = () => {
             return /node_modules/.test(filepath);
           },
           use: [
+            // cache-loader
+            // thread-loader
             {
               loader: require.resolve('babel-loader'),
             },
+          ],
+        },
+        // ts
+        {
+          test: /\.ts$/,
+          use: [
+            // cache-loader
+            // thread-loader
+            {
+              loader: require.resolve('babel-loader'),
+            },
+            {
+              loader: require.resolve('ts-loader'),
+              options: {
+                transpileOnly: true,
+                appendTsSuffixTo: [
+                  '\\.vue$'
+                ],
+                // happyPackMode: true,
+              },
+            }
+          ],
+        },
+        // tsx
+        {
+          test: /\.tsx$/,
+          use: [
+            // cache-loader
+            // thread-loader
+            {
+              loader: require.resolve('babel-loader'),
+            },
+            {
+              loader: require.resolve('ts-loader'),
+              options: {
+                transpileOnly: true,
+                appendTsxSuffixTo: [
+                  '\\.vue$'
+                ],
+                // happyPackMode: true,
+              },
+            }
           ],
         },
         // css
@@ -431,8 +538,12 @@ module.exports = () => {
       minimizer: [
         new TerserPlugin({
           parallel: true,
+          // sourceMap: true,
+          // cache: true,
           terserOptions: {
-            safari10: true,
+            mangle: {
+              safari10: true,
+            },
             compress: {
               warnings: false,
               drop_debugger: true,
@@ -511,6 +622,23 @@ module.exports = () => {
         // both options are optional
         filename: "[name].css",
         chunkFilename: '[name].css',
+      }),
+      new ForkTsCheckerWebpackPlugin({
+        // vue: true,
+        // tslint: false,
+        // formatter: 'codeframe',
+        checkSyntacticErrors: true,
+
+
+        // from create-react-app
+        // typescript: resolve.sync('typescript', {
+        //   basedir: paths.appNodeModules,
+        // }),
+        // async: isEnvDevelopment,
+        // useTypescriptIncrementalApi: true,
+        // checkSyntacticErrors: true,
+        // tsconfig: paths.appTsConfig,
+        // silent: true,
       }),
     ],
   };
