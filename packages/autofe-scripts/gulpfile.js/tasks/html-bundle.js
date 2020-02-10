@@ -1,14 +1,13 @@
 'use strict';
 
-const gulp = require('gulp');
+const { src, dest } = require('gulp');
 const config = require('../config');
 const include = require('gulp-include');
 
-const htmlBundleTask = function () {
-  return gulp.src(config.htmlBundle.src)
+function htmlBundle() {
+  return src(config.htmlBundle.src)
     .pipe(include())
-    .pipe(gulp.dest(config.htmlBundle.dest));
-};
+    .pipe(dest(config.htmlBundle.dest));
+}
 
-gulp.task('html-bundle', htmlBundleTask);
-module.exports = htmlBundleTask;
+exports.htmlBundle = htmlBundle;

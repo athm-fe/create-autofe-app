@@ -55,7 +55,4 @@ module.exports = {
       },
     },
   },
-  watch: {
-    tasks: ['svg', 'js', 'html', 'markdown'],
-  },
 };
