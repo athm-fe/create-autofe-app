@@ -1,9 +1,7 @@
 'use strict';
 
-const gulp = require('gulp');
 const config = require('../../config');
-require('../../gulpfile.js');
-require('../../gulpfile.js/log');
+const spawn = require('cross-spawn');
 
 module.exports = function runner(command) {
   const args = process.argv.slice(2);
@@ -13,7 +11,14 @@ module.exports = function runner(command) {
   console.log('cwd:', process.cwd());
   console.log('argv:', args);
 
-  gulp.start(command, () => {
-    // do nothing...
-  });
+  const gulpBin = require.resolve('gulp/bin/gulp.js');
+  const gulpFile = require.resolve('../../gulpfile.js/index.js')
+  const gulpArgs = [
+    `${gulpBin}`,
+    `--cwd=${config.appDirectory}`,
+    `--gulpfile=${gulpFile}`,
+    command,
+  ];
+
+  spawn('node', gulpArgs, { stdio: 'inherit' });
 };

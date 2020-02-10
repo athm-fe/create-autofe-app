@@ -1,6 +1,5 @@
 'use strict';
 
-const gulp = require('gulp');
 const PluginError = require('plugin-error');
 const log = require('fancy-log');
 const chalk = require('chalk');
@@ -30,7 +29,7 @@ const statsOptions = isCreatorDev ? { colors: true } : {
 
 let isFirst = true;
 
-const webpackTask = function (cb) {
+function webpackTask(cb) {
   const config = webpackConfig();
 
   if (isEmpty(config.entry)) {
@@ -67,7 +66,7 @@ const webpackTask = function (cb) {
       }
     });
   }
-};
+}
+webpackTask.displayName = 'webpack';
 
-gulp.task('webpack', webpackTask);
-module.exports = webpackTask;
+exports.webpack = webpackTask;

@@ -1,12 +1,11 @@
 'use strict';
 
-const gulp = require('gulp');
+const bs = require('browser-sync').create();
 const config = require('../config');
-const browserSync = require('../lib/browserSync');
 
-const browserSyncTask = function () {
-  browserSync.init(config.browserSync.option);
-};
+function browserSync(cb) {
+  bs.init(config.browserSync.option);
+  cb();
+}
 
-gulp.task('browserSync', browserSyncTask);
-module.exports = browserSyncTask;
+exports.browserSync = browserSync;

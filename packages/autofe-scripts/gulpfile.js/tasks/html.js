@@ -1,6 +1,6 @@
 'use strict';
 
-const gulp = require('gulp');
+const { src, dest } = require('gulp');
 const config = require('../config');
 const render = require('gulp-nunjucks-render');
 const data = require('gulp-data');
@@ -88,8 +88,8 @@ const options = {
   manageEnv: manageEnvironment,
 };
 
-const htmlTask = function () {
-  return gulp.src([config.html.src, config.html.exclude])
+function html() {
+  return src([config.html.src, config.html.exclude])
     .pipe(data((file) => {
       const obj = {
         path: file.path,
@@ -112,8 +112,7 @@ const htmlTask = function () {
         this.emit('end');
       }
     })
-    .pipe(gulp.dest(config.html.dest))
-};
+    .pipe(dest(config.html.dest))
+}
 
-gulp.task('html', htmlTask);
-module.exports = htmlTask;
+exports.html = html;

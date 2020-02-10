@@ -1,12 +1,12 @@
 'use strict';
 
-const gulp = require('gulp');
+const { src, dest } = require('gulp');
 const config = require('../config');
 const svgmin = require('../lib/svgmin');
 const gulpif = require('gulp-if');
 
-const svgTask = function () {
-  return gulp.src(config.svg.src)
+function svg() {
+  return src(config.svg.src)
     .pipe(gulpif(
       process.env.NODE_ENV === 'production',
       svgmin({
@@ -16,8 +16,7 @@ const svgTask = function () {
         ]
       })
     ))
-    .pipe(gulp.dest(config.svg.dest, { overwrite: false }))
-};
+    .pipe(dest(config.svg.dest, { overwrite: false }))
+}
 
-gulp.task('svg', svgTask);
-module.exports = svgTask;
+exports.svg = svg;

@@ -1,14 +1,14 @@
 'use strict';
 
-const gulp = require('gulp');
+const { src, dest } = require('gulp');
 const config = require('../config');
 const uglify = require('gulp-uglify');
 const gulpif = require('gulp-if');
 const rename = require('gulp-rename');
 const PluginError = require('plugin-error');
 
-const jsTask = function () {
-  return gulp.src(config.js.src)
+function js() {
+  return src(config.js.src)
     .pipe(gulpif(process.env.NODE_ENV === 'production', uglify({
       output: {
         ascii_only: true,
@@ -22,8 +22,7 @@ const jsTask = function () {
     .pipe(rename((path) => {
       path.basename = path.basename.replace(/\.old$/, '');
     }))
-    .pipe(gulp.dest(config.js.dest))
-};
+    .pipe(dest(config.js.dest))
+}
 
-gulp.task('js', jsTask);
-module.exports = jsTask;
+exports.js = js;
