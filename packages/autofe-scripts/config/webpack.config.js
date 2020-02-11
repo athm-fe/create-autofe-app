@@ -38,11 +38,11 @@ function getEntries() {
   }
 
   // for ts
-  const entryFiles = glob.sync('**/*.entry.ts', {
+  const entryTSFiles = glob.sync('**/*.entry.ts', {
     cwd: config.appSrc,
   });
-  for (let i = 0; i < entryFiles.length; i += 1) {
-    const filePath = entryFiles[i];
+  for (let i = 0; i < entryTSFiles.length; i += 1) {
+    const filePath = entryTSFiles[i];
     const key = path.join(path.dirname(filePath), path.basename(filePath, '.entry.ts'));
     const value = `.${path.sep}${path.join('src', filePath)}`;
 
