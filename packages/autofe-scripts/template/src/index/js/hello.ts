@@ -10,8 +10,7 @@ const age2: string = 'seventeen';
 const age3: any = 'seventeen';
 
 const isDone: boolean = false;
-// ts 类型错误
-const isFinished: boolean = 'finished';
+// const isFinished: boolean = 'finished';
 
 const decLiteral: number = 6;
 const notANumber: number = NaN;
@@ -31,7 +30,7 @@ const user = 'Tom';
 const num = 10;
 
 console.log(sayHello(user));
-console.log(sayHello(num));
+// console.log(sayHello(num));
 
 
 function alertName(): void {
@@ -49,7 +48,8 @@ myFavoriteNumber = 7;
 
 // 类型推论
 let myFavoriteNumber2 = 'seven';
-myFavoriteNumber2 = 7;
+// myFavoriteNumber2 = 7;
+myFavoriteNumber2 = 'eight';
 
 // 任意类型
 let myFavoriteNumber3;
@@ -58,7 +58,10 @@ myFavoriteNumber3 = 7;
 
 
 function getLength(something: string | number): number {
-  return something.length;
+  if (typeof something === 'string') {
+    return something.length;
+  }
+  return 0;
 }
 
 function getString(something: string | number): string {
@@ -99,7 +102,7 @@ class Cat extends Animal {
 }
 
 const a = new Animal('Jack');
-a.name = 'Tom';
+// a.name = 'Tom';
 a.age = 20;
 
 let foo = 3;
