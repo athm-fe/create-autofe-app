@@ -13,7 +13,7 @@ module.exports = {
   settings: {
     'import/resolver': {
       node: {
-        extensions: ['.mjs', '.js', '.json']
+        extensions: ['.tsx', '.ts', '.mjs', '.js', '.jsx', '.json']
       }
       // TODO: eslint import 使用 webpack 的规则
       // eslint-import-resolver-webpack
@@ -25,6 +25,8 @@ module.exports = {
       '.js',
       '.mjs',
       '.jsx',
+      '.ts',
+      '.tsx',
     ],
     'import/core-modules': [
     ],
@@ -138,6 +140,8 @@ module.exports = {
       js: 'never',
       mjs: 'never',
       jsx: 'never',
+      ts: 'never',
+      tsx: 'never',
     }],
 
     // ensure absolute imports are above relative imports and that unassigned imports are ignored

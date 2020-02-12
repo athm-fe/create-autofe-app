@@ -108,6 +108,19 @@ console.log(a.age);
 a.name = 'Tom';
 a.age = 20;
 
+let foo = 3;
+switch (foo) {
+  case 1:
+    sayHello('Tom');
+    break;
+  case 2:
+    sayHello('Jack');
+    break;
+  // default:
+    // do nothing
+}
+foo = 3 + 3;
+
 
 export { sayHello };
 export { getString, getLength };

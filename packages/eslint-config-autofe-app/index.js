@@ -89,12 +89,12 @@ module.exports = {
         "camelcase": "off",
         "@typescript-eslint/camelcase": "error",
         "@typescript-eslint/class-name-casing": "error",
-        // "@typescript-eslint/consistent-type-assertions": "error",
+        "@typescript-eslint/consistent-type-assertions": "error",
         "@typescript-eslint/explicit-function-return-type": "warn",
         "@typescript-eslint/interface-name-prefix": "error",
         "@typescript-eslint/member-delimiter-style": "error",
-        // "no-array-constructor": "off",
-        // "@typescript-eslint/no-array-constructor": "error",
+        "no-array-constructor": "off",
+        "@typescript-eslint/no-array-constructor": "error",
         "no-empty-function": "off",
         "@typescript-eslint/no-empty-function": "error",
         "@typescript-eslint/no-empty-interface": "error",
@@ -104,10 +104,10 @@ module.exports = {
         "@typescript-eslint/no-namespace": "error",
         "@typescript-eslint/no-non-null-assertion": "warn",
         "@typescript-eslint/no-this-alias": "error",
-        // "no-unused-vars": "off",
-        // "@typescript-eslint/no-unused-vars": "warn",
-        // "no-use-before-define": "off",
-        // "@typescript-eslint/no-use-before-define": "error",
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": "warn",
+        "no-use-before-define": "off",
+        "@typescript-eslint/no-use-before-define": "error",
         "@typescript-eslint/no-var-requires": "error",
         "@typescript-eslint/prefer-namespace-keyword": "error",
         "@typescript-eslint/triple-slash-reference": "error",
@@ -118,30 +118,10 @@ module.exports = {
         "prefer-spread": "error",
 
 
-        // from eslint-config-react-app
+        // others
         // --------------
 
-        // TypeScript's `noFallthroughCasesInSwitch` option is more robust (#6906)
-        'default-case': 'off',
-        // 'tsc' already handles this (https://github.com/typescript-eslint/typescript-eslint/issues/291)
-        // 'no-dupe-class-members': 'off',
-        // 'tsc' already handles this (https://github.com/typescript-eslint/typescript-eslint/issues/477)
-        // 'no-undef': 'off',
-
         // Add TypeScript specific rules (and turn off ESLint equivalents)
-        '@typescript-eslint/consistent-type-assertions': 'warn',
-        'no-array-constructor': 'off',
-        '@typescript-eslint/no-array-constructor': 'warn',
-        'no-use-before-define': 'off',
-        '@typescript-eslint/no-use-before-define': [
-          'warn',
-          {
-            functions: false,
-            classes: false,
-            variables: false,
-            typedefs: false,
-          },
-        ],
         'no-unused-expressions': 'off',
         '@typescript-eslint/no-unused-expressions': [
           'error',
@@ -149,14 +129,6 @@ module.exports = {
             allowShortCircuit: true,
             allowTernary: true,
             allowTaggedTemplates: true,
-          },
-        ],
-        'no-unused-vars': 'off',
-        '@typescript-eslint/no-unused-vars': [
-          'warn',
-          {
-            args: 'none',
-            ignoreRestSiblings: true,
           },
         ],
         'no-useless-constructor': 'off',
