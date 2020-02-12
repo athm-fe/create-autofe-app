@@ -14,7 +14,7 @@ module.exports = (appPath, appName, verbose, originalDirectory) => {
   const pkg = {
     dependencies: {},
     devDependencies: {
-      'eslint': '^5.2.0',
+      'eslint': '^5.3.0',
       'eslint-config-autofe-app': '^1.0.0',
       'eslint-plugin-import': "^2.13.0",
       '@typescript-eslint/eslint-plugin': '^2.19.0',

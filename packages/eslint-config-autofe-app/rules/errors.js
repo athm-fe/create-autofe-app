@@ -8,6 +8,10 @@ module.exports = {
     // https://eslint.org/docs/rules/getter-return
     'getter-return': ['error', { allowImplicit: true }],
 
+    // disallow using an async function as a Promise executor
+    // https://eslint.org/docs/rules/no-async-promise-executor
+    'no-async-promise-executor': 'error',
+
     // Disallow await inside of loops
     // https://eslint.org/docs/rules/no-await-in-loop
     'no-await-in-loop': 'error',
@@ -78,12 +82,16 @@ module.exports = {
     // disallow irregular whitespace outside of strings and comments
     'no-irregular-whitespace': 'error',
 
+    // Disallow characters which are made with multiple code points in character class syntax
+    // https://eslint.org/docs/rules/no-misleading-character-class
+    'no-misleading-character-class': 'error',
+
     // disallow the use of object properties of the global object (Math and JSON) as functions
     'no-obj-calls': 'error',
 
     // disallow use of Object.prototypes builtins directly
     // https://eslint.org/docs/rules/no-prototype-builtins
-    'no-prototype-builtins': 'off',
+    'no-prototype-builtins': 'warn',
 
     // disallow multiple spaces in a regular expression literal
     'no-regex-spaces': 'error',

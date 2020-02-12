@@ -21,8 +21,7 @@ module.exports = {
     'brace-style': ['error', '1tbs', { allowSingleLine: true }],
 
     // require camel case names
-    // TODO: semver-major (eslint 5): add ignoreDestructuring: false option
-    camelcase: ['error', { properties: 'never' }],
+    camelcase: ['error', { properties: 'never', ignoreDestructuring: false }],
 
     // enforce or disallow capitalization of the first letter of a comment
     // https://eslint.org/docs/rules/capitalized-comments
@@ -84,9 +83,9 @@ module.exports = {
     // requires function names to match the name of the variable or property to which they are
     // assigned
     // https://eslint.org/docs/rules/func-name-matching
-    // TODO: semver-major (eslint 5): add considerPropertyDescriptor: true
     'func-name-matching': ['off', 'always', {
-      includeCommonJSModuleExports: false
+      includeCommonJSModuleExports: false,
+      considerPropertyDescriptor: true,
     }],
 
     // require function expressions to have a name
@@ -140,7 +139,7 @@ module.exports = {
       ImportDeclaration: 1,
       flatTernaryExpressions: false,
       // list derived from https://github.com/benjamn/ast-types/blob/HEAD/def/jsx.js
-      ignoredNodes: ['JSXElement', 'JSXElement > *', 'JSXAttribute', 'JSXIdentifier', 'JSXNamespacedName', 'JSXMemberExpression', 'JSXSpreadAttribute', 'JSXExpressionContainer', 'JSXOpeningElement', 'JSXClosingElement', 'JSXText', 'JSXEmptyExpression', 'JSXSpreadChild'],
+      ignoredNodes: ['JSXElement', 'JSXElement > *', 'JSXAttribute', 'JSXIdentifier', 'JSXNamespacedName', 'JSXMemberExpression', 'JSXSpreadAttribute', 'JSXExpressionContainer', 'JSXOpeningElement', 'JSXClosingElement', 'JSXFragment', 'JSXOpeningFragment', 'JSXClosingFragment', 'JSXText', 'JSXEmptyExpression', 'JSXSpreadChild'],
       ignoreComments: false
     }],
 
@@ -177,7 +176,7 @@ module.exports = {
 
     // require or disallow an empty line between class members
     // https://eslint.org/docs/rules/lines-between-class-members
-    'lines-between-class-members': ['error', 'always', { exceptAfterSingleLine: false }],
+    'lines-between-class-members': 'off',
 
     // enforces empty lines around comments
     'lines-around-comment': 'off',
@@ -293,14 +292,10 @@ module.exports = {
         ['%', '-'],
         ['%', '*'],
         ['%', '/'],
-        ['**', '+'],
-        ['**', '-'],
-        ['**', '*'],
-        ['**', '/'],
-        ['&', '|', '^', '~', '<<', '>>', '>>>'],
-        ['==', '!=', '===', '!==', '>', '>=', '<', '<='],
+        ['/', '*'],
+        ['&', '|', '<<', '>>', '>>>'],
+        ['==', '!=', '===', '!=='],
         ['&&', '||'],
-        ['in', 'instanceof']
       ],
       allowSamePrecedence: false
     }],
@@ -312,8 +307,9 @@ module.exports = {
     // https://eslint.org/docs/rules/no-multi-assign
     'no-multi-assign': ['error'],
 
-    // disallow multiple empty lines and only one newline at the end
-    'no-multiple-empty-lines': ['error', { max: 2, maxEOF: 0 }],
+    // disallow multiple empty lines, only one newline at the end, and no new lines at the beginning
+    // https://eslint.org/docs/rules/no-multiple-empty-lines
+    'no-multiple-empty-lines': ['error', { max: 2, maxBOF: 1, maxEOF: 0 }],
 
     // disallow negated conditions
     // https://eslint.org/docs/rules/no-negated-condition
@@ -367,11 +363,12 @@ module.exports = {
     }],
 
     // disallow dangling underscores in identifiers
+    // https://eslint.org/docs/rules/no-underscore-dangle
     'no-underscore-dangle': ['off', {
       allow: [],
       allowAfterThis: false,
       allowAfterSuper: false,
-      enforceInMethodNames: false,
+      enforceInMethodNames: true,
     }],
 
     // disallow the use of Boolean literals in conditional expressions
@@ -421,7 +418,13 @@ module.exports = {
     'operator-linebreak': ['error', 'before', { overrides: { '=': 'none' } }],
 
     // disallow padding within blocks
-    'padded-blocks': ['error', { blocks: 'never', classes: 'never', switches: 'never' }],
+    'padded-blocks': ['error', {
+      blocks: 'never',
+      classes: 'never',
+      switches: 'never',
+    }, {
+      allowSingleLineBlocks: true,
+    }],
 
     // Require or disallow padding lines between statements
     // https://eslint.org/docs/rules/padding-line-between-statements
@@ -429,7 +432,6 @@ module.exports = {
 
     // Prefer use of an object spread over Object.assign
     // https://eslint.org/docs/rules/prefer-object-spread
-    // TODO: semver-major (eslint 5): enable
     'prefer-object-spread': 'off',
 
     // require quotes around object literal property names
@@ -494,7 +496,7 @@ module.exports = {
       },
       block: {
         exceptions: ['-', '+'],
-        markers: ['=', '!'], // space here to support sprockets directives
+        markers: ['=', '!', ':', '::'], // space here to support sprockets directives and flow comment types
         balanced: true,
       }
     }],

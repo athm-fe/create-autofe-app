@@ -8,19 +8,27 @@ const customExtends = [
   './rules/imports',
 ].map(require.resolve);
 
+// TODO: vue, react, jsx-a11y, react-hooks
+// TODO: remove eslint-plugin-import
+// TODO: use https://github.com/AlloyTeam/eslint-config-alloy
+
 module.exports = {
   extends: [
     // 'eslint:recommended',
   ].concat(customExtends),
   env: {
     browser: true,
-    node: true,
     commonjs: true,
     amd: true,
+    es6: true,
+    node: true,
   },
   parserOptions: {
     ecmaVersion: 2018,
     sourceType: 'module',
+    ecmaFeatures: {
+      jsx: true,
+    },
   },
 
   // NOTE: When adding rules here, you need to make sure they are compatible with

@@ -1,15 +1,17 @@
-/* eslint no-unused-vars: "off" */
+/* eslint @typescript-eslint/no-unused-vars: "off" */
+/* eslint @typescript-eslint/no-explicit-any: "off" */
+/* eslint @typescript-eslint/no-inferrable-types: "off" */
 
 console.group('ts');
 
 
-const age: any = 'seventeen';
+const age1 = 'seventeen';
+const age2: string = 'seventeen';
+const age3: any = 'seventeen';
 
 const isDone: boolean = false;
 // ts 类型错误
-// const createdByNewBoolean1: boolean = new Boolean(1);
-// eslint ts 代码风格 no-new-wrappers
-const createdByNewBoolean2: Boolean = new Boolean(1);
+const isFinished: boolean = 'finished';
 
 const decLiteral: number = 6;
 const notANumber: number = NaN;
@@ -21,7 +23,7 @@ const sentence: string = `Hello, my name is ${myName}.
 I'll be ${myAge + 1} years old next month.`;
 
 
-function sayHello(person: string) {
+function sayHello(person: string): string {
   return 'Hello, ' + person;
 }
 
@@ -67,16 +69,10 @@ function getString(something: string | number): string {
 const fibonacci: number[] = [1, 1, 2, 3, 5];
 const fibonacci2: Array<number> = [1, 1, 2, 3, 5];
 const myInfo: any[] = ['jpuncle', 33, { website: 'https://jpuncle.com' }];
-function sum() {
-  const args: {
-      [index: number]: number;
-      length: number;
-      callee: Function;
-  } = arguments;
-
+function sum(...args: Array<number>): number {
   return args[0] + args[1];
 }
-function sum2() {
+function sum2(): number {
   const args: IArguments = arguments;
 
   return args[0] + args[1];
@@ -103,8 +99,6 @@ class Cat extends Animal {
 }
 
 const a = new Animal('Jack');
-console.log(a.name);
-console.log(a.age);
 a.name = 'Tom';
 a.age = 20;
 
@@ -117,7 +111,8 @@ switch (foo) {
     sayHello('Jack');
     break;
   // default:
-    // do nothing
+  //   // do nothing
+  // no default
 }
 foo = 3 + 3;
 
