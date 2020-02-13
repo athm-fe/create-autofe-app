@@ -13,7 +13,7 @@ module.exports = {
   settings: {
     'import/resolver': {
       node: {
-        extensions: ['.mjs', '.js', '.json']
+        extensions: ['.tsx', '.ts', '.mjs', '.js', '.jsx', '.json']
       }
       // TODO: eslint import 使用 webpack 的规则
       // eslint-import-resolver-webpack
@@ -25,6 +25,8 @@ module.exports = {
       '.js',
       '.mjs',
       '.jsx',
+      '.ts',
+      '.tsx',
     ],
     'import/core-modules': [
     ],
@@ -84,6 +86,7 @@ module.exports = {
         'test-*.{js,jsx}', // repos with multiple top-level test files
         '**/*{.,_}{test,spec}.{js,jsx}', // tests where the extension or filename suffix denotes that it is a test
         '**/jest.config.js', // jest config
+        '**/jest.setup.js', // jest setup
         '**/vue.config.js', // vue-cli config
         '**/webpack.config.js', // webpack config
         '**/webpack.config.*.js', // webpack config
@@ -94,6 +97,7 @@ module.exports = {
         '**/Gruntfile{,.js}', // grunt config
         '**/protractor.conf.js', // protractor config
         '**/protractor.conf.*.js', // protractor config
+        '**/karma.conf.js' // karma config
       ],
       optionalDependencies: false,
     }],
@@ -138,6 +142,8 @@ module.exports = {
       js: 'never',
       mjs: 'never',
       jsx: 'never',
+      ts: 'never',
+      tsx: 'never',
     }],
 
     // ensure absolute imports are above relative imports and that unassigned imports are ignored

@@ -174,7 +174,7 @@ module.exports = {
     // disallow reassignment of function parameters
     // disallow parameter object manipulation except for specific exclusions
     // rule: https://eslint.org/docs/rules/no-param-reassign.html
-    'no-param-reassign': ['off', {
+    'no-param-reassign': ['warn', {
       props: true,
       ignorePropertyModificationsFor: [
         'acc', // for reduce accumulators
@@ -186,11 +186,12 @@ module.exports = {
         'res', // for Express responses
         'response', // for Express responses
         '$scope', // for Angular 1 scopes
+        'staticContext', // for ReactRouter context
       ]
     }],
 
     // disallow usage of __proto__ property
-    'no-proto': 'off',
+    'no-proto': 'warn',
 
     // disallow declaring the same variable more then once
     'no-redeclare': 'error',
@@ -248,9 +249,8 @@ module.exports = {
 
     // disallow self assignment
     // https://eslint.org/docs/rules/no-self-assign
-    // TODO: semver-major: props -> true
     'no-self-assign': ['error', {
-      props: false,
+      props: true,
     }],
 
     // disallow comparisons where both sides are exactly the same
@@ -260,7 +260,7 @@ module.exports = {
     'no-sequences': 'error',
 
     // restrict what can be thrown as an exception
-    'no-throw-literal': 'off',
+    'no-throw-literal': 'warn',
 
     // disallow unmodified conditions of loops
     // https://eslint.org/docs/rules/no-unmodified-loop-condition

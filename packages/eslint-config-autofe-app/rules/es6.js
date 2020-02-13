@@ -3,7 +3,7 @@ module.exports = {
     es6: true,
   },
   parserOptions: {
-    ecmaVersion: 2018,
+    ecmaVersion: 6,
     sourceType: 'module',
   },
 
@@ -154,6 +154,7 @@ module.exports = {
     // https://eslint.org/docs/rules/sort-imports
     'sort-imports': ['off', {
       ignoreCase: false,
+      ignoreDeclarationSort: false,
       ignoreMemberSort: false,
       memberSyntaxSortOrder: ['none', 'all', 'multiple', 'single'],
     }],

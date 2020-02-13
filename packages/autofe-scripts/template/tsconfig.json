@@ -1,0 +1,47 @@
+{
+  "compilerOptions": {
+    // 使用最新语言规范，交给 Babel 来做后续编译处理
+    "target": "esnext",
+    // 使用最新模块规范，交给 Webpack 来做后续打包
+    "module": "esnext",
+    // Enable all strict type-checking options
+    "strict": true,
+    // Specify JSX code generation: 'preserve', 'react-native', or 'react'.
+    "jsx": "preserve",
+    // Import emit helpers from 'tslib'.
+    "importHelpers": true,
+    // Specify module resolution strategy: 'node' (Node.js) or 'classic' (TypeScript pre-1.6).
+    "moduleResolution": "node",
+    // Enables experimental support for ES7 decorators.
+    "experimentalDecorators": true,
+    // Enables emit interoperability between CommonJS and ES Modules via creation of namespace objects for all imports. Implies 'allowSyntheticDefaultImports'.
+    "esModuleInterop": true,
+    /* Allow default imports from modules with no default export. This does not affect code emit, just typechecking. */
+    "allowSyntheticDefaultImports": true,
+    /* Generates corresponding '.map' file. */
+    "sourceMap": true,
+    /* Base directory to resolve non-absolute module names. */
+    "baseUrl": ".",
+    /* A series of entries which re-map imports to lookup locations relative to the 'baseUrl'. */
+    "paths": {
+      "@/*": [
+        "src/*"
+      ]
+    },
+    // Specify library files to be included in the compilation.
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable",
+      "scripthost"
+    ]
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx"
+    // "src/**/*.vue",
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
