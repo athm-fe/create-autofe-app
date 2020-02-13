@@ -21,6 +21,8 @@ This project was bootstrapped with [Create AutoFE App](https://github.com/athm-f
 - [编写 JavaScript](#编写-javascript)
   - [externals 配置](#externals-配置)
   - [浏览器兼容性](#浏览器兼容性)
+- [编写 TypeScript](#编写-typescript)
+  - [TS 使用 jQuery](#ts-使用-jquery)
 - [ESLint](#eslint)
 - [sourcemaps](#sourcemaps)
 - [还缺啥?](#还缺啥)
@@ -119,6 +121,7 @@ NODE_ENV=development npm run build
 * 使用 PostCSS 支持 Autoprefixer
 * 使用 Babel 处理 ES6+
 * 使用 ESLint 检查 ES6+ 代码
+* 使用 TypeScript 写 JS
 * 使用 Markdown 写文档，并生成 HTML 方便查看
 * 开发环境支持 SourceMap
 * 压缩 CSS 和 JS
@@ -682,6 +685,31 @@ module.exports = {
 通过上面的配置，`babel-loader` 会处理 `@auto/img-crop` 里的 ES6+ 语法。如果你配置了 `useBuiltIns: 'usage'` 的话，`@babel/preset-env` 还会分析 `@auto/img-crop` 的代码，并自动检测出需要的 polyfills。
 
 `transpileDependencies` 接受一个数组，里面的元素可以是字符串，也可以是正则表达式。
+
+## 编写 TypeScript
+
+假设你已经有 TypeScript 的基础，创建 `xxx.entry.ts` 即可作为入口文件，`yyy.ts` 作为模块文件，被入口文件使用。
+
+### TS 使用 jQuery
+
+TypeScript 使用的是自己的模块系统，没有使用 Webpack 的，所以你之前配置的 `externals` 并不会起作用。
+
+`creator.config.js`
+```javascript
+module.exports = {
+  // ...
+  externals: {
+    jquery: 'jQuery',
+  },
+  // ...
+};
+```
+
+如果你已经了解 TypeScript 的话，你就会知道，只要安装如下包，就可以达到类似 Webpack 的 `externals` 的效果：
+
+```
+npm i --save-dev @types/jquery
+```
 
 ## ESLint
 
