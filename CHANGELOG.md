@@ -1,3 +1,15 @@
+## autofe-scripts@1.3.0
+
+该版本增加了 TypeScript 支持，升级请参考 [如果手动支持 TypeScript](./doc/how-to-ts.md)
+
+## autofe-scripts@1.2.3
+
+该版本把 gulp 从 v3 升级到 v4，因为 gulp v3 在 node 12 下不被支持。
+
+## autofe-scripts@1.2.1
+
+减少命令运行时，webpack 部分输出到控制台的日志，方便查找关键日志信息。
+
 ## 1.2.0
 
 该版本功能主要改动：
