@@ -1,6 +1,6 @@
 {
   "name": "eslint-config-autofe-app",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "ESLint configuration used by AutoFE apps",
   "repository": "athm-fe/create-autofe-app",
   "author": "jpuncle",
@@ -14,9 +14,9 @@
     "confusing-browser-globals": "^1.0.9"
   },
   "peerDependencies": {
-    "eslint": "^5.3.0",
-    "eslint-plugin-import": "^2.13.0",
     "@typescript-eslint/eslint-plugin": "^2.19.0",
-    "@typescript-eslint/parser": "^2.19.0"
+    "@typescript-eslint/parser": "^2.19.0",
+    "eslint": "^5.3.0",
+    "eslint-plugin-import": "^2.13.0"
   }
 }
