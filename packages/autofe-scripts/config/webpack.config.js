@@ -625,20 +625,8 @@ module.exports = () => {
       }),
       new ForkTsCheckerWebpackPlugin({
         // vue: true,
-        // tslint: false,
-        // formatter: 'codeframe',
+        formatter: 'codeframe',
         checkSyntacticErrors: true,
-
-
-        // from create-react-app
-        // typescript: resolve.sync('typescript', {
-        //   basedir: paths.appNodeModules,
-        // }),
-        // async: isEnvDevelopment,
-        // useTypescriptIncrementalApi: true,
-        // checkSyntacticErrors: true,
-        // tsconfig: paths.appTsConfig,
-        // silent: true,
       }),
     ],
   };
