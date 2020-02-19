@@ -15,7 +15,7 @@ module.exports = (appPath, appName, verbose, originalDirectory) => {
     dependencies: {},
     devDependencies: {
       'eslint': '^5.3.0',
-      'eslint-config-autofe-app': '^1.1.0',
+      'eslint-config-autofe-app': '^1.2.1',
       'eslint-plugin-import': "^2.13.0",
       '@typescript-eslint/eslint-plugin': '^2.19.0',
       '@typescript-eslint/parser': '^2.19.0',

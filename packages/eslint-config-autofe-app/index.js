@@ -9,7 +9,6 @@ const customExtends = [
 ].map(require.resolve);
 
 // TODO: vue, react, jsx-a11y, react-hooks
-// TODO: remove eslint-plugin-import
 // TODO: use https://github.com/AlloyTeam/eslint-config-alloy
 
 module.exports = {
