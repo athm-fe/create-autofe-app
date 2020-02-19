@@ -2,6 +2,7 @@ module.exports = {
   root: true,
   extends: [
     'eslint-config-autofe-app',
+    'eslint-config-autofe-app/typescript',
   ],
   globals: {
     AHAPP: 'readonly',
