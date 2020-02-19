@@ -1,4 +1,4 @@
-## autofe-scripts@1.3.3
+## autofe-scripts@1.3.4
 
 该版本增加了 TypeScript 支持，升级请参考 [如果手动支持 TypeScript](./doc/how-to-ts.md)
 

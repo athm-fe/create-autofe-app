@@ -1,6 +1,6 @@
 # TypeScript 使用
 
-Creator 从 `autofe-scripts@1.3.3` 开始支持 TypeScript。
+Creator 从 `autofe-scripts@1.3.4` 开始支持 TypeScript。
 
 ## 手动升级
 
@@ -11,7 +11,7 @@ Creator 从 `autofe-scripts@1.3.3` 开始支持 TypeScript。
 首先，更新现有包：
 
 ```
-npm i --save-dev autofe-scripts@1.3.3
+npm i --save-dev autofe-scripts@1.3.4
 npm i --save-dev eslint@5.16.0
 npm i --save-dev eslint-config-autofe-app@1.2.1 eslint-plugin-import@2.13.0
 ```
@@ -46,3 +46,11 @@ module.exports = {
 ## 开始使用
 
 具体内容请移步 [TypeScript 使用](https://github.com/athm-fe/create-autofe-app/tree/master/packages/autofe-scripts/template#%E7%BC%96%E5%86%99-typescript)
+
+## 问题
+
+有可能你会遇到如下图中的报错：
+
+![](./img/tsinputempty.png)
+
+这是因为 `tsconfig.json` 中 `include` 字段的配置要求你至少有一个 `.ts` 文件，解决办法很简单，在 `src` 目录下新建你的文件即可，比如 `hello.ts`

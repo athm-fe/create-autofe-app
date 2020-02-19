@@ -1,5 +1,6 @@
 'use strict';
 
+const fs = require('fs');
 const path = require('path');
 const glob = require('glob');
 const TerserPlugin = require('terser-webpack-plugin');
@@ -19,6 +20,9 @@ const config = require('./index');
 const isProd = process.env.NODE_ENV === 'production';
 
 const context = config.appDirectory;
+
+// Check if TypeScript is setup
+const useTypeScript = fs.existsSync(path.join(context, 'tsconfig.json'));
 
 /**
  * 获取入口文件
@@ -623,7 +627,7 @@ module.exports = () => {
         filename: "[name].css",
         chunkFilename: '[name].css',
       }),
-      new ForkTsCheckerWebpackPlugin({
+      useTypeScript && new ForkTsCheckerWebpackPlugin({
         typescript: path.dirname(
           resolveModule('typescript/package.json', context) ||
           resolveModule('typescript/package.json', __dirname)
@@ -632,6 +636,6 @@ module.exports = () => {
         formatter: 'codeframe',
         checkSyntacticErrors: true,
       }),
-    ],
+    ].filter(Boolean),
   };
 };
