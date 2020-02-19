@@ -13,7 +13,7 @@ const {
   isWindows,
   resolveModule,
   // loadModule,
-} = require('@vue/cli-shared-utils')
+} = require('@vue/cli-shared-utils');
 const config = require('./index');
 
 const isProd = process.env.NODE_ENV === 'production';
@@ -624,6 +624,10 @@ module.exports = () => {
         chunkFilename: '[name].css',
       }),
       new ForkTsCheckerWebpackPlugin({
+        typescript: path.dirname(
+          resolveModule('typescript/package.json', context) ||
+          resolveModule('typescript/package.json', __dirname)
+        ),
         // vue: true,
         formatter: 'codeframe',
         checkSyntacticErrors: true,
