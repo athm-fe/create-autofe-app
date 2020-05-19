@@ -3,6 +3,7 @@
 const fs = require('fs');
 const path = require('path');
 const glob = require('glob');
+const merge = require('webpack-merge');
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -156,7 +157,7 @@ module.exports = () => {
   // there will be a CREATOR_TRANSPILE_BABEL_RUNTIME env var set.
   babel.loadPartialConfig();
 
-  return {
+  let webpackConfig = {
     mode: isProd ? 'production' : 'development',
     context,
     devtool: getDevtool(),
@@ -181,7 +182,7 @@ module.exports = () => {
       path: config.appBuild,
       publicPath: '/',
     },
-    externals: config.externals,
+    externals: {},
     resolve: {
       alias: {
         '@': config.appSrc,
@@ -638,4 +639,24 @@ module.exports = () => {
       }),
     ].filter(Boolean),
   };
+
+  const projectWebpackConfig = config.configureWebpack;
+
+  // 合并项目 configureWebpack 配置
+  if (typeof projectWebpackConfig === 'function') {
+    const result = projectWebpackConfig(webpackConfig);
+    if (result) {
+      webpackConfig = merge(webpackConfig, result);
+    }
+  } else if (projectWebpackConfig) {
+    webpackConfig = merge(webpackConfig, projectWebpackConfig);
+  }
+
+  // 兼容原有的 externals 配置方式
+  if (config.externals) {
+    // TODO 抛出过期警告，推荐使用 configureWebpack.externals 配置
+    webpackConfig = merge(webpackConfig, { externals: config.externals });
+  }
+
+  return webpackConfig;
 };

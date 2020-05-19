@@ -10,6 +10,7 @@ const {
 const appDefaultConfig = {
   externals: {},
   transpileDependencies: [],
+  configureWebpack: {},
 };
 
 const config = {
