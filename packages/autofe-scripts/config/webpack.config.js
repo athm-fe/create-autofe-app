@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const glob = require('glob');
 const merge = require('webpack-merge');
+const Config = require('webpack-chain');
 const TerserPlugin = require('terser-webpack-plugin');
 const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
@@ -157,12 +158,21 @@ module.exports = () => {
   // there will be a CREATOR_TRANSPILE_BABEL_RUNTIME env var set.
   babel.loadPartialConfig();
 
-  let webpackConfig = {
-    mode: isProd ? 'production' : 'development',
-    context,
-    devtool: getDevtool(),
-    // Some libraries import Node modules but don't use them in the browser.
-    // Tell Webpack to provide empty mocks for them so importing them works.
+  const chainableConfig = new Config();
+
+  chainableConfig
+    .mode(isProd ? 'production' : 'development')
+    .context(context)
+    .devtool(getDevtool())
+    .output
+      .path(config.appBuild)
+      .publicPath('/')
+      .filename('[name].js')
+      .chunkFilename('[name].js');
+
+  // Some libraries import Node modules but don't use them in the browser.
+  // Tell Webpack to provide empty mocks for them so importing them works.
+  chainableConfig.merge({
     node: {
       setImmediate: false,
       process: 'mock',
@@ -174,405 +184,335 @@ module.exports = () => {
       tls: 'empty',
       child_process: 'empty',
     },
-    // Notice: use Function for watching entry files
-    entry: getEntries,
-    output: {
-      filename: '[name].js',
-      chunkFilename: '[name].js',
-      path: config.appBuild,
-      publicPath: '/',
-    },
-    externals: {},
-    resolve: {
-      alias: {
-        '@': config.appSrc,
-      },
-      extensions: [
-        '.tsx',
-        '.ts',
-        '.mjs',
-        '.js',
-        '.jsx',
-        '.vue',
-        '.json',
-        '.wasm',
-      ],
-      modules: [
-        'node_modules',
-        path.join(context, 'node_modules'),
-        path.join(__dirname, '../node_modules'),
-        path.join(path.dirname(require.resolve('babel-preset-autofe-app/package.json')), 'node_modules'),
-      ],
-    },
-    resolveLoader: {
-      modules: [
-        'node_modules',
-        path.join(context, 'node_modules'),
-        path.join(__dirname, '../node_modules'),
-      ],
-    },
-    module: {
-      rules: [
-        // eslint
-        {
-          enforce: 'pre',
-          // TODO: eslint 支持 vue
-          // TODO: eslint 支持 jsx
-          // TODO: eslint 支持 ts + tsx
-          test: /\.(vue|mjs|js|jsx|ts|tsx)$/,
-          include: config.appSrc,
-          use: [
-            {
-              loader: require.resolve('eslint-loader'),
-              options: {
-                // TODO: cache，参考 vue-cli
-                // cache: true,
-                // cacheIdentifier: '0443c91d',
-                // TODO: 不确定是否需要配置这个
-                // extensions: [
-                //   '.vue',
-                //   '.mjs',
-                //   '.js',
-                //   '.jsx',
-                //   '.ts',
-                //   '.tsx',
-                // ],
-                emitWarning: true,
-                emitError: false,
-                eslintPath: path.dirname(
-                  resolveModule('eslint/package.json', context) ||
-                  resolveModule('eslint/package.json', __dirname)
-                ),
-                // TODO: 修改 eslint plugin 查找路径，应该不需要这个
-                // resolvePluginsRelativeTo: __dirname
-              },
-            },
-          ],
-        },
-        // js
-        {
-          // TODO: babel 支持 jsx
-          test: /\.(mjs|js|jsx)$/,
-          exclude: (filepath) => {
-            // Notice: 处理 @babel/runtime 会导致很多没必要的 Polyfills，暂时去掉
-            // only include @babel/runtime when the babel-preset-autofe-app preset is used
-            // if (
-            //   process.env.CREATOR_TRANSPILE_BABEL_RUNTIME &&
-            //   filepath.includes(path.join('@babel', 'runtime'))
-            // ) {
-            //   return false;
-            // }
+  });
 
-            // check if this is something the user explicitly wants to transpile
-            if (transpileDepRegex && transpileDepRegex.test(filepath)) {
-              return false;
-            }
+  chainableConfig.resolve
+    .extensions
+      .merge(['.tsx', '.ts', '.mjs', '.js', '.jsx', '.vue', '.json', '.wasm'])
+      .end()
+    .modules
+      .add('node_modules')
+      .add(path.join(context, 'node_modules'))
+      .add(path.join(__dirname, '../node_modules'))
+      .add(path.join(path.dirname(require.resolve('babel-preset-autofe-app/package.json')), 'node_modules'))
+      .end()
+    .alias
+      .set('@', config.appSrc);
 
-            // Don't transpile node_modules
-            return /node_modules/.test(filepath);
-          },
-          use: [
-            // cache-loader
-            // thread-loader
-            {
-              loader: require.resolve('babel-loader'),
-            },
-          ],
-        },
-        // ts
-        {
-          test: /\.ts$/,
-          use: [
-            // cache-loader
-            // thread-loader
-            {
-              loader: require.resolve('babel-loader'),
-            },
-            {
-              loader: require.resolve('ts-loader'),
-              options: {
-                transpileOnly: true,
-                appendTsSuffixTo: [
-                  '\\.vue$'
-                ],
-                // happyPackMode: true,
-              },
-            }
-          ],
-        },
-        // tsx
-        {
-          test: /\.tsx$/,
-          use: [
-            // cache-loader
-            // thread-loader
-            {
-              loader: require.resolve('babel-loader'),
-            },
-            {
-              loader: require.resolve('ts-loader'),
-              options: {
-                transpileOnly: true,
-                appendTsxSuffixTo: [
-                  '\\.vue$'
-                ],
-                // happyPackMode: true,
-              },
-            }
-          ],
-        },
-        // css
-        {
-          test: /\.css$/,
-          use: [
-            {
-              // output based on entry
-              // https://github.com/webpack-contrib/file-loader/issues/114
-              // https://github.com/webpack-contrib/mini-css-extract-plugin#extracting-css-based-on-entry
-              // function findEntry(mod) {
-              //   if (mod.reasons.length > 0 && mod.reasons[0].module.resource) {
-              //       return findEntry(mod.reasons[0].module)
-              //   }
-              //   return mod.resource;
-              // }
-              loader: MiniCssExtractPlugin.loader,
-              options: {
-                // hmr: process.env.NODE_ENV === 'development',
-                // if hmr does not work, this is a forceful method.
-                // reloadAll: true,
-              },
-            },
-            {
-              loader: require.resolve('css-loader'),
-              options: {
-                sourceMap: !isProd,
-              },
-            },
-            {
-              loader: require.resolve('postcss-loader'),
-              options: {
-                sourceMap: !isProd,
-              },
-            },
-          ]
-        },
-        // scss
-        {
-          test: /\.scss$/,
-          use: [
-            {
-              // output based on entry
-              // https://github.com/webpack-contrib/file-loader/issues/114
-              // https://github.com/webpack-contrib/mini-css-extract-plugin#extracting-css-based-on-entry
-              // function findEntry(mod) {
-              //   if (mod.reasons.length > 0 && mod.reasons[0].module.resource) {
-              //       return findEntry(mod.reasons[0].module)
-              //   }
-              //   return mod.resource;
-              // }
-              loader: MiniCssExtractPlugin.loader,
-              options: {
-                // hmr: process.env.NODE_ENV === 'development',
-                // if hmr does not work, this is a forceful method.
-                // reloadAll: true,
-              },
-            },
-            {
-              loader: require.resolve('css-loader'),
-              options: {
-                sourceMap: !isProd,
-              },
-            },
-            {
-              loader: require.resolve('postcss-loader'),
-              options: {
-                sourceMap: !isProd,
-              },
-            },
-            // TODO 处理 image-set( "cat.png" 1x, "cat-2x.png" 2x);
-            {
-              loader: require.resolve('resolve-url-loader'),
-              options: {
-                keepQuery: true, // for loader resourceQuery
-                sourceMap: !isProd,
-              },
-            },
-            {
-              loader: require.resolve('sass-loader'),
-              options: {
-                // Notice: resolve-url-loader need this! so set sourceMap true always
-                // 该配置不产生 map 文件, 只产生 map 内容
-                sourceMap: true,
-                // 参考 vue-cli
-                // prependData: '@import "@/assets/athm/tools.scss";'
-                // Prefer `dart-sass`, you need to install sass and fibers
-                // implementation: require('sass'),
-              },
-            },
-          ]
-        },
-        // images
-        {
-          test: /\.(png|jpe?g|gif|webp|cur)(\?.*)?$/,
-          oneOf: (() => {
-            const imageDataUriLoaderConfig = {
-              loader: require.resolve('url-loader'),
-              options: {
-                limit: true, // no limit
-              },
-            };
+  chainableConfig.resolveLoader
+    .modules
+      .add('node_modules')
+      .add(path.join(context, 'node_modules'))
+      .add(path.join(__dirname, '../node_modules'));
 
-            const imageUrlLoaderConfig = {
-              loader: require.resolve('url-loader'),
-              options: {
-                // url-loader options
-                limit: 1024, // limit 1kb
-                // file-loader options
-                name: getNameForFileLoader,
-                outputPath: getOutputPathForFileLoader,
-              },
-            };
+  chainableConfig.module
+    .noParse(/^(vue|vue-router|vuex|vuex-router-sync)$/);
 
-            return [
-              {
-                resourceQuery: /datauri/,
-                use: [imageDataUriLoaderConfig],
-              },
-              {
-                use: [imageUrlLoaderConfig],
-              },
-            ];
-          })(),
-        },
-        // svg
-        {
-          test: /\.svg$/,
-          oneOf: (() => {
-            const svgoLoaderConfig = {
-              loader: require.resolve('svgo-loader'),
-              options: {
-                plugins: [
-                  { removeViewBox: false },
-                  { cleanupIDs: false }
-                ]
-              },
-            };
-
-            const svgInlineLoaderConfig = {
-              loader: require.resolve('svg-inline-loader'),
-              options: {
-                removeSVGTagAttrs: false,
-              },
-            };
-
-            const svgDataUriLoaderConfig = {
-              loader: require.resolve('svg-url-loader'),
-              options: {
-                limit: 0, // no limit
-                stripdeclarations: true,
-              },
-            };
-
-            const svgUrlLoaderConfig = {
-              loader: require.resolve('svg-url-loader'),
-              options: {
-                // svg-url-loader options
-                limit: 1024, // limit 1kb
-                stripdeclarations: true,
-                // file-loader options
-                name: getNameForFileLoader,
-                outputPath: getOutputPathForFileLoader,
-              },
-            };
-
-            const baseLoaderConfig = [];
-            if (isProd) {
-              baseLoaderConfig.push(svgoLoaderConfig);
-            }
-
-            return [
-              {
-                resourceQuery: /inline/,
-                use: [svgInlineLoaderConfig].concat(baseLoaderConfig),
-              },
-              {
-                resourceQuery: /datauri/,
-                use: [svgDataUriLoaderConfig].concat(baseLoaderConfig),
-              },
-              {
-                use: [svgUrlLoaderConfig].concat(baseLoaderConfig),
-              },
-            ];
-          })(),
-        },
-        // fonts
-        {
-          test: /\.(eot|ttf|otf|woff2?)(\?.*)?$/,
-          use: [
-            {
-              loader: require.resolve('url-loader'),
-              options: {
-                // url-loader options
-                limit: 1024, // limit 1kb
-                // file-loader options
-                name: getNameForFileLoader,
-                outputPath: getOutputPathForFileLoader,
-              },
-            },
-          ],
-        },
-        // media
-        {
-          test: /\.(mp4|webm|ogv|flv|mp3|ogg|wav|flac|acc)$/,
-          use: [
-            {
-              loader: require.resolve('url-loader'),
-              options: {
-                // url-loader options
-                limit: 1024, // limit 1kb
-                // file-loader options
-                name: getNameForFileLoader,
-                outputPath: getOutputPathForFileLoader,
-              },
-            },
-          ],
-        },
-      ],
-    },
-    optimization: {
-      minimizer: [
-        new TerserPlugin({
-          parallel: true,
-          // sourceMap: true,
+  chainableConfig.module
+    .rule('eslint')
+      .test(/\.(vue|mjs|js|jsx|ts|tsx)$/)
+      .pre()
+      .include
+        .add(config.appSrc)
+        .end()
+      .use('eslint-loader')
+        .loader(require.resolve('eslint-loader'))
+        .options({
+          // TODO: cache，参考 vue-cli
           // cache: true,
-          terserOptions: {
-            mangle: {
-              safari10: true,
-            },
-            compress: {
-              warnings: false,
-              drop_debugger: true,
-              // drop_console: true,
-            },
-            output: {
-              ascii_only: true,
-              quote_style: 1,
-            },
+          // cacheIdentifier: '0443c91d',
+          // TODO: 不确定是否需要配置这个
+          // extensions: [
+          //   '.vue',
+          //   '.mjs',
+          //   '.js',
+          //   '.jsx',
+          //   '.ts',
+          //   '.tsx',
+          // ],
+          emitWarning: true,
+          emitError: false,
+          eslintPath: path.dirname(
+            resolveModule('eslint/package.json', context) ||
+            resolveModule('eslint/package.json', __dirname)
+          ),
+          // TODO: 修改 eslint plugin 查找路径，应该不需要这个
+          // resolvePluginsRelativeTo: __dirname
+        });
+
+  // TODO: babel 支持 jsx
+  chainableConfig.module
+    .rule('js')
+      .test(/\.(mjs|js|jsx)$/)
+      .exclude
+        .add((filepath) => {
+          // Notice: 处理 @babel/runtime 会导致很多没必要的 Polyfills，暂时去掉
+          // only include @babel/runtime when the babel-preset-autofe-app preset is used
+          // if (
+          //   process.env.CREATOR_TRANSPILE_BABEL_RUNTIME &&
+          //   filepath.includes(path.join('@babel', 'runtime'))
+          // ) {
+          //   return false;
+          // }
+
+          // check if this is something the user explicitly wants to transpile
+          if (transpileDepRegex && transpileDepRegex.test(filepath)) {
+            return false;
+          }
+
+          // Don't transpile node_modules
+          return /node_modules/.test(filepath);
+        })
+        .end()
+      .use('babel-loader')
+        .loader(require.resolve('babel-loader'));
+
+  chainableConfig.module
+    .rule('ts')
+      .test(/\.ts$/)
+      .use('babel-loader')
+        .loader(require.resolve('babel-loader'))
+        .end()
+      .use('ts-loader')
+        .loader(require.resolve('ts-loader'))
+        .options({
+          transpileOnly: true,
+          appendTsSuffixTo: [
+            '\\.vue$'
+          ],
+          // happyPackMode: true,
+        });
+
+  chainableConfig.module
+    .rule('tsx')
+      .test(/\.tsx$/)
+      .use('babel-loader')
+        .loader(require.resolve('babel-loader'))
+        .end()
+      .use('ts-loader')
+        .loader(require.resolve('ts-loader'))
+        .options({
+          transpileOnly: true,
+          appendTsxSuffixTo: [
+            '\\.vue$'
+          ],
+          // happyPackMode: true,
+        });
+
+  // output based on entry
+  // https://github.com/webpack-contrib/file-loader/issues/114
+  // https://github.com/webpack-contrib/mini-css-extract-plugin#extracting-css-based-on-entry
+  // function findEntry(mod) {
+  //   if (mod.reasons.length > 0 && mod.reasons[0].module.resource) {
+  //       return findEntry(mod.reasons[0].module)
+  //   }
+  //   return mod.resource;
+  // }
+
+  chainableConfig.module
+    .rule('css')
+      .test(/\.css$/)
+      .use('extract-css-loader')
+        .loader(MiniCssExtractPlugin.loader)
+        .options({
+          // hmr: process.env.NODE_ENV === 'development',
+          // if hmr does not work, this is a forceful method.
+          // reloadAll: true,
+        })
+        .end()
+      .use('css-loader')
+        .loader(require.resolve('css-loader'))
+        .options({
+          sourceMap: !isProd,
+        })
+        .end()
+      .use('postcss-loader')
+        .loader(require.resolve('postcss-loader'))
+        .options({
+          sourceMap: !isProd,
+        })
+        .end()
+
+  chainableConfig.module
+    .rule('scss')
+      .test(/\.scss$/)
+      .use('extract-css-loader')
+        .loader(MiniCssExtractPlugin.loader)
+        .options({
+          // hmr: process.env.NODE_ENV === 'development',
+          // if hmr does not work, this is a forceful method.
+          // reloadAll: true,
+        })
+        .end()
+      .use('css-loader')
+        .loader(require.resolve('css-loader'))
+        .options({
+          sourceMap: !isProd,
+        })
+        .end()
+      .use('postcss-loader')
+        .loader(require.resolve('postcss-loader'))
+        .options({
+          sourceMap: !isProd,
+        })
+        .end()
+      // TODO 处理 image-set( "cat.png" 1x, "cat-2x.png" 2x);
+      .use('resolve-url-loader')
+        .loader(require.resolve('resolve-url-loader'))
+        .options({
+          keepQuery: true, // for loader resourceQuery
+          sourceMap: !isProd,
+        })
+        .end()
+      .use('sass-loader')
+        .loader(require.resolve('sass-loader'))
+        .options({
+          // Notice: resolve-url-loader need this! so set sourceMap true always
+          // 该配置不产生 map 文件, 只产生 map 内容
+          sourceMap: true,
+          // 参考 vue-cli
+          // prependData: '@import "@/assets/athm/tools.scss";'
+          // Prefer `dart-sass`, you need to install sass and fibers
+          // implementation: require('sass'),
+        })
+        .end()
+
+  chainableConfig.module
+    .rule('images')
+      .test(/\.(png|jpe?g|gif|webp|cur)(\?.*)?$/)
+      .oneOf('image-datauri')
+        .resourceQuery(/datauri/)
+        .use('url-loader')
+          .loader(require.resolve('url-loader'))
+          .options({
+            limit: true, // no limit
+          })
+          .end()
+        .end()
+      .oneOf('image-url')
+        .use('url-loader')
+          .loader(require.resolve('url-loader'))
+          .options({
+            // url-loader options
+            limit: 1024, // limit 1kb
+            // file-loader options
+            name: getNameForFileLoader,
+            outputPath: getOutputPathForFileLoader,
+          })
+          .end()
+
+  chainableConfig.module
+    .rule('svg')
+      .test(/\.svg$/)
+      .oneOf('svg-inline')
+        .resourceQuery(/inline/)
+        .use('svg-inline-loader')
+          .loader(require.resolve('svg-inline-loader'))
+          .options({
+            removeSVGTagAttrs: false,
+          })
+          .end()
+        .end()
+      .oneOf('svg-datauri')
+        .resourceQuery(/datauri/)
+        .use('svg-url-loader')
+          .loader(require.resolve('svg-url-loader'))
+          .options({
+            limit: 0, // no limit
+            stripdeclarations: true,
+          })
+          .end()
+        .end()
+      .oneOf('svg-url')
+        .use('svg-url-loader')
+          .loader(require.resolve('svg-url-loader'))
+          .options({
+            // svg-url-loader options
+            limit: 1024, // limit 1kb
+            stripdeclarations: true,
+            // file-loader options
+            name: getNameForFileLoader,
+            outputPath: getOutputPathForFileLoader,
+          })
+          .end()
+
+  if (isProd) {
+    chainableConfig.module
+      .rule('svg')
+        .test(/\.svg$/)
+        .use('svgo-loader')
+          .loader(require.resolve('svgo-loader'))
+          .options({
+            plugins: [
+              { removeViewBox: false },
+              { cleanupIDs: false }
+            ]
+          })
+  }
+
+  chainableConfig.module
+    .rule('fonts')
+      .test(/\.(eot|ttf|otf|woff2?)(\?.*)?$/)
+      .use('url-loader')
+        .loader(require.resolve('url-loader'))
+        .options({
+          // url-loader options
+          limit: 1024, // limit 1kb
+          // file-loader options
+          name: getNameForFileLoader,
+          outputPath: getOutputPathForFileLoader,
+        })
+
+  chainableConfig.module
+    .rule('media')
+      .test(/\.(mp4|webm|ogv|flv|mp3|ogg|wav|flac|acc)$/)
+      .use('url-loader')
+        .loader(require.resolve('url-loader'))
+        .options({
+          // url-loader options
+          limit: 1024, // limit 1kb
+          // file-loader options
+          name: getNameForFileLoader,
+          outputPath: getOutputPathForFileLoader,
+        })
+
+  chainableConfig.optimization
+    .minimizer('terser')
+      .use(TerserPlugin, [{
+        parallel: true,
+        // sourceMap: true,
+        // cache: true,
+        terserOptions: {
+          mangle: {
+            safari10: true,
           },
-        }),
-        new OptimizeCSSAssetsPlugin({
-          cssProcessorPluginOptions: {
-            preset: ['default', {
-              cssDeclarationSorter: false,
-              discardComments: { removeAll: true },
-              mergeLonghand: false,
-            }],
+          compress: {
+            warnings: false,
+            drop_debugger: true,
+            // drop_console: true,
           },
-        }),
-      ],
-    },
-    plugins: [
-      new CopyPlugin(
+          output: {
+            ascii_only: true,
+            quote_style: 1,
+          },
+        },
+      }])
+
+  chainableConfig.optimization
+    .minimizer('optimize-css')
+      .use(OptimizeCSSAssetsPlugin, [{
+        cssProcessorPluginOptions: {
+          preset: ['default', {
+            cssDeclarationSorter: false,
+            discardComments: { removeAll: true },
+            mergeLonghand: false,
+          }],
+        },
+      }])
+
+  chainableConfig
+    .plugin('copy')
+      .use(CopyPlugin, [
         [
           {
             from: path.join(context, 'public'),
@@ -615,34 +555,55 @@ module.exports = () => {
             },
           },
         ],
-      ),
-      new AutoFEWebpack.OmitJsForCssOnlyPlugin(),
+      ])
+
+  chainableConfig
+    .plugin('omit-js-for-css-only')
+      .use(AutoFEWebpack.OmitJsForCssOnlyPlugin)
+
+  chainableConfig
+    .plugin('css-url-relative')
       // url(...) 不能是绝对路径, 否则 CssUrlRelativePlugin 没办法处理成相对路径
       // TODO 处理 image-set( "cat.png" 1x, "cat-2x.png" 2x);
-      new AutoFEWebpack.CssUrlRelativePlugin({
-        root: '/',
-      }),
-      new MiniCssExtractPlugin({
+      .use(AutoFEWebpack.CssUrlRelativePlugin, [{ root: '/' }])
+
+  chainableConfig
+    .plugin('mini-css-extract')
+      .use(MiniCssExtractPlugin, [{
         // Options similar to the same options in webpackOptions.output
         // both options are optional
         filename: "[name].css",
         chunkFilename: '[name].css',
-      }),
-      useTypeScript && new ForkTsCheckerWebpackPlugin({
-        typescript: path.dirname(
-          resolveModule('typescript/package.json', context) ||
-          resolveModule('typescript/package.json', __dirname)
-        ),
-        // vue: true,
-        formatter: 'codeframe',
-        checkSyntacticErrors: true,
-      }),
-    ].filter(Boolean),
-  };
+      }])
 
-  const projectWebpackConfig = config.configureWebpack;
+  if (useTypeScript) {
+    chainableConfig
+      .plugin('fork-ts-checker')
+        .use(ForkTsCheckerWebpackPlugin, [{
+          typescript: path.dirname(
+            resolveModule('typescript/package.json', context) ||
+            resolveModule('typescript/package.json', __dirname)
+          ),
+          // vue: true,
+          formatter: 'codeframe',
+          checkSyntacticErrors: true,
+        }])
+  }
+
+  // 合并项目 chainWebpack 配置
+  const projectChainWebpack = config.chainWebpack;
+  if (typeof projectChainWebpack === 'function') {
+    projectChainWebpack(chainableConfig);
+  }
+
+  // 转换为 Webpack 配置
+  let webpackConfig = chainableConfig.toConfig();
+
+  // Notice: use Function for watching entry files
+  webpackConfig.entry = getEntries;
 
   // 合并项目 configureWebpack 配置
+  const projectWebpackConfig = config.configureWebpack;
   if (typeof projectWebpackConfig === 'function') {
     const result = projectWebpackConfig(webpackConfig);
     if (result) {

@@ -8,11 +8,13 @@ import $ from 'jquery';
 import { sum, PI } from './math';
 import bg from '../img/bg.png';
 import sharePic from 'assets/share.png';
+import svgContent from '../img/postcss-assets.svg?inline';
 
 console.log('sum(3, 5)', sum(3, 5));
 console.log('PI', PI);
 console.log(bg);
 console.log(sharePic);
+console.log(svgContent);
 
 $(function () {
   console.log('jQuery document.ready 中文');
