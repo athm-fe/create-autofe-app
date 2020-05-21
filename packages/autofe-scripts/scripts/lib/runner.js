@@ -1,7 +1,7 @@
 'use strict';
 
-const config = require('../../config');
 const spawn = require('cross-spawn');
+const config = require('../../config');
 
 module.exports = function runner(command) {
   const args = process.argv.slice(2);

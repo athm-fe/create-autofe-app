@@ -8,6 +8,7 @@ const {
 } = require('./paths');
 
 const appDefaultConfig = {
+  publicPath: '/',
   externals: {},
   transpileDependencies: [],
   configureWebpack: {},

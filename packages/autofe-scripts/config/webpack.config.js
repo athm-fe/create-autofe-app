@@ -18,9 +18,10 @@ const {
   // loadModule,
 } = require('@vue/cli-shared-utils');
 const config = require('./index');
+const loadEnv = require('./env');
 
 const isProd = process.env.NODE_ENV === 'production';
-
+const mode = isProd ? 'production' : 'development';
 const context = config.appDirectory;
 
 // Check if TypeScript is setup
@@ -158,15 +159,22 @@ module.exports = () => {
   // there will be a CREATOR_TRANSPILE_BABEL_RUNTIME env var set.
   babel.loadPartialConfig();
 
+  // load mode .env
+  if (mode) {
+    loadEnv(mode);
+  }
+  // load base .env
+  loadEnv();
+
   const chainableConfig = new Config();
 
   chainableConfig
-    .mode(isProd ? 'production' : 'development')
+    .mode(mode)
     .context(context)
     .devtool(getDevtool())
     .output
       .path(config.appBuild)
-      .publicPath('/')
+      .publicPath(config.publicPath)
       .filename('[name].js')
       .chunkFilename('[name].js');
 
@@ -509,6 +517,13 @@ module.exports = () => {
           }],
         },
       }])
+
+  const resolveClientEnv = require('../util/resolveClientEnv');
+  chainableConfig
+    .plugin('define')
+      .use(require('webpack').DefinePlugin, [
+        resolveClientEnv(config)
+      ])
 
   chainableConfig
     .plugin('copy')
