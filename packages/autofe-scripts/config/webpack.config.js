@@ -18,6 +18,7 @@ const {
   // loadModule,
 } = require('@vue/cli-shared-utils');
 const config = require('./index');
+const resolveClientEnv = require('../util/resolveClientEnv');
 
 const isProd = process.env.NODE_ENV === 'production';
 const mode = isProd ? 'production' : 'development';
@@ -148,6 +149,23 @@ function genTranspileDepRegex(transpileDependencies) {
     }
   });
   return deps.length ? new RegExp(deps.join('|')) : null;
+}
+
+function getPrependDataForSassLoader(prependData = '') {
+  let data = '';
+  const env = resolveClientEnv(config, true);
+  for (const key in env) {
+    data += `$${key}: "${env[key]}";\n`;
+  }
+
+  if (typeof prependData === 'function') {
+    return (loaderContext) => {
+      const result = prependData(loaderContext);
+      return `${data}\n${result}`;
+    }
+  }
+
+  return `${data}\n${prependData}`;
 }
 
 module.exports = () => {
@@ -333,6 +351,20 @@ module.exports = () => {
         })
         .end()
 
+  const projectSassLoaderOptions = config.css.loaderOptions.scss || {};
+  const prependData = getPrependDataForSassLoader(projectSassLoaderOptions.prependData);
+  const sassLoaderOptions = Object.assign({
+    // 参考 vue-cli
+    // prependData: '@import "@/assets/athm/tools.scss";'
+    // Prefer `dart-sass`, you need to install sass and fibers
+    // implementation: require('sass'),
+  }, projectSassLoaderOptions, {
+    // Notice: resolve-url-loader need this! so set sourceMap true always
+    // 该配置不产生 map 文件, 只产生 map 内容
+    sourceMap: true,
+    prependData,
+  });
+
   chainableConfig.module
     .rule('scss')
       .test(/\.scss$/)
@@ -366,15 +398,7 @@ module.exports = () => {
         .end()
       .use('sass-loader')
         .loader(require.resolve('sass-loader'))
-        .options({
-          // Notice: resolve-url-loader need this! so set sourceMap true always
-          // 该配置不产生 map 文件, 只产生 map 内容
-          sourceMap: true,
-          // 参考 vue-cli
-          // prependData: '@import "@/assets/athm/tools.scss";'
-          // Prefer `dart-sass`, you need to install sass and fibers
-          // implementation: require('sass'),
-        })
+        .options(sassLoaderOptions)
         .end()
 
   chainableConfig.module
@@ -440,6 +464,7 @@ module.exports = () => {
     chainableConfig.module
       .rule('svg')
         .test(/\.svg$/)
+        .pre()
         .use('svgo-loader')
           .loader(require.resolve('svgo-loader'))
           .options({
@@ -510,7 +535,6 @@ module.exports = () => {
         },
       }])
 
-  const resolveClientEnv = require('../util/resolveClientEnv');
   chainableConfig
     .plugin('define')
       .use(require('webpack').DefinePlugin, [

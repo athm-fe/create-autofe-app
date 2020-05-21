@@ -19,4 +19,11 @@ module.exports = {
   transpileDependencies: [
     '@auto/img-crop',
   ],
+  css: {
+    loaderOptions: {
+      scss: {
+        prependData: `@import "~@/assets/_variables.scss";`
+      }
+    }
+  }
 };

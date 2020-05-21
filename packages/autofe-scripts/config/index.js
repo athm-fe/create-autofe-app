@@ -12,6 +12,9 @@ const appDefaultConfig = {
   externals: {},
   transpileDependencies: [],
   configureWebpack: {},
+  css: {
+    loaderOptions: {},
+  },
 };
 
 const config = {
@@ -26,5 +29,8 @@ const configExists = fs.pathExistsSync(appConfig);
 if (configExists) {
   Object.assign(config, require(appConfig));
 }
+
+config.css = config.css || {};
+config.css.loaderOptions = config.css.loaderOptions || {};
 
 module.exports = config;

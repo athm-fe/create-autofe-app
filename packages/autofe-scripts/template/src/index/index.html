@@ -53,7 +53,7 @@
     {% includePretty "component/footer/_index.html" %}
 
     <h2>Nunjucks, 来自 .env 配置的变量</h2>
-    {{ APP_TEST_ENV_FEATURE }}
+    <p>{{ APP_TEST_ENV_FEATURE }}</p>
 
     <h2>Nunjucks, 区分开发和线上</h2>
     {% if NODE_ENV === 'development' %}
