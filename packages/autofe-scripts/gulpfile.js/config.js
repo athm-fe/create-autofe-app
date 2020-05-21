@@ -1,6 +1,6 @@
 'use strict';
 
-const path = require('path');
+const join = require('path').posix.join;
 
 const root = {
   src: 'src',
@@ -24,24 +24,24 @@ module.exports = {
     dest: root.dest,
   },
   svg: {
-    src: path.join(root.src, '/**/*.svg'),
-    dest: path.join(root.dest),
+    src: join(root.src, '/**/*.svg'),
+    dest: root.dest,
   },
   js: {
-    src: path.join(root.src, '/**/*.old.js'),
+    src: join(root.src, '/**/*.old.js'),
     dest: root.dest,
   },
   html: {
-    src: path.join(root.src, '/**/*.html'),
+    src: join(root.src, '/**/*.html'),
     dest: root.dest,
-    exclude: `!${path.join(root.src, '/**/_*.html')}`,
+    exclude: `!${join(root.src, '/**/_*.html')}`,
   },
   htmlBundle: {
-    src: path.join(root.dest, '/**/*.bundle.html'),
+    src: join(root.dest, '/**/*.bundle.html'),
     dest: root.dest,
   },
   markdown: {
-    src: path.join(root.src, '/**/*.md'),
+    src: join(root.src, '/**/*.md'),
     dest: root.dest,
   },
   browserSync: {
