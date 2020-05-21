@@ -52,6 +52,16 @@
     <h2>Nunjucks, includePretty, assets</h2>
     {% includePretty "component/footer/_index.html" %}
 
+    <h2>Nunjucks, 来自 .env 配置的变量</h2>
+    {{ APP_TEST_ENV_FEATURE }}
+
+    <h2>Nunjucks, 区分开发和线上</h2>
+    {% if NODE_ENV === 'development' %}
+      <p>这是只出现在开发环境的内容</p>
+    {% else %}
+      <p>这是只出现在生产环境的内容</p>
+    {% endif %}
+
     <h2>属性选择器</h2>
     <ul>
       <li><a href="#internal">Internal link</a></li>

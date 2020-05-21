@@ -6,6 +6,8 @@ const render = require('gulp-nunjucks-render');
 const data = require('gulp-data');
 const path = require('path');
 const PluginError = require('plugin-error');
+const projectConfig = require('../../config');
+const resolveClientEnv = require('../../util/resolveClientEnv');
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -99,6 +101,7 @@ function html() {
       };
       return {
         __ctx_file: obj,
+        ...resolveClientEnv(projectConfig, true),
       };
     }))
     .pipe(render(options))

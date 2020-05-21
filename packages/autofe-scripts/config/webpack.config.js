@@ -18,7 +18,6 @@ const {
   // loadModule,
 } = require('@vue/cli-shared-utils');
 const config = require('./index');
-const loadEnv = require('./env');
 
 const isProd = process.env.NODE_ENV === 'production';
 const mode = isProd ? 'production' : 'development';
@@ -158,13 +157,6 @@ module.exports = () => {
   // if the default preset is used,
   // there will be a CREATOR_TRANSPILE_BABEL_RUNTIME env var set.
   babel.loadPartialConfig();
-
-  // load mode .env
-  if (mode) {
-    loadEnv(mode);
-  }
-  // load base .env
-  loadEnv();
 
   const chainableConfig = new Config();
 
