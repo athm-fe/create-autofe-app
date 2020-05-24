@@ -482,7 +482,7 @@ module.exports = {
 }
 ```
 
-Perfect！但是我在测试的时候，发现该插件在处理样式的过程中，把 SourceMap 给弄丢了。因此，自己写了一份 [Hack](https://github.com/athm-fe/create-autofe-app/blob/master/packages/autofe-webpack/src/css-url-relative-plugin/index.js) 来修复了这个问题
+Perfect！但是我在测试的时候，发现该插件在处理样式的过程中，把 SourceMap 给弄丢了。因此，自己写了一份 [Hack](https://github.com/athm-fe/create-autofe-app/blob/master/packages/autofe-shared-utils/lib/css-url-relative-plugin/index.js) 来修复了这个问题
 
 **PS. 为什么没有贡献开源？因为是 Hack 啊，而且我对这个插件还不太满意，后续考虑用 PostCSS 来重写这个插件😎。**
 

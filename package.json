@@ -6,10 +6,19 @@
     "test": "node packages/autofe-scripts/scripts/test.js",
     "create-autofe-app": "tasks/cra.sh",
     "postinstall": "node bootstrap.js",
-    "publish": "tasks/release.sh"
+    "publish": "tasks/release.sh",
+    "docs": "vuepress dev docs --temp .temp",
+    "docs:build": "vuepress build docs --temp .temp",
+    "docs:release": "tasks/releaseDoc.sh"
   },
   "devDependencies": {
+    "@vuepress/plugin-back-to-top": "^1.4.0",
+    "@vuepress/plugin-google-analytics": "^1.4.0",
+    "@vuepress/plugin-medium-zoom": "^1.4.0",
+    "@vuepress/plugin-pwa": "^1.4.0",
     "eslint": "^5.2.0",
-    "lerna": "^2.11.0"
+    "lerna": "^2.11.0",
+    "vuepress": "^1.4.0",
+    "vuepress-plugin-flowchart": "^1.4.3"
   }
 }

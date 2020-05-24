@@ -12,7 +12,7 @@ module.exports = {
     resolve: {
       alias: {
         vue$: 'vue/dist/vue.esm.js',
-        assets: resolve('src/assets'),
+        // assets: resolve('src/assets'),
       },
     },
   },

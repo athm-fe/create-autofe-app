@@ -11,7 +11,10 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CopyPlugin = require('copy-webpack-plugin');
 const ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
 const babel = require('@babel/core');
-const AutoFEWebpack = require("autofe-webpack");
+const {
+  CssUrlRelativePlugin,
+  OmitJsForCssOnlyPlugin,
+} = require("autofe-shared-utils");
 const {
   isWindows,
   resolveModule,
@@ -327,31 +330,28 @@ module.exports = () => {
   //   return mod.resource;
   // }
 
-  chainableConfig.module
-    .rule('css')
-      .test(/\.css$/)
-      .use('extract-css-loader')
-        .loader(MiniCssExtractPlugin.loader)
-        .options({
-          // hmr: process.env.NODE_ENV === 'development',
-          // if hmr does not work, this is a forceful method.
-          // reloadAll: true,
-        })
-        .end()
-      .use('css-loader')
-        .loader(require.resolve('css-loader'))
-        .options({
-          sourceMap: !isProd,
-        })
-        .end()
-      .use('postcss-loader')
-        .loader(require.resolve('postcss-loader'))
-        .options({
-          sourceMap: !isProd,
-        })
-        .end()
-
+  const projectCssLoaderOptions = config.css.loaderOptions.css || {};
+  const projectPostcssLoaderOptions = config.css.loaderOptions.postcss || {};
   const projectSassLoaderOptions = config.css.loaderOptions.scss || {};
+
+  const extractCssLoaderOptions = {
+    // hmr: process.env.NODE_ENV === 'development',
+    // if hmr does not work, this is a forceful method.
+    // reloadAll: true,
+  };
+
+  const cssLoaderOptions = Object.assign({
+    // something...
+  }, projectCssLoaderOptions, {
+    sourceMap: !isProd,
+  });
+
+  const postcssLoaderOptions = Object.assign({
+    // something...
+  }, projectPostcssLoaderOptions, {
+    sourceMap: !isProd,
+  });
+
   const prependData = getPrependDataForSassLoader(projectSassLoaderOptions.prependData);
   const sassLoaderOptions = Object.assign({
     // 参考 vue-cli
@@ -366,27 +366,35 @@ module.exports = () => {
   });
 
   chainableConfig.module
+    .rule('css')
+      .test(/\.css$/)
+      .use('extract-css-loader')
+        .loader(MiniCssExtractPlugin.loader)
+        .options(extractCssLoaderOptions)
+        .end()
+      .use('css-loader')
+        .loader(require.resolve('css-loader'))
+        .options(cssLoaderOptions)
+        .end()
+      .use('postcss-loader')
+        .loader(require.resolve('postcss-loader'))
+        .options(postcssLoaderOptions)
+        .end()
+
+  chainableConfig.module
     .rule('scss')
       .test(/\.scss$/)
       .use('extract-css-loader')
         .loader(MiniCssExtractPlugin.loader)
-        .options({
-          // hmr: process.env.NODE_ENV === 'development',
-          // if hmr does not work, this is a forceful method.
-          // reloadAll: true,
-        })
+        .options(extractCssLoaderOptions)
         .end()
       .use('css-loader')
         .loader(require.resolve('css-loader'))
-        .options({
-          sourceMap: !isProd,
-        })
+        .options(cssLoaderOptions)
         .end()
       .use('postcss-loader')
         .loader(require.resolve('postcss-loader'))
-        .options({
-          sourceMap: !isProd,
-        })
+        .options(postcssLoaderOptions)
         .end()
       // TODO 处理 image-set( "cat.png" 1x, "cat-2x.png" 2x);
       .use('resolve-url-loader')
@@ -590,13 +598,13 @@ module.exports = () => {
 
   chainableConfig
     .plugin('omit-js-for-css-only')
-      .use(AutoFEWebpack.OmitJsForCssOnlyPlugin)
+      .use(OmitJsForCssOnlyPlugin)
 
   chainableConfig
     .plugin('css-url-relative')
       // url(...) 不能是绝对路径, 否则 CssUrlRelativePlugin 没办法处理成相对路径
       // TODO 处理 image-set( "cat.png" 1x, "cat-2x.png" 2x);
-      .use(AutoFEWebpack.CssUrlRelativePlugin, [{ root: '/' }])
+      .use(CssUrlRelativePlugin, [{ root: '/' }])
 
   chainableConfig
     .plugin('mini-css-extract')

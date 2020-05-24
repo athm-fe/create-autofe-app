@@ -12,3 +12,7 @@ yarn-error.log*
 /.changelog
 package-lock.json
 yarn.lock
+
+# docs
+/docs/.vuepress/dist
+.temp

@@ -1,7 +1,10 @@
 # create-autofe-app
 
-This package includes the global command for [Create AutoFE App](https://github.com/athm-fe/create-autofe-app).
-Please refer to its documentation:
+``` sh
+npx create-autofe-app my-app
 
-* [Getting Started](https://github.com/athm-fe/create-autofe-app/blob/master/README.md#getting-started) – How to create a new app.
-* [User Guide](https://github.com/athm-fe/create-autofe-app/blob/master/packages/autofe-scripts/template/README.md) – How to develop apps bootstrapped with Create React App.
+cd my-app
+npm start
+```
+
+[Full Docs](https://athm-fe.github.io/create-autofe-app/)

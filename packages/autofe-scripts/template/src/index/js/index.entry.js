@@ -7,7 +7,7 @@
 import $ from 'jquery';
 import { sum, PI } from './math';
 import bg from '../img/bg.png';
-import sharePic from 'assets/share.png';
+import sharePic from '@/assets/share.png';
 import svgContent from '../img/postcss-assets.svg?inline';
 
 console.log('sum(3, 5)', sum(3, 5));
