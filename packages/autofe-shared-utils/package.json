@@ -1,6 +1,6 @@
 {
   "name": "autofe-shared-utils",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "shared utilities for Create AutoFE App",
   "license": "MIT",
   "repository": "athm-fe/create-autofe-app",
