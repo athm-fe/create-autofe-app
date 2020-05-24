@@ -1,3 +1,14 @@
+## autofe-scripts@1.3.5
+
+该版本功能主要改动：
+* 基于 VuePress 搭建文档站点，并完善文档
+* 增加 Webpack 配置功能，两种方式 configureWebpack 和 chainWebpack
+* 增加环境变量配置功能，使用 dotenv 加载 .env 文件
+* 修复 Window 下打包目录问题，由于 gulp glob 不支持 windows 风格路径导致
+* 去掉由于 src 目录没有 ts 文件导致的错误日志
+* autofe-webpack 替换成 autofe-shared-utils
+* 增加 css.loaderOptions 配置能力
+
 ## autofe-scripts@1.3.4
 
 该版本增加了 TypeScript 支持，升级请参考 [如果手动支持 TypeScript](./doc/how-to-ts.md)
