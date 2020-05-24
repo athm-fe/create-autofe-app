@@ -8,6 +8,8 @@ This document covers some common issues and how to resolve them. You should alwa
 
 ## TypeScript No inputs were found in config file
 
+**该问题已经修复**
+
 有可能你会遇到如下图中的报错：
 
 ![](./images/tsinputempty.png)
