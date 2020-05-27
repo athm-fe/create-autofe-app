@@ -171,20 +171,6 @@ function getPrependDataForSassLoader(prependData = '') {
   return `${data}\n${prependData}`;
 }
 
-function getForkTsCheckerLogger() {
-  const myLogger = Object.create(console);
-  const reg = /No inputs were found in config file.+tsconfig\.json/;
-
-  myLogger.error = (msg, ...args) => {
-    if (typeof msg === 'string' && reg.test(msg)) {
-      return;
-    }
-    console.error(msg, ...args);
-  };
-
-  return myLogger;
-}
-
 module.exports = () => {
   const transpileDepRegex = genTranspileDepRegex(config.transpileDependencies);
 
@@ -637,10 +623,11 @@ module.exports = () => {
             resolveModule('typescript/package.json', context) ||
             resolveModule('typescript/package.json', __dirname)
           ),
-          logger: getForkTsCheckerLogger(),
           // vue: true,
           formatter: 'codeframe',
           checkSyntacticErrors: true,
+          // diagnostic: 18003 'No inputs were found in config file...
+          ignoreDiagnostics: [18003],
         }])
   }
 
