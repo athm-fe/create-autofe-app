@@ -1,28 +1,29 @@
 # autofe-polyfill
 
-This package inclues polyfills used by [Create AutoFE App](https://github.com/athm-fe/create-autofe-app).
+This package includes polyfills for various browsers.
+It includes minimum requirements and commonly used language features used by [Create AutoFE App](https://github.com/athm-fe/create-autofe-app) projects.
 
-Polyfills
-* Promise [es6-promise](https://github.com/stefanpenner/es6-promise)
-* Object.assign [object-assign](https://github.com/sindresorhus/object-assign)
+## Usage
 
-TODOs
-* whatwg-fetch
-* core-js/features/symbol (for...of)
-* core-js/features/array/from (iterable spread)
-* core-js/features/map (ie9)
-* core-js/features/set (ie9)
-* raf (ie9)
+First, install the package using Yarn or npm:
 
-useBuiltIns: usage
-不需要自己做额外处理，Creator 会自动处理代码中用到的 Polyfill
+```sh
+npm install autofe-polyfill
+```
 
-useBuiltIns: entry
-* core-js/stable
-* regenerator-runtime/runtime
+or
 
-思考纬度
-* 语法 + Polyfill
-* 代码 + 依赖包
-* 手动 + 半自动 + 自动 useBuiltIns
-* browserslist
+```sh
+yarn add autofe-polyfill
+```
+
+## Polyfills
+
+* `Promise` (for `async` / `await` support)
+* `Object.assign` (a helper required for Object Spread, i.e. `{ ...a, ...b }`)
+* `Symbol` (a built-in object used by `for...of` syntax and friends)
+* `Array.from` (a built-in static method used by array spread, i.e. `[...arr]`)
+
+## More Features
+
+If you need more features, see the [browser compatibility](https://athm-fe.github.io/create-autofe-app/guide/browser-compatibility.html)
