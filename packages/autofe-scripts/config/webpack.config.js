@@ -401,6 +401,7 @@ module.exports = () => {
         .loader(require.resolve('resolve-url-loader'))
         .options({
           keepQuery: true, // for loader resourceQuery
+          removeCR: true, // for windows CRLF
           sourceMap: !isProd,
         })
         .end()
