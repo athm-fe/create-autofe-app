@@ -14,6 +14,7 @@ module.exports = {
   appDirectory,
   appSrc: resolveApp('src'),
   appBuild: resolveApp('build'),
+  appPublic: resolveApp('public'),
   appConfig: resolveApp('creator.config.js'),
   isCreatorDev: false,
 };
@@ -27,6 +28,7 @@ if (__dirname.indexOf(path.join('packages', 'autofe-scripts', 'config')) !== -1)
     appDirectory: resolveOwn('../template'),
     appSrc: resolveOwn('../template/src'),
     appBuild: resolveOwn('../template/build'),
+    appPublic: resolveOwn('../template/public'),
     appConfig: resolveOwn('../template/creator.config.js'),
     isCreatorDev: true,
   };
