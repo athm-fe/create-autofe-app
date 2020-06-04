@@ -558,18 +558,28 @@ module.exports = () => {
     ]
   });
 
+  // 开发环境不要拷贝 public 目录，这样才能保证访问 public 下的最新资源
+  if (isProd) {
+    chainableConfig
+      .plugin('copy-public')
+        .use(CopyPlugin, [
+          [
+            {
+              from: path.join(context, 'public'),
+              to: config.appBuild,
+              toType: 'dir',
+              ignore: [
+                '.DS_Store'
+              ],
+            },
+          ]
+        ])
+  }
+
   chainableConfig
     .plugin('copy')
       .use(CopyPlugin, [
         [
-          {
-            from: path.join(context, 'public'),
-            to: config.appBuild,
-            toType: 'dir',
-            ignore: [
-              '.DS_Store'
-            ],
-          },
           {
             from: 'src/**/*.{eot,ttf,otf,woff,woff2}',
             to: getNameForFileLoader(),

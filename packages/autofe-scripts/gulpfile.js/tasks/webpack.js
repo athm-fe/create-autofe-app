@@ -90,16 +90,13 @@ async function webpackTask() {
 
   const server = new WebpackDevServer(compiler, Object.assign({
     logLevel: 'silent',
-    // clientLogLevel: 'silent',
+    clientLogLevel: 'silent',
     historyApiFallback: false,
     hot: !isProd,
     compress: isProd,
     publicPath: publicPath,
     watchOptions: {
       ignored: [/node_modules/, /\.(html|old\.js|md)$/],
-    },
-    staticOptions: {
-      index: false, // 关闭默认 index.html
     },
     overlay: isProd
       ? false
@@ -108,10 +105,20 @@ async function webpackTask() {
     https: useHttps,
     proxy: proxySettings,
     open: false,
+    // 不要配置数组，才能保证 staticOptions 配置有效
     contentBase: projectConfig.appBuild,
     // watchContentBase 能力比较有限，自己实现比较好
     watchContentBase: false,
+    // 不直接打开 index.html，而是展示目录
+    staticOptions: {
+      index: false, // 关闭默认 index.html
+    },
     after: (app, server) => {
+      // 提供访问 public 目录的能力
+      const express = require('express');
+      app.use(express.static(projectConfig.appPublic));
+
+      // 自己实现监听 public 和 build 下目录变更
       const chokidar = require('chokidar');
       const files = [
         projectConfig.appBuild,
