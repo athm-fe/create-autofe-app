@@ -14,12 +14,15 @@ function myWatch(...args) {
   const watcher = watch(...args);
 
   watcher.on('change', function(path) {
+    global.__creator_gulp_file_update = true;
     log(`File ${path} was changed`);
   });
   watcher.on('add', function(path) {
+    global.__creator_gulp_file_update = true;
     log(`File ${path} was added`);
   });
   watcher.on('unlink', function(path) {
+    global.__creator_gulp_file_update = true;
     log(`File ${path} was removed`);
   });
 

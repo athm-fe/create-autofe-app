@@ -29,6 +29,24 @@ const statsOptions = projectConfig.isCreatorDev ? { colors: true } : {
   chunkGroups: false,
 };
 
+function normalizeFSEvent(event) {
+  let result;
+  switch (event) {
+    case 'add':
+      result = 'added';
+      break;
+    case 'change':
+      result = 'changed';
+      break;
+    case 'unlink':
+      result = 'removed';
+      break;
+    default:
+      break;
+  }
+  return result;
+}
+
 async function webpackTask() {
   const config = webpackConfig();
   const compiler = webpack(config);
@@ -120,21 +138,30 @@ async function webpackTask() {
 
       // 自己实现监听 public 和 build 下目录变更
       const chokidar = require('chokidar');
-      const files = [
-        projectConfig.appBuild,
-        projectConfig.appPublic,
-      ];
+      const watchOptions = {
+        persistent: true,
+        ignoreInitial: true,
+        followSymlinks: false,
+        alwaysStat: true,
+        ignorePermissionErrors: true,
+        atomic: false,
+        cwd: projectConfig.appDirectory,
+      };
 
       chokidar
-        .watch(files, {
-          persistent: true,
-          ignoreInitial: true,
-          followSymlinks: false,
-          alwaysStat: true,
-          ignorePermissionErrors: true,
-          atomic: false,
-        })
+        .watch(projectConfig.appBuild, watchOptions)
         .on('all', () => {
+          // TODO 先使用这种方式，后面再优化
+          if (global.__creator_gulp_file_update) {
+            global.__creator_gulp_file_update = false;
+            server.sockWrite(server.sockets, 'content-changed');
+          }
+        });
+
+      chokidar
+        .watch(projectConfig.appPublic, watchOptions)
+        .on('all', (event, path) => {
+          log(`File ${path} was ${normalizeFSEvent(event)}`);
           server.sockWrite(server.sockets, 'content-changed');
         });
 
