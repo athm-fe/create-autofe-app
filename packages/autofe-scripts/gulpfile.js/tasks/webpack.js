@@ -69,7 +69,7 @@ async function webpackTask() {
   const publicPath = projectConfig.publicPath;
   const defaults = {
     host: '0.0.0.0',
-    port: 8080,
+    port: 3000,
     https: false,
     open: true,
     useLocalIp: true,
@@ -120,23 +120,33 @@ async function webpackTask() {
     historyApiFallback: false,
     hot: !isProd,
     compress: isProd,
-    publicPath: publicPath,
     overlay: isProd
       ? false
-      : { warnings: false, errors: true }
+      : { warnings: false, errors: true },
+    // 关闭直接打开 index 的能力，而是展示目录
+    staticOptions: {
+      index: false,
+    },
   }, projectDevServer, {
     https: useHttps,
     proxy: proxySettings,
     open: false,
     watchOptions,
+    publicPath: publicPath,
+
+    // TODO 使用其他的方式实现目录浏览，
+    // 结合 /webpack-dev-server、build 目录、public 目录以及 contentBase
+
+    // contentBase、contentBasePublicPath 以及 watchContentBase 的能力
+    // express.static + serve-static
+    // watchContentBase 会忽略 watchOptions.ignore 的配置
+    // staticOptions 仅当 contentBase 是一个时才生效
+    // contentBase 多个时存在无法关闭 index 功能的问题，另外 serveIndex 只能展示第一个的目录，不展示第二个的
+
     // 不要配置数组，才能保证 staticOptions 配置有效
     contentBase: projectConfig.appBuild,
     // watchContentBase 能力比较有限，自己实现比较好
     watchContentBase: false,
-    // 不直接打开 index.html，而是展示目录
-    staticOptions: {
-      index: false, // 关闭默认 index.html
-    },
     before: (app, server) => {
       // 提供访问 public 目录的能力
       const express = require('express');
@@ -158,6 +168,8 @@ async function webpackTask() {
         cwd: projectConfig.appDirectory,
       };
 
+      // TODO: 需要关闭 watcher，防止内存泄漏
+
       chokidar
         .watch(projectConfig.appBuild, watchOptions)
         .on('all', () => {
@@ -178,12 +190,23 @@ async function webpackTask() {
       // apply in project middlewares
       projectDevServer.after && projectDevServer.after(app, server);
     },
+
+    // progress: true,
+
     // injectClient: (compilerConfig) => compilerConfig.name === 'only-include'
     // injectHot: (compilerConfig) => compilerConfig.name === 'only-include'
     // inline: false // iframe mode
     // Inline mode is recommended for Hot Module Replacement
     // as it includes an HMR trigger from the websocket.
     // liveReload: true // hot: false && watchContentBase: true 才生效
+    // transportMode: 'sockjs' // 'sockjs' | 'ws'
+
+    // 当访问目录时，展示当前目录文件列表，可以结合 /webpack-dev-server 改造
+    // 搭配 staticOptions.index 能提供更好的使用体验
+    // serveIndex: true
+    // index: 'index.html'
+
+    // stats, quiet, noInfo, info
   }));
 
   ['SIGINT', 'SIGTERM'].forEach(signal => {
