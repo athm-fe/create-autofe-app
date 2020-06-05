@@ -72,6 +72,7 @@ async function webpackTask() {
     port: 8080,
     https: false,
     open: true,
+    useLocalIp: true,
   };
   const projectDevServer = Object.assign(
     {},
@@ -222,7 +223,11 @@ async function webpackTask() {
           const pageUri = (projectDevServer.openPage && typeof projectDevServer.openPage === 'string')
             ? projectDevServer.openPage
             : '';
-          openBrowser((urls.lanUrlForBrowser || localUrlForBrowser) + pageUri);
+          let baseUrl = localUrlForBrowser;
+          if (!publicUrl && projectDevServer.useLocalIp && urls.lanUrlForBrowser) {
+            baseUrl = urls.lanUrlForBrowser;
+          }
+          openBrowser(baseUrl + pageUri);
         }
 
         resolve({
