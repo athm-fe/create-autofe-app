@@ -106,16 +106,20 @@ async function webpackTask() {
     projectConfig.appPublic, // TODO 还需要处理 build 目录中的资源
   );
 
+  const watchOptions = Object.assign({}, projectDevServer.watchOptions);
+  watchOptions.ignored = watchOptions.ignored || [];
+  watchOptions.ignored = Array.isArray(watchOptions.ignored)
+    ? watchOptions.ignored
+    : [watchOptions.ignored];
+  watchOptions.ignored.push(...[/node_modules/, /\.(html|old\.js|md)$/]);
+
   const server = new WebpackDevServer(compiler, Object.assign({
     logLevel: 'silent',
-    clientLogLevel: 'silent',
+    // clientLogLevel: 'silent',
     historyApiFallback: false,
     hot: !isProd,
     compress: isProd,
     publicPath: publicPath,
-    watchOptions: {
-      ignored: [/node_modules/, /\.(html|old\.js|md)$/],
-    },
     overlay: isProd
       ? false
       : { warnings: false, errors: true }
@@ -123,6 +127,7 @@ async function webpackTask() {
     https: useHttps,
     proxy: proxySettings,
     open: false,
+    watchOptions,
     // 不要配置数组，才能保证 staticOptions 配置有效
     contentBase: projectConfig.appBuild,
     // watchContentBase 能力比较有限，自己实现比较好
@@ -131,11 +136,15 @@ async function webpackTask() {
     staticOptions: {
       index: false, // 关闭默认 index.html
     },
-    after: (app, server) => {
+    before: (app, server) => {
       // 提供访问 public 目录的能力
       const express = require('express');
       app.use(express.static(projectConfig.appPublic));
 
+      // apply in project middlewares
+      projectDevServer.before && projectDevServer.before(app, server);
+    },
+    after: (app, server) => {
       // 自己实现监听 public 和 build 下目录变更
       const chokidar = require('chokidar');
       const watchOptions = {
@@ -167,7 +176,13 @@ async function webpackTask() {
 
       // apply in project middlewares
       projectDevServer.after && projectDevServer.after(app, server);
-    }
+    },
+    // injectClient: (compilerConfig) => compilerConfig.name === 'only-include'
+    // injectHot: (compilerConfig) => compilerConfig.name === 'only-include'
+    // inline: false // iframe mode
+    // Inline mode is recommended for Hot Module Replacement
+    // as it includes an HMR trigger from the websocket.
+    // liveReload: true // hot: false && watchContentBase: true 才生效
   }));
 
   ['SIGINT', 'SIGTERM'].forEach(signal => {
