@@ -1,0 +1,29 @@
+{
+  "name": "autofe-serve-index",
+  "description": "Serve directory listings",
+  "version": "0.1.0",
+  "author": "jpuncle",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/athm-fe/create-autofe-app.git",
+    "directory": "packages/autofe-serve-index"
+  },
+  "dependencies": {
+    "accepts": "~1.3.7",
+    "batch": "0.6.1",
+    "debug": "2.6.9",
+    "escape-html": "~1.0.3",
+    "http-errors": "~1.7.2",
+    "mime-types": "~2.1.24",
+    "parseurl": "~1.3.3"
+  },
+  "files": [
+    "public/",
+    "LICENSE",
+    "index.js"
+  ],
+  "engines": {
+    "node": ">= 0.8.0"
+  }
+}

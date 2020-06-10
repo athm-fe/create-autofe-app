@@ -21,6 +21,7 @@
     "@vue/cli-shared-utils": "^4.1.1",
     "address": "^1.1.2",
     "autofe-shared-utils": "^0.1.1",
+    "autofe-serve-index": "^0.1.0",
     "autoprefixer": "^9.7.1",
     "babel-loader": "^8.0.6",
     "babel-preset-autofe-app": "^2.0.1",

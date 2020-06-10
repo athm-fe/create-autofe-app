@@ -8,7 +8,9 @@ const WebpackDevServer = require('webpack-dev-server');
 const portfinder = require('portfinder');
 const {
   openBrowser,
-} = require('@vue/cli-shared-utils')
+} = require('@vue/cli-shared-utils');
+
+const serveIndex = require('autofe-serve-index');
 const webpackConfig = require('../../config/webpack.config');
 const projectConfig = require('../../config/index');
 const isAbsoluteUrl = require('../../util/isAbsoluteUrl');
@@ -73,6 +75,9 @@ async function webpackTask() {
     https: false,
     open: true,
     useLocalIp: true,
+    staticOptions: {
+      index: false, // 关闭直接打开 index 的能力，而是展示目录
+    },
   };
   const projectDevServer = Object.assign(
     {},
@@ -107,12 +112,13 @@ async function webpackTask() {
     projectConfig.appPublic, // TODO 还需要处理 build 目录中的资源
   );
 
-  const watchOptions = Object.assign({}, projectDevServer.watchOptions);
-  watchOptions.ignored = watchOptions.ignored || [];
-  watchOptions.ignored = Array.isArray(watchOptions.ignored)
-    ? watchOptions.ignored
-    : [watchOptions.ignored];
-  watchOptions.ignored.push(...[/node_modules/, /\.(html|old\.js|md)$/]);
+  const watchOptions = projectDevServer.watchOptions || {};
+  const watchOptionsIgnored = Array.isArray(watchOptions.ignored)
+    ? watchOptions.ignored.slice(0)
+    : (watchOptions.ignored ? [watchOptions.ignored] : []);
+  const watchOptionsForPrivate = Object.assign({}, watchOptions, {
+    ignored: [...watchOptionsIgnored, /node_modules/, /\.(html|old\.js|md)$/]
+  });
 
   const server = new WebpackDevServer(compiler, Object.assign({
     logLevel: 'silent',
@@ -123,48 +129,47 @@ async function webpackTask() {
     overlay: isProd
       ? false
       : { warnings: false, errors: true },
-    // 关闭直接打开 index 的能力，而是展示目录
-    staticOptions: {
-      index: false,
-    },
   }, projectDevServer, {
     https: useHttps,
     proxy: proxySettings,
     open: false,
-    watchOptions,
+    watchOptions: watchOptionsForPrivate,
     publicPath: publicPath,
-
-    // TODO 使用其他的方式实现目录浏览，
-    // 结合 /webpack-dev-server、build 目录、public 目录以及 contentBase
-
-    // contentBase、contentBasePublicPath 以及 watchContentBase 的能力
-    // express.static + serve-static
-    // watchContentBase 会忽略 watchOptions.ignore 的配置
-    // staticOptions 仅当 contentBase 是一个时才生效
-    // contentBase 多个时存在无法关闭 index 功能的问题，另外 serveIndex 只能展示第一个的目录，不展示第二个的
-
-    // 不要配置数组，才能保证 staticOptions 配置有效
-    contentBase: projectConfig.appBuild,
-    // watchContentBase 能力比较有限，自己实现比较好
+    serveIndex: false,
+    contentBase: projectConfig.appPublic,
+    contentBasePublicPath: '/',
     watchContentBase: false,
     before: (app, server) => {
-      // 提供访问 public 目录的能力
-      const express = require('express');
-      app.use(express.static(projectConfig.appPublic));
-
       // apply in project middlewares
       projectDevServer.before && projectDevServer.before(app, server);
     },
     after: (app, server) => {
-      // 自己实现监听 public 和 build 下目录变更
+      // 由于 contentBase 是数组时，不支持自定义 staticOptions
+      // 因此自己来托管 build 目录
+      const express = require('express');
+      app.use(express.static(projectConfig.appBuild, projectDevServer.staticOptions));
+
+      // webpack-dev-server 自带 serveIndex 太弱，自己实现
+      app.use(serveIndex({
+        app,
+        server,
+        contentBase: [projectConfig.appBuild, projectConfig.appPublic],
+        icons: true,
+      }));
+
+      // 自己实现监听 public 和 build 下目录变更，原因
+      // 1. watchContentBase 会忽略 watchOptions.ignore 的配置
+      // 2. public 不希望忽略 html 等文件
+      // 3. build 目录的需求比较特殊，只在特定情况触发
       const chokidar = require('chokidar');
       const watchOptions = {
-        persistent: true,
         ignoreInitial: true,
+        persistent: true,
         followSymlinks: false,
+        atomic: false,
         alwaysStat: true,
         ignorePermissionErrors: true,
-        atomic: false,
+        ignored: watchOptionsIgnored,
         cwd: projectConfig.appDirectory,
       };
 
@@ -200,11 +205,6 @@ async function webpackTask() {
     // as it includes an HMR trigger from the websocket.
     // liveReload: true // hot: false && watchContentBase: true 才生效
     // transportMode: 'sockjs' // 'sockjs' | 'ws'
-
-    // 当访问目录时，展示当前目录文件列表，可以结合 /webpack-dev-server 改造
-    // 搭配 staticOptions.index 能提供更好的使用体验
-    // serveIndex: true
-    // index: 'index.html'
 
     // stats, quiet, noInfo, info
   }));
