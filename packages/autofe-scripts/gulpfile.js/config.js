@@ -7,24 +7,10 @@ const root = {
   dest: 'build',
 };
 
-let chromeName = 'google chrome';
-
-if (process.platform === 'darwin') {
-  chromeName = 'google chrome';
-} else if (process.platform === 'linux') {
-  chromeName = 'google-chrome';
-} else if (process.platform === 'win32') {
-  chromeName = 'chrome';
-}
-
 module.exports = {
   src: root.src,
   dest: root.dest,
   clean: {
-    dest: root.dest,
-  },
-  svg: {
-    src: join(root.src, '/**/*.svg'),
     dest: root.dest,
   },
   js: {
@@ -43,16 +29,5 @@ module.exports = {
   markdown: {
     src: join(root.src, '/**/*.md'),
     dest: root.dest,
-  },
-  browserSync: {
-    option: {
-      open: "external",
-      browser: chromeName,
-      watch: true,
-      server: {
-        baseDir: root.dest,
-        directory: true,
-      },
-    },
   },
 };

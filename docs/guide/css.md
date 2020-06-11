@@ -87,6 +87,34 @@ body {
 CSS 中图片路径使用 `@` 别名时，要添加 `~` 前缀。
 :::
 
+### Sass 中引用 CSS
+
+Sass 中引用 CSS 时要特别小心如下代码：
+
+```scss
+@import 'nest/_test_nest2.css';
+```
+
+因为 Sass 的 `@import` 遇到明确指定 `.css` 时，并不会导入该文件（参考[官方文档](https://sass-lang.com/documentation/at-rules/import#plain-css-imports)），而是编译为如下代码：
+
+```css
+@import url(nest/_test_nest2.css);
+```
+
+这时候，该样式文件实际上是被 `css-loader` 导入的，如果存在文件目录嵌套时，就有可能会出现打包失败的情况，有如下两种解决方式：
+
+```scss
+// 去掉 .css 后缀
+@import 'nest/_test_nest2';
+@import 'nest/test_nest2';
+
+// or
+
+// 使用别名
+@import '~@/path/to/nest/_test_nest2.css';
+```
+
+
 ### 支持 Sass 图片相对路径
 
 假设你的目录结构是这样的：

@@ -3,6 +3,7 @@ const {
   appDirectory,
   appSrc,
   appBuild,
+  appPublic,
   appConfig,
   isCreatorDev,
 } = require('./paths');
@@ -21,6 +22,7 @@ const config = {
   appDirectory,
   appSrc,
   appBuild,
+  appPublic,
   isCreatorDev,
   ...appDefaultConfig,
 }
