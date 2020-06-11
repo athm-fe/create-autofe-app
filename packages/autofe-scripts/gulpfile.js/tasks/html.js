@@ -8,6 +8,8 @@ const path = require('path');
 const PluginError = require('plugin-error');
 const projectConfig = require('../../config');
 const resolveClientEnv = require('../../util/resolveClientEnv');
+const gulpif = require('gulp-if');
+const insert = require('gulp-insert');
 
 const isProd = process.env.NODE_ENV === 'production';
 
@@ -115,6 +117,9 @@ function html() {
         this.emit('end');
       }
     })
+    .pipe(gulpif(process.env.NODE_ENV !== 'production', insert.append(
+      '<script src="/webpack-dev-server.js"></script>'
+    )))
     .pipe(dest(config.html.dest))
 }
 

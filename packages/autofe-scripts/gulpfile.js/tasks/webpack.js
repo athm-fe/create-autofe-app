@@ -198,13 +198,14 @@ async function webpackTask() {
 
     // progress: true,
 
-    // injectClient: (compilerConfig) => compilerConfig.name === 'only-include'
+    // HMR 存在一些问题，CSS 文件变化没有触发更新，目前使用 style-loader 才能解决
+    hot: false,
     // injectHot: (compilerConfig) => compilerConfig.name === 'only-include'
-    // inline: false // iframe mode
-    // Inline mode is recommended for Hot Module Replacement
-    // as it includes an HMR trigger from the websocket.
-    // liveReload: true // hot: false && watchContentBase: true 才生效
-    // transportMode: 'sockjs' // 'sockjs' | 'ws'
+    // 因此先使用 liveReload，存在文件变化时，自动刷新页面
+    liveReload: true,
+    // 有的页面没有 JS，而有的页面有多个 Entry，因此 injectClient 不满足要求
+    // 决定自己在 HTML 中插入 /webpack-dev-server.js
+    injectClient: false,
 
     // stats, quiet, noInfo, info
   }));
