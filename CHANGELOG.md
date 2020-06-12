@@ -1,3 +1,10 @@
+## autofe-scripts@1.3.8
+
+该版本功能主要改动：
+1. 使用 webpack-dev-server 取代 browsersync
+2. 优化内部 watch 实现，并实现监听 public 目录
+3. 支持在 creator.config.js 中配置 devServer
+
 ## autofe-scripts@1.3.5
 
 该版本功能主要改动：
