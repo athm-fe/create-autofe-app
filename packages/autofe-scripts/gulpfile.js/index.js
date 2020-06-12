@@ -10,19 +10,24 @@ const { html } = require('./tasks/html');
 const { markdown } = require('./tasks/markdown');
 const { htmlBundle } = require('./tasks/html-bundle');
 
+function reload(cb) {
+  if (global.__creator_dev_server) {
+    const server = global.__creator_dev_server;
+    server.sockWrite(server.sockets, 'content-changed');
+  }
+  cb();
+}
+
 function myWatch(...args) {
   const watcher = watch(...args);
 
   watcher.on('change', function(path) {
-    global.__creator_gulp_file_update = true;
     log(`File ${path} was changed`);
   });
   watcher.on('add', function(path) {
-    global.__creator_gulp_file_update = true;
     log(`File ${path} was added`);
   });
   watcher.on('unlink', function(path) {
-    global.__creator_gulp_file_update = true;
     log(`File ${path} was removed`);
   });
 
@@ -30,9 +35,9 @@ function myWatch(...args) {
 }
 
 const watchTask = function(cb) {
-  myWatch(config.js.src, js);
-  myWatch(config.html.src, html);
-  myWatch(config.markdown.src, markdown);
+  myWatch(config.js.src, series(js, reload));
+  myWatch(config.html.src, series(html, reload));
+  myWatch(config.markdown.src, series(markdown, reload));
 
   cb();
 };

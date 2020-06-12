@@ -44,6 +44,7 @@ function normalizeFSEvent(event) {
       result = 'removed';
       break;
     default:
+      result = event;
       break;
   }
   return result;
@@ -157,10 +158,9 @@ async function webpackTask() {
         icons: true,
       }));
 
-      // 自己实现监听 public 和 build 下目录变更，原因
+      // 自己实现监听 public 下目录变更，原因：
       // 1. watchContentBase 会忽略 watchOptions.ignore 的配置
       // 2. public 不希望忽略 html 等文件
-      // 3. build 目录的需求比较特殊，只在特定情况触发
       const chokidar = require('chokidar');
       const watchOptions = {
         ignoreInitial: true,
@@ -174,17 +174,6 @@ async function webpackTask() {
       };
 
       // TODO: 需要关闭 watcher，防止内存泄漏
-
-      chokidar
-        .watch(projectConfig.appBuild, watchOptions)
-        .on('all', () => {
-          // TODO 先使用这种方式，后面再优化
-          if (global.__creator_gulp_file_update) {
-            global.__creator_gulp_file_update = false;
-            server.sockWrite(server.sockets, 'content-changed');
-          }
-        });
-
       chokidar
         .watch(projectConfig.appPublic, watchOptions)
         .on('all', (event, path) => {
@@ -209,6 +198,8 @@ async function webpackTask() {
 
     // stats, quiet, noInfo, info
   }));
+
+  global.__creator_dev_server = server;
 
   ['SIGINT', 'SIGTERM'].forEach(signal => {
     process.on(signal, () => {
