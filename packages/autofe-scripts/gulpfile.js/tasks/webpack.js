@@ -79,6 +79,7 @@ async function webpackTask() {
     staticOptions: {
       index: false, // 关闭直接打开 index 的能力，而是展示目录
     },
+    disableHostCheck: true,
   };
   const projectDevServer = Object.assign(
     {},
