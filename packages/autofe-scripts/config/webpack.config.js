@@ -353,6 +353,12 @@ module.exports = () => {
     sourceMap: !isProd,
   });
 
+  const resolveUrlLoaderOptions = {
+    keepQuery: true, // for loader resourceQuery
+    removeCR: true, // for windows CRLF
+    sourceMap: !isProd,
+  };
+
   const prependData = getPrependDataForSassLoader(projectSassLoaderOptions.prependData);
   const sassLoaderOptions = Object.assign({
     // 参考 vue-cli
@@ -366,50 +372,54 @@ module.exports = () => {
     prependData,
   });
 
-  chainableConfig.module
-    .rule('css')
-      .test(/\.css$/)
-      .use('extract-css-loader')
-        .loader(MiniCssExtractPlugin.loader)
-        .options(extractCssLoaderOptions)
-        .end()
-      .use('css-loader')
-        .loader(require.resolve('css-loader'))
-        .options(cssLoaderOptions)
-        .end()
-      .use('postcss-loader')
-        .loader(require.resolve('postcss-loader'))
-        .options(postcssLoaderOptions)
-        .end()
+  function createCSSRule(lang, test, loaders = []) {
+    const baseRule = chainableConfig.module.rule(lang).test(test);
 
-  chainableConfig.module
-    .rule('scss')
-      .test(/\.scss$/)
-      .use('extract-css-loader')
-        .loader(MiniCssExtractPlugin.loader)
-        .options(extractCssLoaderOptions)
-        .end()
-      .use('css-loader')
+    const inlineRule = baseRule.oneOf('inline').resourceQuery(/inline/);
+    applyLoaders(inlineRule, false);
+
+    const normalRule = baseRule.oneOf('normal');
+    applyLoaders(normalRule, true);
+
+    function applyLoaders(rule, shouldExtract) {
+      if (shouldExtract) {
+        rule
+          .use('extract-css-loader')
+          .loader(MiniCssExtractPlugin.loader)
+          .options(extractCssLoaderOptions)
+      } else {
+        rule
+          .use('style-loader')
+          .loader(require.resolve('style-loader'));
+      }
+
+      rule
+        .use('css-loader')
         .loader(require.resolve('css-loader'))
-        .options(cssLoaderOptions)
-        .end()
-      .use('postcss-loader')
+        .options(cssLoaderOptions);
+
+      rule
+        .use('postcss-loader')
         .loader(require.resolve('postcss-loader'))
-        .options(postcssLoaderOptions)
-        .end()
-      // TODO 处理 image-set( "cat.png" 1x, "cat-2x.png" 2x);
-      .use('resolve-url-loader')
-        .loader(require.resolve('resolve-url-loader'))
-        .options({
-          keepQuery: true, // for loader resourceQuery
-          removeCR: true, // for windows CRLF
-          sourceMap: !isProd,
-        })
-        .end()
-      .use('sass-loader')
-        .loader(require.resolve('sass-loader'))
-        .options(sassLoaderOptions)
-        .end()
+        .options(postcssLoaderOptions);
+
+      if (loaders) {
+        loaders.forEach(item => {
+          rule
+            .use(item.loader)
+            .loader(require.resolve(item.loader))
+            .options(item.options);
+        });
+      }
+    }
+  }
+
+  createCSSRule('css', /\.css$/);
+  createCSSRule('scss', /\.scss$/, [
+    // TODO 处理 image-set( "cat.png" 1x, "cat-2x.png" 2x);
+    { loader: 'resolve-url-loader', options: resolveUrlLoaderOptions},
+    { loader: 'sass-loader', options: sassLoaderOptions},
+  ]);
 
   chainableConfig.module
     .rule('images')
