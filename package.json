@@ -4,7 +4,7 @@
     "start": "node packages/autofe-scripts/scripts/start.js",
     "build": "node packages/autofe-scripts/scripts/build.js",
     "test": "node packages/autofe-scripts/scripts/test.js",
-    "create-autofe-app": "tasks/cra.sh",
+    "create-autofe-app": "node tasks/cra.js",
     "postinstall": "node bootstrap.js",
     "publish": "tasks/release.sh",
     "docs": "vuepress dev docs --temp .temp",
