@@ -1,11 +1,13 @@
 {
   "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
-    "start": "node packages/autofe-scripts/scripts/start.js",
-    "build": "node packages/autofe-scripts/scripts/build.js",
-    "test": "node packages/autofe-scripts/scripts/test.js",
+    "start": "cd packages/autofe-scripts && node bin/autofe-scripts.js start",
+    "build": "cd packages/autofe-scripts && node bin/autofe-scripts.js build",
+    "test": "cd packages/autofe-scripts && node bin/autofe-scripts.js test",
     "create-autofe-app": "node tasks/cra.js",
-    "postinstall": "node bootstrap.js",
     "publish": "tasks/release.sh",
     "docs": "vuepress dev docs --temp .temp",
     "docs:build": "vuepress build docs --temp .temp",
