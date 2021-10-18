@@ -57,9 +57,6 @@ module.exports = function buildPreset(api, options = {}) {
 
   // 添加一些 preset-env 没有的插件
   const proposalPlugins = [
-
-
-    
     // Stage 0
     // ==============
     // "@babel/plugin-proposal-function-bind",
@@ -134,6 +131,14 @@ module.exports = function buildPreset(api, options = {}) {
 
     // use simple assignments instead of Object.defineProperty.
     [require('@babel/plugin-transform-computed-properties'), {
+      loose: true,
+    }],
+
+    [require('@babel/plugin-proposal-private-methods'), {
+      loose: true,
+    }],
+
+    [require('@babel/plugin-proposal-private-property-in-object'), {
       loose: true,
     }],
   ];
