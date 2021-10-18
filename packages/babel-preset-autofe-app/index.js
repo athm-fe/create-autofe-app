@@ -57,6 +57,9 @@ module.exports = function buildPreset(api, options = {}) {
 
   // 添加一些 preset-env 没有的插件
   const proposalPlugins = [
+
+
+    
     // Stage 0
     // ==============
     // "@babel/plugin-proposal-function-bind",
@@ -69,11 +72,13 @@ module.exports = function buildPreset(api, options = {}) {
     // "@babel/plugin-proposal-do-expressions"
 
     // Adds syntax support for optional chaining (?.)
-    require('@babel/plugin-proposal-optional-chaining'),
+    // start @babel/preset-env": "^7.15.8" 有此插件了
+    // require('@babel/plugin-proposal-optional-chaining'),
 
     // Adds syntax support for default value using ?? operator
-    require('@babel/plugin-proposal-nullish-coalescing-operator'),
-
+    // require('@babel/plugin-proposal-nullish-coalescing-operator'),
+    //  end 
+    
     // Stage 2
     // ==============
     // "@babel/plugin-proposal-function-sent"
@@ -96,12 +101,15 @@ module.exports = function buildPreset(api, options = {}) {
 
     // TODO: 已经出现在 preset-env
     // Adds syntax support for import()
-    require('@babel/plugin-syntax-dynamic-import'),
+    // start @babel/preset-env": "^7.15.8" 有此插件了
+    // require('@babel/plugin-syntax-dynamic-import'),
 
     // Enable loose mode to use assignment instead of defineProperty
     [require('@babel/plugin-proposal-class-properties'), {
       loose: true,
     }],
+
+
   ];
 
   // 覆盖一些 preset-env 的插件
