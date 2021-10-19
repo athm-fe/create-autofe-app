@@ -1,6 +1,6 @@
 # 贡献
 
-首先，你应当了解一下 [lerna](https://lernajs.io/)
+首先，你应当了解一下 [lerna](https://lernajs.io/) 和 [yarn](https://yarnpkg.com/)。
 
 ## 关于配置
 
@@ -12,22 +12,24 @@
 
 ## 本地开发
 
+**注意：要求使用 `yarn` 而不是 `npm`，因为我们需要结合 yarn 的 workflow 的概念来进行开发。**
+
 ```
 git clone https://github.com/athm-fe/create-autofe-app
 cd create-autofe-app
-npm install
+yarn
 ```
 
-`npm start` 可以用来看 demo
+一旦上面的命名执行成功，你可以修改任何文件，并且运行 `yarn start`，`yarn build` 等来查看 Demo，它将运行位于 `packages/autofe-scripts/temlate` 目录下的应用。
 
 如果想本地联调测试 `create-autofe-app` 和 `autofe-scripts`，可以按照下面的步骤来：
 
 ```
-npm run create-autofe-app my-app
+yarn create-autofe-app my-app
 cd my-app
 ```
 
-然后就运行 `npm start` 或者 `npm run build` 了。
+然后就运行 `yarn start` 或者 `yarn build` 了。
 
 ## 发布
 

@@ -1,6 +1,6 @@
 {
   "name": "create-autofe-app",
-  "version": "0.6.3",
+  "version": "0.6.4",
   "description": "Create AutoFE apps with no build configuration.",
   "repository": "athm-fe/create-autofe-app",
   "author": "jpuncle",
