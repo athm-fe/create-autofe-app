@@ -1,6 +1,6 @@
 # Create AutoFE App
 
-> Thanks to [Create React App](https://create-react-app.dev/) and [Vue CLI](https://cli.vuejs.org/)
+> Thanks to [Create React App](https://create-react-app.dev/) and [Vue CLI](https://cli.vuejs.org/).
 
 > Create AutoFE App is the Recommended Tooling for AutoFE Development.
 
