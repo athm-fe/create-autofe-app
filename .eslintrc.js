@@ -1,16 +1,16 @@
-{
-  "root": true,
-  "extends": "eslint:recommended",
-  "env": {
+module.exports = {
+  root: true,
+  extends: "eslint:recommended",
+  env: {
     "browser": true,
     "commonjs": true,
     "node": true,
     "es6": true
   },
-  "parserOptions": {
+  parserOptions: {
     "ecmaVersion": 2018
   },
-  "rules": {
+  rules: {
     "no-console": "off",
     "strict": "off",
     "curly": "warn"

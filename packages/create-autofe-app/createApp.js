@@ -42,6 +42,7 @@ const chalk = require('chalk');
 const commander = require('commander');
 const fs = require('fs-extra');
 const path = require('path');
+const os = require('os');
 const execSync = require('child_process').execSync;
 const spawn = require('cross-spawn');
 const semver = require('semver');
@@ -59,20 +60,36 @@ const program = new commander.Command(packageInfo.name)
   })
   .option(
     '--verbose',
-    'print additional logs')
+    'print additional logs'
+  )
   .option(
     '--scripts-version <alternative-package>',
-    'use a non-standard version of autofe-scripts')
+    'use a non-standard version of autofe-scripts'
+  )
+  // .option(
+  //   '--template <path-to-template>',
+  //   'specify a template for the created project'
+  // )
+  // .option('--use-npm')
   .allowUnknownOption()
   .on('--help', () => {
     console.log(`    Only ${chalk.green('<project-directory>')} is required.`);
     console.log();
     console.log(`    A custom ${chalk.cyan('--scripts-version')} can be one of:`);
     console.log(`      - a specific npm version: ${chalk.green('0.8.2')}`);
+    console.log(`      - a specific npm tag: ${chalk.green('@next')}`);
     console.log(`      - a custom fork published on npm: ${chalk.green('my-autofe-scripts')}`);
+    console.log(`      - a local path relative to the current working directory: ${chalk.green('file:../my-autofe-scripts')}`);
     console.log(`      - a .tgz archive: ${chalk.green('https://mysite.com/my-autofe-scripts-0.8.2.tgz')}`);
+    console.log(`      - a .tgz.gz archive: ${chalk.green('https://mysite.com/my-autofe-scripts-0.8.2.tgz.gz')}`);
     console.log('    It is not needed unless you specifically want to use a fork.');
     console.log();
+    // console.log(`    A custom ${chalk.cyan('--template')} can be one of:`);
+    // console.log(`      - a custom template published on npm: ${chalk.green('autofe-template-typescript')}`);
+    // console.log(`      - a local path relative to the current working directory: ${chalk.green('file:../my-custom-template')}`);
+    // console.log(`      - a .tgz archive: ${chalk.green('https://mysite.com/my-custom-template-0.8.2.tgz')}`);
+    // console.log(`      - a .tar.gz archive: ${chalk.green('https://mysite.com/my-custom-template-0.8.2.tar.gz')}`);
+    // console.log();
     console.log('    If you have any problems, do not hesitate to file an issue:');
     console.log(`      ${chalk.cyan('https://github.com/athm-fe/create-autofe-app/issues/new')}`);
     console.log();
@@ -90,7 +107,11 @@ if (typeof projectName === 'undefined') {
   process.exit(1);
 }
 
-createApp(projectName, program.verbose, program.scriptsVersion);
+createApp(
+  projectName,
+  program.verbose,
+  program.scriptsVersion,
+);
 
 function createApp(name, verbose, version) {
   const root = path.resolve(name);
@@ -112,7 +133,11 @@ function createApp(name, verbose, version) {
     version: '0.1.0',
     private: true,
   };
-  fs.writeFileSync(path.join(root, 'package.json'), JSON.stringify(packageJson, null, 2));
+  fs.writeFileSync(
+    path.join(root, 'package.json'),
+    JSON.stringify(packageJson, null, 2) + os.EOL,
+  );
+
   const originalDirectory = process.cwd();
   process.chdir(root);
 
@@ -120,7 +145,13 @@ function createApp(name, verbose, version) {
   console.log('Installing autofe-scripts...');
   console.log();
 
-  run(root, appName, version, verbose, originalDirectory);
+  run(
+    root,
+    appName,
+    version,
+    verbose,
+    originalDirectory,
+  );
 }
 
 function shouldUseYarn() {
@@ -169,7 +200,7 @@ function install(packageToInstall, verbose, callback) {
 }
 
 function run(root, appName, version, verbose, originalDirectory) {
-  const packageToInstall = getInstallPackage(version);
+  const packageToInstall = getInstallPackage(version, originalDirectory);
   const packageName = getPackageName(packageToInstall);
 
   install(packageToInstall, verbose, (code, command, args) => {
@@ -192,14 +223,23 @@ function run(root, appName, version, verbose, originalDirectory) {
   });
 }
 
-function getInstallPackage(version) {
+function getInstallPackage(version, originalDirectory) {
   let packageToInstall = 'autofe-scripts';
   const validSemver = semver.valid(version);
   if (validSemver) {
     packageToInstall += `@${validSemver}`;
   } else if (version) {
-    // for tar.gz or alternative paths
-    packageToInstall = version;
+    if (version[0] === '@' && !version.includes('/')) {
+      packageToInstall += version;
+    } else if (version.match(/^file:/)) {
+      packageToInstall = `file:${path.resolve(
+        originalDirectory,
+        version.match(/^file:(.*)?$/)[1]
+      )}`;
+    } else {
+      // for tar.gz or alternative paths
+      packageToInstall = version;
+    }
   }
   return packageToInstall;
 }
