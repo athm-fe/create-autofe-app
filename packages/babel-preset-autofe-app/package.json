@@ -1,6 +1,6 @@
 {
   "name": "babel-preset-autofe-app",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Babel preset used by AutoFE apps",
   "repository": "athm-fe/create-autofe-app",
   "author": "jpuncle",
