@@ -13,7 +13,7 @@
 ## 创建全新项目
 
 ```
-create-autofe-app --scripts-version=autofe-scripts@next my-app
+npx create-autofe-app --scripts-version=autofe-scripts@next my-app
 ```
 
 ## 老项目迁移
