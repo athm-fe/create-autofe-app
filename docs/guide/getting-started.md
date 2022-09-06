@@ -1,7 +1,7 @@
 # 快速开始
 
 ::: tip Node 版本要求
-Creator 需要 [Node.js](https://nodejs.org/) 8.0 或更高版本。你可以使用 [nvm](https://github.com/creationix/nvm) 或 [nvm-windows](https://github.com/coreybutler/nvm-windows) 在同一台电脑中管理多个 Node 版本。
+Creator 需要 [Node.js](https://nodejs.org/) 8.0 或更高版本。但暂时不要使用太新的版本，Node 12 是比较稳妥的选择。后续会考虑升级代码以支持更高版本 Node。@你可以使用 [nvm](https://github.com/creationix/nvm) 或 [nvm-windows](https://github.com/coreybutler/nvm-windows) 在同一台电脑中管理多个 Node 版本。
 :::
 
 使用如下方式创建项目：

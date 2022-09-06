@@ -71,7 +71,7 @@ module.exports = {
           // 这里的选项会传递给 postcss-loader
         }
         scss: {
-          // 这里的选项会传递给 postcss-loader
+          // 这里的选项会传递给 sass-loader
         }
       }
     }

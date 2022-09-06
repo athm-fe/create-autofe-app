@@ -1,3 +1,23 @@
+## autofe-scripts@1.3.13
+
+该版本功能主要改动：
+* 使用 sass 替代 node-sass
+
+## autofe-scripts@1.3.12
+
+该版本功能主要改动：
+* 更新内部 babel 配置，修复报警
+
+## autofe-scripts@1.3.10
+
+该版本功能主要改动：
+* 支持 css 内嵌到 js 中，由 js 动态插入 style 到页面
+
+## autofe-scripts@1.3.9
+
+该版本功能主要改动：
+* 默认关闭 webpack-dev-server 的 Host 检查功能，方便开发
+
 ## autofe-scripts@1.3.8
 
 该版本功能主要改动：

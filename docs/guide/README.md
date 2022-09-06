@@ -23,7 +23,7 @@ Creator 支持 macOS、Windows 以及 Linux。<br>
 
 ## 功能支持
 
-* 使用 [Browsersync](http://browsersync.io/) 开启本地服务器
+* 使用 ~~[Browsersync](http://browsersync.io/)~~ WebpackDevServer 开启本地服务器
   * 支持文件修改时自动刷新浏览器
   * 支持目录浏览
   * 自动打开浏览器 Chrome
