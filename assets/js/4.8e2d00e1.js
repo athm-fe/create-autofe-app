@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[4],{174:function(n,t,s){},199:function(n,t,s){"use strict";s(174)},240:function(n,t,s){"use strict";s.r(t);s(199);var e=s(0),o=Object(e.a)({},(function(){return(0,this._self._c)("section",{staticClass:"other-demo"},[this._v("\n  This is another component\n")])}),[],!1,null,"3e2f92ba",null);t.default=o.exports}}]);
